@@ -1,5 +1,6 @@
 import Image from "next/image";
-import logo from "@/public/svg/system-settings-svgrepo-com.svg"
+import logo from "@/public/svg/logo.svg"
+import name from "@/public/svg/Terrinens.svg"
 
 const Header = () => {
     return (
@@ -8,10 +9,10 @@ const Header = () => {
                 className="mt-4 relative max-w-2xl w-full bg-white border border-gray-200 rounded-[2rem] mx-2 py-2.5 md:flex md:items-center md:justify-between md:py-0 md:px-4 md:mx-auto">
                 <div className="px-4 md:px-0 flex justify-between items-center">
                     <div>
-                        {/* 헤더 로고  */}
-                        <a className="flex-none rounded-md text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
+                        <a className="flex rounded-md text-xl font-semibold focus:outline-none focus:opacity-80"
                            href="/" aria-label="Preline">
-                            <Image className='h-auto' src={logo} alt='logo' width={50} height={30} />
+                            <Image className='h-auto' src={logo} alt='logo' width={50} height={30}/>
+                            <Image className='ml-2' src={name} alt='name'/>
                         </a>
                     </div>
 
