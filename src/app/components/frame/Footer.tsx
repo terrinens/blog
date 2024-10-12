@@ -12,8 +12,7 @@ const Footer = () => {
                     <ul className="flex flex-wrap items-center">
                         <li className="inline-block pe-4 text-xs">
                             <a className="text-xs text-gray-500 underline hover:text-gray-800 hover:decoration-2 focus:outline-none focus:decoration-2 dark:text-neutral-500 dark:hover:text-neutral-400"
-                               href="https://github.com/terrinens">
-                                Github
+                               href={process.env.GITHUB}>GitHub
                             </a>
                         </li>
                     </ul>

@@ -5,6 +5,7 @@ const config: Config = {
         "./src/pages/**/*.{js,ts,jsx,tsx}",
         "./src/components/**/*.{js,ts,jsx,tsx}",
         "./src/app/**/*.{js,ts,jsx,tsx}",
+        './node_modules/preline/preline.js',
     ],
     theme: {
         extend: {
@@ -14,6 +15,9 @@ const config: Config = {
             },
         },
     },
-    plugins: [require('@tailwindcss/typography')],
+    plugins: [
+        require('@tailwindcss/typography'),
+        require('preline/plugin'),
+    ],
 };
 export default config;
