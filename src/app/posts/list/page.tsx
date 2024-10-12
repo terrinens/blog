@@ -1,6 +1,4 @@
-import {getPostSlugs, getPostSlugsDeep} from "@/app/lib/Posts";
-import PostCard from "@/app/components/PostCard";
-import fs from "fs";
+import {getPostSlugs} from "@/app/lib/Posts";
 
 // export async function getStaticProps() {
 //     const posts = await getPostSlugs();

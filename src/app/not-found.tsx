@@ -1,11 +1,13 @@
-import Header from "@/app/components/frame/Header";
+type NotFoundProps = {
+    message: string;
+}
 
-export default function NotFound() {
+export default function NotFound({message = '해당 페이지를 찾을수 없습니다.'}: NotFoundProps) {
     return (
         <div className="text-center py-10 px-4 sm:px-6 lg:px-8">
             <h1 className="block text-7xl font-bold text-gray-800 sm:text-9xl">404</h1>
             <p className="mt-3 text-gray-600">이런, 문제가 발생했습니다.</p>
-            <p className="text-gray-600">해당 페이지를 찾을수 없습니다.</p>
+            <p className="text-gray-600">{message}</p>
             <div className="mt-5 flex flex-col justify-center items-center gap-2 sm:flex-row sm:gap-3">
                 <a className="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                    href="/">

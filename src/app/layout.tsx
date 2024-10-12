@@ -12,7 +12,6 @@ export default function RootLayout({children,}: { children: React.ReactNode }) {
     return (
         <html lang="en">
         <body>
-        <script src="./node_modules/preline/dist/preline.js"></script>
         <Header/>
         <Main children={children}/>
         <Footer/>
