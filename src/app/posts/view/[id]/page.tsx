@@ -16,5 +16,5 @@ export default async function Page(props: Props) {
 
 export async function generateStaticParams() {
     const postList = await getPostSlugs();
-    return postList.map(id => ({id: id}))
+    return postList.map(id => ({id: id.replace('.mdx', '')}))
 }

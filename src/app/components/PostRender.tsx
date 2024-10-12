@@ -19,13 +19,7 @@ export default function PostRender({postPath, postName}: PostRenderProps) {
          * <h1> 같이 정상적으로 작동하지 않았음.
          * */
         <div className="prose">
-            <MDXRemote source={source} options={{
-                parseFrontmatter: true,
-                mdxOptions: {
-                    remarkPlugins: [],
-                    rehypePlugins: []
-                }
-            }}/>
+            <MDXRemote source={source} options={{parseFrontmatter: true}}/>
         </div>
     )
 };

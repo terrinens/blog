@@ -1,6 +1,6 @@
 import Image from "next/image";
 import logo from "@/public/svg/logo.svg"
-import name from "@/public/svg/Terrinens.svg"
+import name from "@/public/svg/Terrinens.log.svg"
 
 const Header = () => {
     return (
