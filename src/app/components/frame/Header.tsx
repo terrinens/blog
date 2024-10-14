@@ -11,8 +11,8 @@ const Header = () => {
                     <div>
                         <a className="flex rounded-md text-xl font-semibold focus:outline-none focus:opacity-80"
                            href="/" aria-label="Preline">
-                            <Image className='h-auto' src={logo} alt='logo' width={50} height={30}/>
-                            <Image className='ml-2' src={name} alt='name'/>
+                            <Image className='h-auto' src={logo} alt='logo' width={50}/>
+                            <Image className='ml-2' src={name} alt='name' width={150}/>
                         </a>
                     </div>
 

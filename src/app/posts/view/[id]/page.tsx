@@ -1,5 +1,5 @@
 import {getPostSlugs} from "@/app/lib/Posts";
-import PostRender from "@/app/components/PostRender";
+import {PostRender} from "@/app/components/PostRender";
 
 type Props = {
     params: {
@@ -18,3 +18,4 @@ export async function generateStaticParams() {
     const postList = await getPostSlugs();
     return postList.map(id => ({id: id.replace('.mdx', '')}))
 }
+

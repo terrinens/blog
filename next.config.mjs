@@ -1,4 +1,4 @@
-import withMDX from '@next/mdx'
+import createdMDX from '@next/mdx'
 
 const isDev = process.env.NODE_ENV === 'development';
 const repository = process.env.REPOSITORY;
@@ -14,4 +14,6 @@ const nextConfig = {
     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
 };
 
-export default withMDX()(nextConfig);
+const withMDX = createdMDX({})
+
+export default withMDX(nextConfig);

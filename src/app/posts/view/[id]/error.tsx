@@ -12,3 +12,4 @@ export default function Error({error, reset}: {
     }
     return (<NotFound message={'해당 게시글을 찾지 못했습니다!'}/>);
 }
+
