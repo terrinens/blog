@@ -1,13 +1,21 @@
-import {getPostListData, Paging, slicePage} from "@/app/lib/Posts";
+import {getPostListData, getPostSlugs, Paging, slicePage} from "@/app/lib/Posts";
 import {PostCard, PostCardProps} from "@/app/components/PostRender";
 import Pagination from "@/app/components/Pagination";
 
-export default async function Page() {
+type Props = {
+    params: {
+        page: number;
+    }
+}
+
+export default async function Page({params}: Props) {
+    const page = Number(params.page);
+
     const dataList = await getPostListData();
     const paging: Paging = new Paging(10, dataList.length);
     dataList.sort((a, b) => paging.default_sort(a.frontmatter, b.frontmatter));
 
-    const result: PostCardProps[] = await slicePage(dataList, 1, paging);
+    const result: PostCardProps[] = await slicePage(dataList, page, paging);
 
     return (
         <div className="max-w-[50rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
@@ -18,8 +26,20 @@ export default async function Page() {
                     ))
                 }
             </div>
-            <Pagination key={'page:nav' + 1} thisPage={1} paging={paging} baseURL={'/posts/list'}/>
+            <Pagination key={'page:nav' + page} thisPage={page} paging={paging} baseURL={'/posts/list'}/>
         </div>
     );
+}
+
+export async function generateStaticParams() {
+    const postSlugs = await getPostSlugs();
+    const paging: Paging = new Paging(10, postSlugs.length);
+
+    let map = []
+    for (let i = 1; i < paging.getTotalPage; i++) {
+        map.push(i.toString());
+    }
+
+    return map.map(i => ({page: i}));
 }
 

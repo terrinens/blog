@@ -45,7 +45,7 @@ function postSort(a: any, b: any, paging: Paging) {
     return 0;
 }
 
-type PostListProps = {
+export type PostListProps = {
     filename: string,
     frontmatter: Record<string, unknown>
 }
@@ -95,6 +95,31 @@ export async function generationPaging(list: PostListProps[], paging: Paging) {
             page_slice.push(props)
         }
         result[page] = {list: page_slice};
+    }
+
+    return result;
+}
+
+export async function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
+    let result: PostCardProps[] = [];
+
+    const startSlice = thisPage * paging.size;
+
+    for (let obj of list.slice(startSlice, startSlice + paging.size)) {
+        const filename = obj.filename.replace('.mdx', '');
+        const frontmatter = obj.frontmatter;
+        const props: PostCardProps = {
+            filename: filename,
+            info: {
+                mainImg: (<string>frontmatter.mainImg),
+                title: (<string>frontmatter.title),
+                description: (<string>frontmatter.description),
+                tags: (<Array<string>>frontmatter.tags),
+                date: (new Date(<Date>frontmatter.timestamp))
+            }
+        }
+
+        result.push(props);
     }
 
     return result;
