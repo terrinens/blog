@@ -11,7 +11,7 @@ type Props = {
 export default async function Page({params}: Props) {
     const page = Number(params.page);
 
-    const dataList = await getPostListData();
+    const dataList = await getPostListData('/main');
     const paging: Paging = new Paging(10, dataList.length);
     dataList.sort((a, b) => paging.default_sort(a.frontmatter, b.frontmatter));
 
@@ -26,7 +26,7 @@ export default async function Page({params}: Props) {
                     ))
                 }
             </div>
-            <Pagination key={'page:nav' + page} thisPage={page} paging={paging} baseURL={'/posts/list'}/>
+            <Pagination key={'page:nav' + page} thisPage={page} paging={paging} baseURL={'/posts/main/list'}/>
         </div>
     );
 }

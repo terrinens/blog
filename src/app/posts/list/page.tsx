@@ -3,7 +3,7 @@ import {PostCard, PostCardProps} from "@/app/components/PostRender";
 import Pagination from "@/app/components/Pagination";
 
 export default async function Page() {
-    const dataList = await getPostListData();
+    const dataList = await getPostListData('/main');
     const paging: Paging = new Paging(10, dataList.length);
     dataList.sort((a, b) => paging.default_sort(a.frontmatter, b.frontmatter));
 
@@ -18,7 +18,7 @@ export default async function Page() {
                     ))
                 }
             </div>
-            <Pagination key={'page:nav' + 1} thisPage={1} paging={paging} baseURL={'/posts/list'}/>
+            <Pagination key={'page:nav' + 1} thisPage={1} paging={paging} baseURL={'/posts/main/list'}/>
         </div>
     );
 }

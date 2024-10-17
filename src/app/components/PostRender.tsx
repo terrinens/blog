@@ -6,7 +6,7 @@ import {userMDXComponents} from "@/app/mdx-componets"
 import {DefaultImg, generationPostCardProps} from "@/app/lib/Posts";
 
 type PostRenderProps = {
-    postPath: string;
+    deep: string;
     postName: string;
 }
 
@@ -17,10 +17,12 @@ const PostRenderHeaderBlock = (
     const liCss = "me-1 inline-flex items-center text-sm text-gray-800"
 
     if (Array.isArray(values)) {
-        const lis = values.map(value => (<li className={liCss}>{String(value).trim()}</li>))
+        const lis = values.map(value => (
+            <li key={'li:' + value} className={liCss}>{String(value).trim()}</li>)
+        )
         content.push(...lis);
     } else {
-        content.push(<li className={liCss}>{values}</li>)
+        content.push(<li key={'li' + values} className={liCss}>{values}</li>)
     }
 
     return (
@@ -29,7 +31,7 @@ const PostRenderHeaderBlock = (
                 <span className="block text-sm text-gray-500">{name}:</span>
             </dt>
             <dd className='max-h-0 p-0 m-0 mt-2'>
-                <ul className='ml-0 mt-1 list-disc pl-3 text-left'>
+                <ul key={'ul:' + name} className='ml-0 mt-1 list-disc pl-3 text-left'>
                     {content}
                 </ul>
             </dd>
@@ -44,16 +46,16 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
             className='relative rounded-lg shadow-sm overflow-hidden ring-1 ring-gray-800 ring-opacity-5  dark:ring-neutral-700
              pt-0.5 pb-0.5 pl-2 mb-5'>
             <div className="space-y-3 mb-10">
-                <PostRenderHeaderBlock name={'title'} values={info.title}/>
-                <PostRenderHeaderBlock name={'date'} values={dateFormatter(info.date)}/>
-                <PostRenderHeaderBlock name={'tags'} values={info.tags}/>
+                <PostRenderHeaderBlock key={'title'} name={'title'} values={info.title}/>
+                <PostRenderHeaderBlock key={'date'} name={'date'} values={dateFormatter(info.date)}/>
+                <PostRenderHeaderBlock key={'tags'} name={'tags'} values={info.tags}/>
             </div>
         </div>
     );
 }
 
-export async function PostRender({postPath, postName}: PostRenderProps) {
-    const target = path.join(process.cwd(), postPath, postName + '.mdx');
+export async function PostRender({deep, postName}: PostRenderProps) {
+    const target = path.join(process.cwd(), 'src/posts/', deep, postName + '.mdx');
     const source = fs.readFileSync(target, "utf8");
     const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
     const cardProps = generationPostCardProps(postName, compiled.frontmatter)
@@ -66,8 +68,10 @@ export async function PostRender({postPath, postName}: PostRenderProps) {
          * <h1> 같이 정상적으로 작동하지 않았음.
          * */
         <div className="prose">
-            <PostRenderHeader props={cardProps}/>
-            <MDXRemote components={userMDXComponents} source={source} options={{parseFrontmatter: true}}/>
+            <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
+            <MDXRemote key={'post_body:' + postName} components={userMDXComponents} source={source}
+                       options={{parseFrontmatter: true}}
+            />
         </div>
     )
 }

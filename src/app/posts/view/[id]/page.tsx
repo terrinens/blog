@@ -10,12 +10,12 @@ type Props = {
 export default async function Page(props: Props) {
     const {id} = props.params;
     return (
-        <PostRender postPath={'src/posts'} postName={id}/>
+        <PostRender deep={'/main'} postName={id}/>
     )
 }
 
 export async function generateStaticParams() {
-    const postList = await getPostSlugs();
+    const postList = await getPostSlugs('/main');
     return postList.map(id => ({id: id.replace('.mdx', '')}))
 }
 
