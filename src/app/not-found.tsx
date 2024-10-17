@@ -1,3 +1,5 @@
+import {rootPath} from "@/app/lib/Config";
+
 type NotFoundProps = {
     message: string;
 }
@@ -10,7 +12,7 @@ export default function NotFound({message = '해당 페이지를 찾을수 없�
             <p className="text-gray-600">{message}</p>
             <div className="mt-5 flex flex-col justify-center items-center gap-2 sm:flex-row sm:gap-3">
                 <a className="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                   href="/">
+                   href={rootPath}>
                     <svg className="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                          strokeLinecap="round" strokeLinejoin="round">

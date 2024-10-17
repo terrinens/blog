@@ -1,6 +1,6 @@
 import createdMDX from '@next/mdx'
 
-const prefix = process.env.NODE_ENV === 'production' ? '/blog' : '';
+export const prefix = process.env.NODE_ENV === 'production' ? '/blog' : '';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

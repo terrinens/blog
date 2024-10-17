@@ -1,8 +1,12 @@
 import Image from "next/image";
 import logo from "@/public/svg/logo.svg"
 import name from "@/public/svg/Terrinens.log.svg"
+import {rootPath} from "@/app/lib/Config";
+import path from "path";
 
 const Header = () => {
+
+
     return (
         <header className="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full text-sm">
             <nav
@@ -10,7 +14,7 @@ const Header = () => {
                 <div className="px-4 md:px-0 flex justify-between items-center">
                     <div>
                         <a className="flex rounded-md text-xl font-semibold focus:outline-none focus:opacity-80"
-                           href="/" aria-label="Preline">
+                           href={rootPath} aria-label="Preline">
                             <Image className='h-auto' src={logo} alt='logo' width={50}/>
                             <Image className='ml-2' src={name} alt='name' width={150}/>
                         </a>
@@ -47,9 +51,7 @@ const Header = () => {
                     <div
                         className="flex flex-col md:flex-row md:items-center md:justify-end gap-2 md:gap-3 mt-3 md:mt-0 py-2 md:py-0 md:ps-7">
                         <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
-                           href="/" aria-current="page">메인</a>
-                        <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
-                           href="/posts/list">포스트 목록</a>
+                           href={path.join(rootPath, "/posts/list")}>포스트 목록</a>
                         <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
                            href="#">프로젝트</a>
                         <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
