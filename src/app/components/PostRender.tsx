@@ -1,18 +1,62 @@
 import React from "react";
-import {MDXRemote} from "next-mdx-remote/rsc";
+import {compileMDX, MDXRemote} from "next-mdx-remote/rsc";
 import path from "path";
 import fs from "fs";
 import {userMDXComponents} from "@/app/mdx-componets"
-import {DefaultImg} from "@/app/lib/Posts";
+import {DefaultImg, generationPostCardProps} from "@/app/lib/Posts";
 
 type PostRenderProps = {
     postPath: string;
     postName: string;
 }
 
-export function PostRender({postPath, postName}: PostRenderProps) {
+const PostRenderHeaderBlock = (
+    {name, values}: { name: string, values: string | Array<any> }
+) => {
+    const content = [];
+    const liCss = "me-1 inline-flex items-center text-sm text-gray-800"
+
+    if (Array.isArray(values)) {
+        const lis = values.map(value => (<li className={liCss}>{String(value).trim()}</li>))
+        content.push(...lis);
+    } else {
+        content.push(<li className={liCss}>{values}</li>)
+    }
+
+    return (
+        <dl className="min-h-5 min-w-1 m-0 flex flex-col sm:flex-row gap-1">
+            <dt className="max-h-0 min-w-50">
+                <span className="block text-sm text-gray-500">{name}:</span>
+            </dt>
+            <dd className='max-h-0 p-0 m-0 mt-2'>
+                <ul className='ml-0 mt-1 list-disc pl-3 text-left'>
+                    {content}
+                </ul>
+            </dd>
+        </dl>
+    )
+}
+
+async function PostRenderHeader({props}: { props: PostCardProps }) {
+    const info = props.info
+    return (
+        <div
+            className='relative rounded-lg shadow-sm overflow-hidden ring-1 ring-gray-800 ring-opacity-5  dark:ring-neutral-700
+             pt-0.5 pb-0.5 pl-2 mb-5'>
+            <div className="space-y-3 mb-10">
+                <PostRenderHeaderBlock name={'title'} values={info.title}/>
+                <PostRenderHeaderBlock name={'date'} values={dateFormatter(info.date)}/>
+                <PostRenderHeaderBlock name={'tags'} values={info.tags}/>
+            </div>
+        </div>
+    );
+}
+
+export async function PostRender({postPath, postName}: PostRenderProps) {
     const target = path.join(process.cwd(), postPath, postName + '.mdx');
     const source = fs.readFileSync(target, "utf8");
+    const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
+    const cardProps = generationPostCardProps(postName, compiled.frontmatter)
 
     return (
         /** RECORD
@@ -22,6 +66,7 @@ export function PostRender({postPath, postName}: PostRenderProps) {
          * <h1> 같이 정상적으로 작동하지 않았음.
          * */
         <div className="prose">
+            <PostRenderHeader props={cardProps}/>
             <MDXRemote components={userMDXComponents} source={source} options={{parseFrontmatter: true}}/>
         </div>
     )
@@ -38,7 +83,7 @@ export type PostCardProps = {
     }
 }
 
-const dataFormatter = (date: Date) => {
+const dateFormatter = (date: Date) => {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
@@ -60,7 +105,7 @@ export function PostCard(props: PostCardProps) {
                 </div>
                 <div className="p-2 md:p-4">
                     <div className='text-center pt-1 text-sm text-gray-500'>
-                        {info.date != null ? dataFormatter(info.date) : '기록된 날짜가 없습니다.'}
+                        {info.date != null ? dateFormatter(info.date) : '기록된 날짜가 없습니다.'}
                     </div>
 
                     <h3 className="text-center text-xl font-semibold text-gray-800">

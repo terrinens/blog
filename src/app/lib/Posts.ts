@@ -100,6 +100,19 @@ export async function generationPaging(list: PostListProps[], paging: Paging) {
     return result;
 }
 
+export function generationPostCardProps(filename: string, frontmatter: Record<string, unknown>): PostCardProps {
+    return {
+        filename: filename,
+        info: {
+            mainImg: (<string>frontmatter.mainImg),
+            title: (<string>frontmatter.title),
+            description: (<string>frontmatter.description),
+            tags: (<Array<string>>frontmatter.tags),
+            date: (new Date(<Date>frontmatter.timestamp))
+        }
+    }
+}
+
 export async function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
     let result: PostCardProps[] = [];
 
@@ -108,17 +121,7 @@ export async function slicePage(list: PostListProps[], thisPage: number, paging:
     for (let obj of list.slice(startSlice, startSlice + paging.size)) {
         const filename = obj.filename.replace('.mdx', '');
         const frontmatter = obj.frontmatter;
-        const props: PostCardProps = {
-            filename: filename,
-            info: {
-                mainImg: (<string>frontmatter.mainImg),
-                title: (<string>frontmatter.title),
-                description: (<string>frontmatter.description),
-                tags: (<Array<string>>frontmatter.tags),
-                date: (new Date(<Date>frontmatter.timestamp))
-            }
-        }
-
+        const props: PostCardProps = generationPostCardProps(filename, frontmatter);
         result.push(props);
     }
 
