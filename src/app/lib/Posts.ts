@@ -4,7 +4,9 @@ import default_img from '@/public/post_default.jpg'
 import {compileMDX} from "next-mdx-remote/rsc";
 import {PostCardProps} from "@/app/components/PostRender";
 
-const postsDir = path.join(process.cwd(), '/src/posts');
+const postsDir = process.env.NODE_ENV === 'production'
+    ? path.join('/src/posts')
+    : path.join(process.cwd(), '/src/posts');
 
 export class Paging {
     size: number;
