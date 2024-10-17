@@ -118,7 +118,7 @@ export function generationPostCardProps(filename: string, frontmatter: Record<st
 export async function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
     const result: PostCardProps[] = [];
 
-    const push = (obj: { filename: string, frontmatter: {} }) => {
+    const push = (obj: { filename: string, frontmatter: Record<string, unknown> }) => {
         const filename = obj.filename.replace('.mdx', '');
         const frontmatter = obj.frontmatter;
         const props: PostCardProps = generationPostCardProps(filename, frontmatter);
