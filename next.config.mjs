@@ -9,6 +9,7 @@ const nextConfig = {
     trailingSlash: true,
     output: 'export',
     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+    distDir: 'build',
 };
 
 const withMDX = createdMDX({})
