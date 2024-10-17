@@ -1,1 +1,3 @@
-export const rootPath = process.env.NODE_ENV === 'production' ? '/blog' : '';
+export const rootPath = process.env.NODE_ENV === 'production'
+    ? '/blog'
+    : '/';
