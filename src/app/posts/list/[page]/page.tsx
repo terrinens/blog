@@ -32,10 +32,10 @@ export default async function Page({params}: Props) {
 }
 
 export async function generateStaticParams() {
-    const postSlugs = await getPostSlugs();
+    const postSlugs = await getPostSlugs('/main');
     const paging: Paging = new Paging(10, postSlugs.length);
 
-    let map = []
+    const map = []
     for (let i = 1; i < paging.getTotalPage; i++) {
         map.push(i.toString());
     }

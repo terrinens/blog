@@ -20,7 +20,9 @@ export default function RootLayout({children}: RootLayoutProps) {
         <html lang="ko">
         <body>
         <Header/>
-        <Main children={children}/>
+        <Main>
+            {children}
+        </Main>
         <Footer/>
         <PrelineScript/>
         </body>

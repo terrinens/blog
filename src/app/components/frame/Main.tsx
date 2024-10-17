@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Main({children,}: { children: React.ReactNode }) {
+export default function Main({children}: { children: React.ReactNode }) {
     return (
         <main id="content">
             <div className="w-full mx-auto pt-5 px-0 sm:px-6 lg:px-8">

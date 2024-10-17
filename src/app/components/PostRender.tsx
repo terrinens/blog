@@ -4,6 +4,7 @@ import path from "path";
 import fs from "fs";
 import {userMDXComponents} from "@/app/mdx-componets"
 import {DefaultImg, generationPostCardProps} from "@/app/lib/Posts";
+import Image from "next/image";
 
 type PostRenderProps = {
     deep: string;
@@ -103,7 +104,7 @@ export function PostCard(props: PostCardProps) {
         <div className="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
             <a href={path.join('/posts/view/', props.filename)}>
                 <div className="h-40 flex flex-col justify-center items-center rounded-t-xl">
-                    <img className='w-full, h-full object-cover'
+                    <Image className='w-full, h-full object-cover'
                          src={info.mainImg == null ? DefaultImg.src : info.mainImg}
                          alt={info.mainImg == null ? DefaultImg.alt : ''}/>
                 </div>
