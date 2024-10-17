@@ -23,9 +23,7 @@
     "next-mdx-remote": "^5.0.0",
     "preline": "^2.5.0",
     "react": "^18",
-    "react-dom": "^18"
-  },
-  "devDependencies": {
+    "react-dom": "^18",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
     "@types/glob": "^8.1.0",
