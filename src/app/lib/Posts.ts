@@ -118,13 +118,23 @@ export function generationPostCardProps(filename: string, frontmatter: Record<st
 export async function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
     const result: PostCardProps[] = [];
 
-    const startSlice = thisPage * paging.size;
-
-    for (const obj of list.slice(startSlice, startSlice + paging.size)) {
+    const push = (obj: { filename: string, frontmatter: {} }) => {
         const filename = obj.filename.replace('.mdx', '');
         const frontmatter = obj.frontmatter;
         const props: PostCardProps = generationPostCardProps(filename, frontmatter);
         result.push(props);
+    }
+
+    if (thisPage == 1) {
+        for (const obj of list.slice(0, thisPage * paging.size)) {
+            push(obj)
+        }
+    } else {
+        const startSlice = ((thisPage - 1) * paging.size) - 1;
+        const endSlice = paging.size * thisPage - 1;
+        for (const obj of list.slice(startSlice, endSlice)) {
+            push(obj)
+        }
     }
 
     return result;

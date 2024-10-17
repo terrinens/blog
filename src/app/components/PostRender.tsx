@@ -104,7 +104,7 @@ export function PostCard(props: PostCardProps) {
         <div className="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
             <a href={path.join('/posts/view/', props.filename)}>
                 <div className="h-40 flex flex-col justify-center items-center rounded-t-xl">
-                    <Image className='w-full, h-full object-cover'
+                    <Image width={200} height={80}  className='w-full, h-full object-cover'
                          src={info.mainImg == null ? DefaultImg.src : info.mainImg}
                          alt={info.mainImg == null ? DefaultImg.alt : ''}/>
                 </div>

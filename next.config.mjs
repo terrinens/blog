@@ -18,6 +18,6 @@ const nextConfig = {
     },
 };
 
-const withMDX = createdMDX({})
+const withMDX = createdMDX()
 
 export default withMDX(nextConfig);

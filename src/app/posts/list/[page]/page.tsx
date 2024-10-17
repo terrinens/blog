@@ -26,7 +26,7 @@ export default async function Page({params}: Props) {
                     ))
                 }
             </div>
-            <Pagination key={'page:nav' + page} thisPage={page} paging={paging} baseURL={'/posts/main/list'}/>
+            <Pagination key={'page:nav' + page} thisPage={page} paging={paging} baseURL={'/posts/list'}/>
         </div>
     );
 }
@@ -36,8 +36,8 @@ export async function generateStaticParams() {
     const paging: Paging = new Paging(10, postSlugs.length);
 
     const map = []
-    for (let i = 1; i < paging.getTotalPage; i++) {
-        map.push(i.toString());
+    for (let i = 0; i < paging.getTotalPage; i++) {
+        map.push((i + 1).toString());
     }
 
     return map.map(i => ({page: i}));
