@@ -36,8 +36,8 @@ export async function generateStaticParams() {
     const paging: Paging = new Paging(10, postSlugs.length);
 
     const map = []
-    for (let i = 0; i < paging.getTotalPage; i++) {
-        map.push((i + 1).toString());
+    for (let i = 1; i <= paging.getTotalPage; i++) {
+        map.push(i.toString());
     }
 
     return map.map(i => ({page: i}));

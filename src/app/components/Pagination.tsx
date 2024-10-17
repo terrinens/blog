@@ -23,9 +23,9 @@ interface PaginationProps {
     baseURL: string;
 }
 
-function extracted(nowPage: number, paging: Paging) {
+function calculationPageNumbers(nowPage: number, paging: Paging) {
     const buttonMaxSize = 7;
-    const totalPageCount = paging.getTotalPage - 1;
+    const totalPageCount = paging.getTotalPage;
 
     const halfSize = Math.floor(buttonMaxSize / 2);
 
@@ -48,7 +48,7 @@ function extracted(nowPage: number, paging: Paging) {
 }
 
 export default function Pagination({thisPage, baseURL, paging}: PaginationProps) {
-    const buttons = extracted(thisPage, paging);
+    const buttons = calculationPageNumbers(thisPage, paging);
 
     const preUrl = path.join(baseURL, String((thisPage - 1)))
     const nextUrl = path.join(baseURL, String((thisPage + 1)))
