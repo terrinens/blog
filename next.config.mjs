@@ -1,17 +1,15 @@
 import createdMDX from '@next/mdx'
 
-const isDev = process.env.NODE_ENV === 'development';
-const repository = process.env.REPOSITORY;
+const prefix = process.env.NODE_ENV === 'production' ? 'https://github.com/terrinens/blog' : '';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    assetPrefix: isDev
-        ? ""
-        : repository,
+    assetPrefix: prefix,
     trailingSlash: true,
     output: 'export',
     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+    distDir: 'build',
 };
 
 const withMDX = createdMDX({})

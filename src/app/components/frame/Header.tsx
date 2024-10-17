@@ -53,7 +53,7 @@ const Header = () => {
                         <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
                            href="#">프로젝트</a>
                         <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
-                           href={process.env.GITHUB}>GitHub</a>
+                           href='https://github.com/terrinens'>GitHub</a>
                     </div>
                 </div>
             </nav>

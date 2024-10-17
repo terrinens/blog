@@ -54,7 +54,7 @@ export async function getPostListData(deep: string | null = null) {
     const readDir = deep ? path.join(postsDir, deep) : postsDir
     const mdList = await getPostSlugs(deep);
 
-    let result: PostListProps[] = [];
+    const result: PostListProps[] = [];
 
     for (const slug of mdList) {
         const source = fs.readFileSync(path.join(readDir, slug), 'utf8');
@@ -63,6 +63,8 @@ export async function getPostListData(deep: string | null = null) {
             const frontmatter = compiled.frontmatter;
             result.push({filename: slug, frontmatter: frontmatter})
         } catch (error) {
+            console.log('not read a file but pass');
+            console.log(error);
         }
     }
 
@@ -72,12 +74,12 @@ export async function getPostListData(deep: string | null = null) {
 export async function generationPaging(list: PostListProps[], paging: Paging) {
     list = list.sort((a, b) => postSort(a.frontmatter, b.frontmatter, paging))
 
-    let result: { [key: number]: { list: PostCardProps[] } } = {};
+    const result: { [key: number]: { list: PostCardProps[] } } = {};
 
     for (let i = 0, page = 1; i < paging.total; i += paging.size, page++) {
-        let page_slice: PostCardProps[] = [];
+        const page_slice: PostCardProps[] = [];
 
-        for (let obj of list.slice(i, i + paging.size)) {
+        for (const obj of list.slice(i, i + paging.size)) {
             const filename = obj.filename.replace('.mdx', '');
             const frontmatter = obj.frontmatter;
 
@@ -114,11 +116,11 @@ export function generationPostCardProps(filename: string, frontmatter: Record<st
 }
 
 export async function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
-    let result: PostCardProps[] = [];
+    const result: PostCardProps[] = [];
 
     const startSlice = thisPage * paging.size;
 
-    for (let obj of list.slice(startSlice, startSlice + paging.size)) {
+    for (const obj of list.slice(startSlice, startSlice + paging.size)) {
         const filename = obj.filename.replace('.mdx', '');
         const frontmatter = obj.frontmatter;
         const props: PostCardProps = generationPostCardProps(filename, frontmatter);
