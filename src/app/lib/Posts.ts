@@ -142,4 +142,36 @@ export async function slicePage(list: PostListProps[], thisPage: number, paging:
 
 export const DefaultImg = {src: default_img.src, alt: 'https://www.freepik.com/ Designed by : freepik'}
 
+export async function countUsedTags(dirs: string[]) {
+    const allSlugs: string[] = [];
 
+    for (const dir of dirs) {
+        const slugs = await getPostSlugs(dir);
+        for (const slug of slugs) {
+            allSlugs.push(path.join(postsDir, dir, slug));
+        }
+    }
+
+    const data: { [tag: string]: number; } = {};
+
+    for (const slug of allSlugs) {
+        const source = fs.readFileSync(slug, 'utf8');
+        const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
+        const frontmatter = compiled.frontmatter;
+        const tags = frontmatter.tags as string[];
+
+        if (tags == undefined || tags.length < 0) continue;
+
+        for (let tag of tags) {
+            tag = tag.toLowerCase();
+
+            if (Object.hasOwn(data, tag)) {
+                data[tag] += 1;
+            } else {
+                data[tag] = 1;
+            }
+        }
+    }
+
+    return data;
+}
