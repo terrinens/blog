@@ -1,5 +1,6 @@
 # custom
 src/posts
+.env
 
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains+all,jetbrains+iml,windows,nextjs,node,git
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains+all,jetbrains+iml,windows,nextjs,node,git

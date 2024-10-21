@@ -32,6 +32,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Injection Git Token
+        env:
+          GIT_TOKEN: ${{ BLOG_TOKEN }}
+
       - name: Detect package manager
         id: detect-package-manager
         run: |

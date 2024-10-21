@@ -13,7 +13,7 @@ export default async function Page({params}: Props) {
 
     const dataList = await getPostListData('/main');
     const paging: Paging = new Paging(10, dataList.length);
-    dataList.sort((a, b) => paging.default_sort(a.frontmatter, b.frontmatter));
+    dataList.sort((a, b) => Paging.default_sort(a.frontmatter, b.frontmatter));
 
     const result: PostCardProps[] = await slicePage(dataList, page, paging);
 
@@ -22,7 +22,7 @@ export default async function Page({params}: Props) {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
                 {
                     result.map(card => (
-                        <PostCard key={card.filename} filename={card.filename} info={card.info}/>
+                        <PostCard key={card.filename} filename={card.filename} info={card.info} tagRender={true}/>
                     ))
                 }
             </div>

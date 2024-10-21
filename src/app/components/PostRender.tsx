@@ -79,18 +79,22 @@ export async function PostRender({deep, postName}: PostRenderProps) {
 }
 
 export type PostCardProps = {
-    filename: string;
+    filename: string,
     info: {
         mainImg: string;
         title: string,
         description: string,
         tags: string[];
         date: Date;
-    }
+    },
+    tagRender?: boolean
 }
 
 const dateFormatter = (date: Date) => {
     const year = date.getFullYear();
+
+    if (isNaN(year)) return '기록된 날짜가 없습니다.'
+
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
     const hour = date.getHours().toString().padStart(2, "0");
@@ -105,13 +109,13 @@ export function PostCard(props: PostCardProps) {
         <div className="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
             <a href={path.join(rootPath, '/posts/view/', props.filename)}>
                 <div className="h-40 flex flex-col justify-center items-center rounded-t-xl">
-                    <Image width={200} height={80}  className='w-full, h-full object-cover'
-                         src={info.mainImg == null ? DefaultImg.src : info.mainImg}
-                         alt={info.mainImg == null ? DefaultImg.alt : ''}/>
+                    <Image width={200} height={80} className='w-full, h-full object-cover'
+                           src={info.mainImg == null ? DefaultImg.src : info.mainImg}
+                           alt={info.mainImg == null ? DefaultImg.alt : ''}/>
                 </div>
                 <div className="p-2 md:p-4">
                     <div className='text-center pt-1 text-sm text-gray-500'>
-                        {info.date != null ? dateFormatter(info.date) : '기록된 날짜가 없습니다.'}
+                        {info.date != null || undefined || {} ? dateFormatter(info.date) : '기록된 날짜가 없습니다.'}
                     </div>
 
                     <h3 className="text-center text-xl font-semibold text-gray-800">
@@ -125,15 +129,19 @@ export function PostCard(props: PostCardProps) {
                         </text>
                     </div>
 
-                    <div className="mt-1.5">
-                        <ul className="flex flex-row justify-center overflow-hidden *:rounded-full *:border *:border-gray-300 *:bg-gray-50 *:px-2 *:py-0.5 dark:text-sky-300 dark:*:border-sky-500/15 dark:*:bg-sky-500/10 ...">
-                            {info.tags.map(tag => (
-                                <li key={tag}
-                                    className="mx-1 inline-block px-1 py-0.5 text-sm text-black mr-1 mt-0.5">{tag}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    {
+                        props.tagRender
+                            ? (<div className="mt-1.5">
+                                <ul className="flex flex-row justify-center overflow-hidden *:rounded-full *:border *:border-gray-300 *:bg-gray-50 *:px-2 *:py-0.5 dark:text-sky-300 dark:*:border-sky-500/15 dark:*:bg-sky-500/10 ...">
+                                    {info.tags.map(tag => (
+                                        <li key={tag}
+                                            className="mx-1 inline-block px-1 py-0.5 text-sm text-black mr-1 mt-0.5">{tag}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>)
+                            : null
+                    }
                 </div>
             </a>
         </div>

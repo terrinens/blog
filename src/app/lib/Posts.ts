@@ -11,13 +11,13 @@ export class Paging {
     total: number;
     sort: any;
 
-    default_sort(a: any, b: any) {
+    static default_sort(a: any, b: any) {
         a = new Date(a.timestamp);
         b = new Date(b.timestamp);
         return b.getTime() - a.getTime();
     }
 
-    constructor(size: number, total: any[] | number, sort: any = this.default_sort) {
+    constructor(size: number, total: any[] | number, sort?: any) {
         this.size = size;
         this.total = (total instanceof Array) ? total.length : total
         this.sort = sort;
