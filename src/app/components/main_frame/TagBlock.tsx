@@ -7,14 +7,16 @@ export default async function TagBlock() {
     return (
         <div className="w-full px-1 py-5 lg:px-20 lg:py-14 mx-auto">
             <div
-                className="scroll-hidden max-h-[calc(3*4rem)] overflow-hidden overflow-y-auto grid grid-cols-7 lg:grid-cols-10 gap-1 sm:gap-3">
-                {
-                    Object.entries(result).map(([key, value]) => (
-                        <div key={'TagCountBlockParents:' + key} className={'flex items-center justify-center'}>
-                            <GenerationBlock key={'TagCountBlock:' + key} tag={key} count={value}/>
-                        </div>
-                    ))
-                }
+                className="scroll-hidden max-h-[calc(3*4rem)] overflow-hidden overflow-y-auto flex justify-center">
+                <div className='grid grid-cols-7 lg:grid-cols-10 gap-1 sm:gap-3 min-w-0'>
+                    {
+                        Object.entries(result).map(([key, value]) => (
+                            <div key={'TagCountBlockParents:' + key} className={'flex items-center justify-center'}>
+                                <GenerationBlock key={'TagCountBlock:' + key} tag={key} count={value}/>
+                            </div>
+                        ))
+                    }
+                </div>
             </div>
         </div>
     );
