@@ -1,5 +1,8 @@
 name: Deploy Next.js site to Pages
 
+env:
+  GIT_TOKEN: ${{ secrets.BLOG_TOKEN }}
+
 on:
   push:
     branches: [ "main" ]
@@ -24,11 +27,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Injection Git Token
-        env:
-          GIT_TOKEN: ${{ BLOG_TOKEN }}
-        uses: actions/configure-pages
 
       - name: Detect package manager
         id: detect-package-manager
