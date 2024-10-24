@@ -18,7 +18,7 @@ export default async function Page() {
                     ))
                 }
             </div>
-            <Pagination key={'page:nav' + 1} thisPage={1} paging={paging} baseURL={'/posts/main/list'}/>
+            <Pagination key={'page:nav' + 1} thisPage={1} paging={paging} baseURL={'/posts/list'}/>
         </div>
     );
 }

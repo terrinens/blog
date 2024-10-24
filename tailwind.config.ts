@@ -1,11 +1,13 @@
 import type {Config} from "tailwindcss";
+import flowbite from 'flowbite-react/tailwind';
 
 const config: Config = {
     content: [
         "./src/pages/**/*.{js,ts,jsx,tsx}",
         "./src/components/**/*.{js,ts,jsx,tsx}",
         "./src/app/**/*.{js,ts,jsx,tsx}",
-        './node_modules/preline/preline.js',
+        flowbite.content(),
+        './node_modules/flowbite/**/*.js'
     ],
     theme: {
         extend: {
@@ -18,6 +20,8 @@ const config: Config = {
     plugins: [
         require('@tailwindcss/typography'),
         require('preline/plugin'),
+        flowbite.plugin(),
+        require('flowbite/plugin')({datatables: true,}),
     ],
 };
 export default config;

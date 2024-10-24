@@ -49,26 +49,29 @@ async function getGitRepositories() {
 }
 
 class LanguagesByte {
-    languagesByte: { [key: string]: { byte: number }; } = {};
+    languagesByte: Record<string, number> = {};
 
     public append(key: string, value: number) {
         const languageName = programmeLanguageMatching(key);
         if (languageName == undefined) return;
 
-        if (!Object.hasOwn(this.languagesByte, languageName)) {
-            this.languagesByte[languageName] = {byte: value};
-        } else this.languagesByte[languageName].byte += value;
+        if (!Object.hasOwn(this.languagesByte, languageName as string)) {
+            this.languagesByte[languageName] = value;
+        } else this.languagesByte[languageName] += value;
     }
 
     get getList() {
-        return this.languagesByte
+        return Object.fromEntries(
+            Object.entries(this.languagesByte)
+                .sort(([, byteA], [, byteB]) => byteB - byteA)
+        )
     }
 
     public merge(...added: LanguagesByte[]) {
         added.forEach(languageByte => {
             const list = languageByte.getList;
             for (const key in list) {
-                const byte = list[key].byte;
+                const byte = list[key];
                 this.append(key, byte);
             }
         });
