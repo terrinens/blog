@@ -1,5 +1,6 @@
 import {Paging} from "@/app/lib/Posts";
 import path from "path";
+import {rootPath} from "@/app/lib/Config";
 
 const PaginationItem = ({page, baseUrl, nowPage = false}: { page: number, baseUrl: string, nowPage?: boolean }) => {
     let css = "px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-100";
@@ -9,7 +10,7 @@ const PaginationItem = ({page, baseUrl, nowPage = false}: { page: number, baseUr
 
     return (
         <li>
-            <a href={path.join(baseUrl, page.toString())}
+            <a href={path.join(rootPath, baseUrl, page.toString())}
                className={css}>
                 {page}
             </a>
