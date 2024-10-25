@@ -3,9 +3,9 @@ import {compileMDX, MDXRemote} from "next-mdx-remote/rsc";
 import path from "path";
 import fs from "fs";
 import {userMDXComponents} from "@/app/mdx-componets"
-import {DefaultImg, generationPostCardProps} from "@/app/lib/Posts";
+import {generationPostCardProps} from "@/app/lib/Posts";
 import Image from "next/image";
-import {rootPath} from "@/app/lib/Config";
+import {DefaultImg, rootPath} from "@/app/lib/Config";
 
 type PostRenderProps = {
     deep: string;

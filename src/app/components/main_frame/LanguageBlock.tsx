@@ -5,17 +5,16 @@ import ApexCharts from "apexcharts";
 import {ChartDataProps} from "@/app/components/main_frame/LanguageBlockData";
 import {DataTable} from "simple-datatables";
 
+const numberFormat = Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+});
 
 function chartOption(chartData: ChartDataProps) {
     const bytes = chartData.bytes;
     const lang = chartData.lang;
     const colors = chartData.colors;
-
-    const numberFormat = Intl.NumberFormat('en-US', {
-        style: 'decimal',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-    });
 
     return {
         series: bytes,
@@ -57,7 +56,7 @@ function chartOption(chartData: ChartDataProps) {
                             fontFamily: "Inter, sans-serif",
                             offsetY: -20,
                             formatter: function (value: string) {
-                                return value + " Byte"
+                                return numberFormat.format(Number(value)) + " Byte"
                             },
                         },
                     },
@@ -80,14 +79,14 @@ function chartOption(chartData: ChartDataProps) {
         yaxis: {
             labels: {
                 formatter: function (value: string) {
-                    return value + " Byte"
+                    return numberFormat.format(Number(value)) + " Byte"
                 },
             },
         },
         xaxis: {
             labels: {
                 formatter: function (value: string) {
-                    return value + " Byte"
+                    return numberFormat.format(Number(value)) + " Byte"
                 },
             },
             axisTicks: {
@@ -132,7 +131,7 @@ function CodeByteTable({chartData}: { chartData: ChartDataProps }) {
         return {
             headings: ['언어', 'Bytes'],
             data: chartData.lang.map((lan, index) =>
-                [lan, chartData.bytes[index]]
+                [lan, numberFormat.format(chartData.bytes[index])]
             )
         }
     }, [chartData.lang, chartData.bytes])
