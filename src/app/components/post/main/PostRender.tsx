@@ -1,15 +1,14 @@
 import React from "react";
-import {compileMDX, MDXRemote} from "next-mdx-remote/rsc";
+import {MDXRemote} from "next-mdx-remote/rsc";
 import path from "path";
-import fs from "fs";
 import {userMDXComponents} from "@/app/mdx-componets"
-import {generationPostCardProps} from "@/app/lib/Posts";
+import {generationPostCardProps, getCompileMDX} from "@/app/lib/Posts";
 import Image from "next/image";
-import {DefaultImg, rootPath} from "@/app/lib/Config";
+import {DefaultImg, PostsDir, rootPath} from "@/app/lib/Config";
 
-type PostRenderProps = {
-    deep: string;
+export type PostRenderProps = {
     postName: string;
+    deep: string[];
 }
 
 const PostRenderHeaderBlock = (
@@ -56,10 +55,8 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
     );
 }
 
-export async function PostRender({deep, postName}: PostRenderProps) {
-    const target = path.join(process.cwd(), 'src/posts/', deep, postName + '.mdx');
-    const source = fs.readFileSync(target, "utf8");
-    const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
+export async function PostRender({postName, deep}: PostRenderProps) {
+    const {source, compiled} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
     const cardProps = generationPostCardProps(postName, compiled.frontmatter)
 
     return (
@@ -93,7 +90,7 @@ export type PostCardProps = {
 const dateFormatter = (date: Date) => {
     const year = date.getFullYear();
 
-    if (isNaN(year)) return '기록된 날짜가 없습니다.'
+    if (isNaN(year)) return 'Not Recode Date'
 
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import {compileMDX} from "next-mdx-remote/rsc";
-import {PostCardProps} from "@/app/components/PostRender";
+import {compileMDX, CompileMDXResult} from "next-mdx-remote/rsc";
+import {PostCardProps} from "@/app/components/post/main/PostRender";
 import {PostsDir} from "@/app/lib/Config";
 
 /** 페이징 계산을 위해 만들어진 클래스 입니다. */
@@ -54,13 +54,20 @@ export type PostListProps = {
     frontmatter: Record<string, unknown>
 }
 
-/** 경로로부터 MDX 파일을 가져오며, 컴파일 결과를 반환합니다. 기본 포스터 경로를 책임지지 않습니다. */
-export async function getCompileMDX(...readPath: string[]) {
+/**
+ * 경로로부터 MDX 파일을 가져오며, source, compiled, frontmatter 결과를 반환합니다. 기본 포스터 경로를 책임지지 않습니다.
+ * @return {source, compiled, frontmatter}
+ * */
+export async function getCompileMDX(...readPath: string[]): Promise<{
+    source: string,
+    compiled: CompileMDXResult,
+    frontmatter: Record<string, unknown>
+}> {
     const join = path.join(...readPath);
     const source = fs.readFileSync(join, 'utf8');
     const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
     const frontmatter = compiled.frontmatter;
-    return {compiled, frontmatter}
+    return {source, compiled, frontmatter}
 }
 
 /** 기본 Post 저장 위치에서 deep 수준에 따라 MDX 문서들을 가져오고, 이를 {@link PostListProps} 데이터로 가공하여 반환합니다.

@@ -1,5 +1,5 @@
 import TagBlock from "@/app/components/main_frame/TagBlock";
-import {PostCard} from "@/app/components/PostRender";
+import {PostCard} from "@/app/components/post/main/PostRender";
 import dynamic from "next/dynamic";
 import {generationPostCardProps, getPostListData, Paging} from "@/app/lib/Posts";
 import {ChartDataProps, generationChartData} from "@/app/components/main_frame/LanguageBlockData";
