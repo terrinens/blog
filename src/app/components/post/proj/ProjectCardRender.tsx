@@ -1,9 +1,10 @@
 "use client"
 
 import React from "react";
-import {DefaultImg} from "@/app/lib/Config";
+import {DefaultImg, rootPath} from "@/app/lib/Config";
 import Image from "next/image";
 import {PostCardProps} from "@/app/components/post/main/PostRender";
+import path from "path";
 
 export function DataDisplay({team, personal}: { team: React.ReactNode, personal: React.ReactNode }) {
     const [isTeam, setIsTeam] = React.useState(true);
@@ -54,17 +55,20 @@ function GenTags(title: string, tag: string) {
     );
 }
 
-function ProjCard(key: number, imgPath: string, title: string, description: string, tags: string[]) {
+function ProjCard(key: number, type: string, prop: PostCardProps) {
+    const info = prop.info;
+    const dir = prop.filename;
+
     return (
         <div key={`info:${key}`} className='p-4 border border-gray-200 shadow-sm rounded-xl mb-5 items-center'>
             <a
                 className="my-4 group flex flex-col focus:outline-none mb-1 h-80 w-full md:w-96 lg:w-full"
-                href="#">
+                href={path.join(rootPath, 'projects/view', type, dir)}>
                 <div className="h-60 w-full relative flex justify-center overflow-hidden bg-gray-100 rounded-2xl">
                     <Image fill
                            style={{objectFit: 'cover'}}
                            className="object-cover group-hover:scale-105 group-focus:scale-105 transition-transform duration-500 ease-in-out rounded-2xl"
-                           src={imgPath == null ? DefaultImg.src : imgPath}
+                           src={info.mainImg == null ? DefaultImg.src : info.mainImg}
                            alt="Project Image"
                            sizes="(max-width: 768px) 100vw, 50vw"
                     />
@@ -72,14 +76,14 @@ function ProjCard(key: number, imgPath: string, title: string, description: stri
 
                 <div className="items-center pt-4 flex-grow text-center">
                     <h3 className="text-center relative inline-block font-medium text-lg text-black before:absolute before:bottom-0.5 before:start-0 before:-z-[1] before:w-full before:h-1 before:bg-lime-400 before:transition before:origin-left before:scale-x-0 group-hover:before:scale-x-100 dark:text-white">
-                        {title}
+                        {info.title}
                     </h3>
                     <p className="text-center mt-1 text-gray-600">
-                        {description}
+                        {info.description}
                     </p>
 
                     <div className="justify-center mt-3 flex flex-wrap gap-2">
-                        {tags.map(tag => (GenTags(title, tag)))}
+                        {info.tags.map(tag => (GenTags(info.title, tag)))}
                     </div>
                 </div>
             </a>
@@ -87,14 +91,13 @@ function ProjCard(key: number, imgPath: string, title: string, description: stri
     )
 }
 
-function generationCards(props: PostCardProps[]) {
+function generationCards(type: string, props: PostCardProps[]) {
     return (
         <div className='mt-2'>
             {
-                props.map((props, index) => {
-                    const info = props.info;
+                props.map((prop, index) => {
                     return (
-                        ProjCard(index, info.mainImg, info.title, info.description, info.tags)
+                        ProjCard(index, type, prop)
                     )
                 })
             }
@@ -103,11 +106,11 @@ function generationCards(props: PostCardProps[]) {
 }
 
 export function ProjectCard({teamProps, personalProps}: {
-    teamProps: PostCardProps[],
-    personalProps: PostCardProps[]
+    teamProps: [type: string, PostCardProps[]],
+    personalProps: [type: string, PostCardProps[]]
 }) {
-    const team = generationCards(teamProps);
-    const personal = generationCards(personalProps)
+    const team = generationCards(teamProps[0], teamProps[1]);
+    const personal = generationCards(personalProps[0], personalProps[1]);
     return (<DataDisplay team={team} personal={personal}/>)
 }
 

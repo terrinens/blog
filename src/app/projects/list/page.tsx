@@ -28,5 +28,5 @@ const getData = async (type: string) => {
 export default async function Page() {
     const teamData = await getData('team');
     const personalData = await getData('personal');
-    return (<ProjectCard teamProps={teamData} personalProps={personalData}/>)
+    return (<ProjectCard teamProps={['team', teamData]} personalProps={['personal', personalData]}/>)
 }

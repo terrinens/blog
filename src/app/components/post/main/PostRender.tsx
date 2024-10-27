@@ -65,6 +65,7 @@ export async function PostRender({postName, deep}: PostRenderProps) {
          * RESOLUTION :
          * MDX를 파싱할때 globals.css의 @tailwind base;가 기존의 태그들을 재정의 하고 있었던 탓에
          * <h1> 같이 정상적으로 작동하지 않았음.
+         * 그렇기에 기본 MD 태그들을 재정의하는 prose css 정의를 사용함
          * */
         <div className="prose">
             <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
