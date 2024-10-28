@@ -37,6 +37,16 @@ const nextConfig = {
     images: {
         unoptimized: true,
     },
+
+    async redirects() {
+        return [
+            {
+                source: `${prefix}/posts/list`,
+                destination: `${prefix}/posts/list/1`,
+                permanent: false,
+            }
+        ]
+    }
 };
 
 const withMDX = createdMDX()

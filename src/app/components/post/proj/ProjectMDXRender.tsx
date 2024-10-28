@@ -1,6 +1,6 @@
 import {PostRenderProps} from "@/app/components/post/main/PostRender";
 import {getCompileMDX} from "@/app/lib/Posts";
-import {PostsDir} from "@/app/lib/Config";
+import {PostsDir, rootPath} from "@/app/lib/Config";
 import {MDXRemote} from "next-mdx-remote/rsc";
 import React from "react";
 import {userMDXComponents} from "@/app/mdx-componets";
@@ -8,29 +8,67 @@ import path from "path";
 import {
     BreadcrumbCase,
     BreadcrumbEntries,
-    BreadcrumbEntriesProps,
+    BreadcrumbLowerEntries,
     BreadcrumbNow,
     BreadcrumbPrevious
 } from "@/app/components/post/proj/Breadcrumb";
+import {FileObject, LowerFileEntries, RootTree, SubTree} from "@/app/components/post/proj/TreeView";
 
-function DocsBreadcrumb() {
-    const props: BreadcrumbEntriesProps = {entries: []}
+type DocsBreadcrumbProps = {
+    projName: string,
+    now: string,
+    dirs: string[],
+    baseUrl: string[]
+}
+
+function DocsBreadcrumb({projName, now, dirs, baseUrl}: DocsBreadcrumbProps) {
     return (
         <div
             className='mb-5 flex whitespace-nowrap border max-h-24 rounded-xl shadow-sm p-1 dark:bg-neutral-800 dark:border-neutral-700'>
             <BreadcrumbCase>
-                <BreadcrumbPrevious str={'프로젝트'}/>
-                <BreadcrumbPrevious str={'보고 있는 프로젝트 이름'}/>
-                <BreadcrumbEntries props={props}/>
-                <BreadcrumbNow str={'info'}/>
+                <BreadcrumbPrevious str={'프로젝트'} href={path.join(rootPath, 'projects', 'list')}/>
+                <BreadcrumbPrevious str={projName}/>
+                <BreadcrumbEntries>
+                    <BreadcrumbLowerEntries entries={dirs} baseUrl={baseUrl}/>
+                </BreadcrumbEntries>
+                <BreadcrumbNow str={now}/>
             </BreadcrumbCase>
+        </div>
+    )
+}
+
+export type DocsProps = {
+    entries: {
+        dir: string;
+        docs: string[];
+    }[]
+}
+
+function DocsTreeView({docs_list}: { docs_list: DocsProps }) {
+    return (
+        <div className='mb-5'>
+            <RootTree dirname={'docs'}>{
+                docs_list.entries.map(entry => {
+                    const dir = entry.dir;
+                    const docs = entry.docs;
+                    return (
+                        <SubTree dirname={dir}>
+                            <LowerFileEntries>{
+                                docs.map(doc => (
+                                    <FileObject filename={doc} href={`${dir}#${doc}`}/>
+                                ))
+                            }</LowerFileEntries>
+                        </SubTree>
+                    )
+                })
+            }</RootTree>
         </div>
     )
 }
 
 export async function ProjectInfoRender({props, docs_list}: {
     props: PostRenderProps,
-    docs_list: BreadcrumbEntriesProps
+    docs_list: DocsProps
 }) {
     const deep = props.deep;
     const postName = props.postName;
@@ -38,9 +76,12 @@ export async function ProjectInfoRender({props, docs_list}: {
     const projDir = path.join(PostsDir, ...deep);
     const {source, compiled} = await getCompileMDX(projDir, postName + '.mdx');
 
+    const docsDirs = docs_list.entries.flatMap(x => x.dir);
+
     return (
         <div className='prose'>
-            <DocsBreadcrumb/>
+            <DocsBreadcrumb projName={deep[2]} dirs={docsDirs} now={'info'} baseUrl={deep}/>
+            <DocsTreeView docs_list={docs_list}/>
             <MDXRemote components={userMDXComponents} source={source} options={{parseFrontmatter: true}}/>
         </div>
     );

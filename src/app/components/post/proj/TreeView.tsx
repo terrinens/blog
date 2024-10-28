@@ -1,4 +1,6 @@
 import React from "react";
+import path from "path";
+import Link from "next/link";
 
 function DefaultFileSVG() {
     return (
@@ -47,13 +49,14 @@ function DirEntriesButton({dirname}: { dirname: string }) {
 }
 
 /** 최상단에서 선언되어야 하는 함수입니다. 최상단에서 디렉토리를 선언하고, 하위 요소를 받습니다.
+ * @param id
  * @param dirname 디렉토리 이름
  * @param children */
-export function RootTree({dirname, children}: { dirname: string, children?: React.ReactNode }) {
+export function RootTree({id, dirname, children}: { id?: string, dirname: string, children?: React.ReactNode }) {
     return (
         <div className="hs-accordion-treeview-root" role="tree" aria-orientation="vertical">
             <div className="hs-accordion-group" role="group" data-hs-accordion-always-open="">
-                <div className="hs-accordion active" role="treeitem" aria-expanded="true">
+                <div className="hs-accordion active" role="treeitem" id={id} aria-expanded="true">
                     <DirEntriesButton dirname={dirname}/>
                     <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300"
                          role="group">
@@ -66,14 +69,15 @@ export function RootTree({dirname, children}: { dirname: string, children?: Reac
 }
 
 /** 루트 하위에서 집합체를 사용하기 위한 함수입니다.
+ * @param id
  * @param dirname 디렉토리 이름
  * @param children */
-export function SubTree({dirname, children}: { dirname: string, children: React.ReactNode }) {
+export function SubTree({id, dirname, children}: { id?: string, dirname: string, children: React.ReactNode }) {
     return (
         <div
             className="hs-accordion-group ps-7 relative before:absolute before:top-0 before:start-3 before:w-0.5 before:-ms-px before:h-full before:bg-gray-100"
             role="group">
-            <div className="hs-accordion active" role="treeitem" aria-expanded="true">
+            <div className="hs-accordion active" role="treeitem" aria-expanded="true" id={id}>
                 <DirEntriesButton dirname={dirname}/>
                 {children}
             </div>
@@ -100,14 +104,20 @@ export function LowerTree({toggle, children}: { toggle?: boolean, children: Reac
 }
 
 /** {@link LowerTree} 이후 하위 디렉토리 요소를 선언하기 위한 함수입니다. 해당 함수로 이후 더 하위 요소를 선언할 수 있습니다.
+ * @param id
  * @param dirname 디렉토리 이름 ||
  * 선언하지 않을 수도 있습니다. 하지만 선언하지 않을 경우 이후 하위 디렉토리 요소를 선언을 책임지지 않습니다.
  * 최하단의 구조에서 고려하십시오.
  * @param children */
-export function LowerDirEntries({dirname, children}: { dirname?: string, children?: React.ReactNode }) {
+export function LowerDirEntries({id, dirname, children}: {
+    id?: string,
+    dirname?: string,
+    children?: React.ReactNode
+}) {
+
     return (
-        <div className="hs-accordion" role="treeitem" aria-expanded="true">
-            {dirname != null ? <DirEntriesButton dirname={dirname}/> : <div/>}
+        <div className="hs-accordion" role="treeitem" aria-expanded="false" id={id}>
+            {dirname ? <DirEntriesButton dirname={dirname}/> : <div/>}
             <div className="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
                  role="group">
                 <div
@@ -145,9 +155,11 @@ export function LowerFileEntries({children}: { children: React.ReactNode }) {
 
 /** 파일 오브젝트를 선언하기 위한 함수입니다.
  * @param filename 파일의 이름입니다.
+ * @param baseUrl 이동할 위치
  * @param svg 만약 파일의 이미지를 변경하고 싶으면 사용하십시오. 선언하지 않을 경우 {@link DefaultFileSVG}가 사용됩니다. */
-export function FileObject({filename, svg}: {
+export function FileObject({filename, href, svg}: {
     filename: string,
+    href?: string,
     svg?: React.ReactElement<React.SVGProps<SVGSVGElement>>
 }) {
     const fileSVG = svg
@@ -158,14 +170,16 @@ export function FileObject({filename, svg}: {
         <div
             className="hs-accordion-selectable hs-accordion-selected:bg-gray-100 px-2 rounded-md cursor-pointer"
             role="treeitem">
-            <div className="flex items-center gap-x-3">
-                {fileSVG}
-                <div className="grow">
+            <Link href={href || '#'}>
+                <div className="flex items-center gap-x-3">
+                    {fileSVG}
+                    <div className="grow">
                     <span className="text-sm text-gray-800">
                         {filename}
                     </span>
+                    </div>
                 </div>
-            </div>
+            </Link>
         </div>
     )
 }
@@ -184,11 +198,11 @@ export function SimpleFileObject({filename}: { filename: string }) {
 
 export function Example() {
     return (
-        <div>
-            <RootTree dirname={'assets'}>
-                <SubTree dirname={'css'}>
+        <div className='mb-5'>
+            <RootTree id={'level1:assets'} dirname={'assets'}>
+                <SubTree id={'level2:css'} dirname={'css'}>
                     <LowerTree>
-                        <LowerDirEntries dirname={'main'}>
+                        <LowerDirEntries id={'level3:main'} dirname={'main'}>
                             <LowerFileEntries>
                                 <FileObject filename={'main.css'}/>
                                 <FileObject filename={'docs.css'}/>
@@ -196,16 +210,16 @@ export function Example() {
                             </LowerFileEntries>
                         </LowerDirEntries>
 
-                        <LowerDirEntries dirname={'deep example'}>
+                        <LowerDirEntries id={'level3:deep1'} dirname={'deep example'}>
                             <LowerFileEntries>
                                 <FileObject filename={'input.css'}/>
                             </LowerFileEntries>
-                            <LowerDirEntries dirname={'deep2 example'}>
+                            <LowerDirEntries id={'level4:deep2'} dirname={'deep2 example'}>
                                 <LowerFileEntries>
                                     <FileObject filename={'deep2 example.js'}/>
                                     <FileObject filename={'deep2 example2.ts'}/>
                                 </LowerFileEntries>
-                                <LowerDirEntries dirname={'deep3 example'}>
+                                <LowerDirEntries id={'level5:deep3'} dirname={'deep3 example'}>
                                     <LowerFileEntries>
                                         <FileObject filename={'deep3 example.java'}/>
                                         <FileObject filename={'deep3 example2.docker'}/>
@@ -221,10 +235,10 @@ export function Example() {
                 </SubTree>
             </RootTree>
 
-            <RootTree dirname={'More Root'}>
-                <SubTree dirname={'css'}>
+            <RootTree id={'level1:more-root'} dirname={'More Root'}>
+                <SubTree id={'level2:css-2'} dirname={'css'}>
                     <LowerTree>
-                        <LowerDirEntries dirname={'main'}>
+                        <LowerDirEntries id={'level3:main2'} dirname={'main'}>
                             <LowerFileEntries>
                                 <FileObject filename={'main.css'}/>
                                 <FileObject filename={'docs.css'}/>
@@ -233,9 +247,9 @@ export function Example() {
                         </LowerDirEntries>
                     </LowerTree>
                 </SubTree>
-                <SubTree dirname={'More Sub'}>
+                <SubTree id={'level2:more-sub2'} dirname={'More Sub'}>
                     <LowerTree>
-                        <LowerDirEntries dirname={'main'}>
+                        <LowerDirEntries id={'level3:main3'} dirname={'main'}>
                             <LowerFileEntries>
                                 <FileObject filename={'main.css'}/>
                                 <FileObject filename={'docs.css'}/>
