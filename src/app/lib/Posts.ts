@@ -1,11 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import default_img from '@/public/post_default.jpg'
-import {compileMDX} from "next-mdx-remote/rsc";
-import {PostCardProps} from "@/app/components/PostRender";
+import {compileMDX, CompileMDXResult} from "next-mdx-remote/rsc";
+import {PostCardProps} from "@/app/components/post/main/PostRender";
+import {PostsDir} from "@/app/lib/Config";
 
-const postsDir = path.join(process.cwd(), '/src/posts');
-
+/** 페이징 계산을 위해 만들어진 클래스 입니다. */
 export class Paging {
     size: number;
     total: number;
@@ -26,23 +25,28 @@ export class Paging {
     get getTotalPage() {
         return Math.ceil(this.total / this.size);
     }
+
+    get generateStaticParams() {
+        return Array.from({length: this.getTotalPage}, (_, index) =>
+            ({page: String(index + 1)}))
+    }
 }
 
-export async function getPostSlugs(deep: string | null = null) {
-    const readDir = deep ? path.join(postsDir, deep) : postsDir
+/** 기본 Post 저장 위치에서 deep 수준에 따라 MDX 파일을 찾습니다.
+ * @param deep 기본 포스터 위치에서 하위 디렉토리 수준 */
+export async function getPostSlugs(...deep: (string)[]) {
+    const readDir = deep.length > 0 ? path.join(PostsDir, ...deep) : PostsDir;
     return fs.readdirSync(readDir).filter(file => file.endsWith('.mdx'));
 }
 
-function postSort(a: any, b: any, paging: Paging) {
-    if (typeof paging.sort === "function") return paging.sort(a, b);
-
-    const elementA = a[paging.sort];
-    const elementB = b[paging.sort];
-
-    if (elementA < elementB) return -1;
-    if (elementA > elementB) return 1;
-
-    return 0;
+/** 기본 Post 저장 위치에서 deep 수준에 따라서 디렉토리를 찾습니다.
+ * @param deep 기본 포스터 위치에서 하위 디렉토리 수준 */
+export async function getDirList(...deep: (string)[]) {
+    const readDir = path.join(PostsDir, ...deep)
+    return fs.readdirSync(readDir).filter(item => {
+        const itemPath = path.join(readDir, item);
+        return fs.statSync(itemPath).isDirectory()
+    });
 }
 
 export type PostListProps = {
@@ -50,53 +54,40 @@ export type PostListProps = {
     frontmatter: Record<string, unknown>
 }
 
-export async function getPostListData(deep: string | null = null) {
-    const readDir = deep ? path.join(postsDir, deep) : postsDir
-    const mdList = await getPostSlugs(deep);
+/**
+ * 경로로부터 MDX 파일을 가져오며, source, compiled, frontmatter 결과를 반환합니다. 기본 포스터 경로를 책임지지 않습니다.
+ * @return {source, compiled, frontmatter}
+ * */
+export async function getCompileMDX(...readPath: string[]): Promise<{
+    source: string,
+    compiled: CompileMDXResult,
+    frontmatter: Record<string, unknown>
+}> {
+    const join = path.join(...readPath);
+    const source = fs.readFileSync(join, 'utf8');
+    const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
+    const frontmatter = compiled.frontmatter;
+    return {source, compiled, frontmatter}
+}
+
+/** 기본 Post 저장 위치에서 deep 수준에 따라 MDX 문서들을 가져오고, 이를 {@link PostListProps} 데이터로 가공하여 반환합니다.
+ * @param deep 기본 포스터 위치에서 하위 디렉토리 수준
+ * @return {Promise<PostListProps[]>}
+ * @see {@link PostListProps}*/
+export async function getPostListData(...deep: (string)[]): Promise<PostListProps[]> {
+    const readDir = deep ? path.join(PostsDir, ...deep) : PostsDir
+    const mdList = await getPostSlugs(...deep);
 
     const result: PostListProps[] = [];
 
     for (const slug of mdList) {
-        const source = fs.readFileSync(path.join(readDir, slug), 'utf8');
         try {
-            const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
-            const frontmatter = compiled.frontmatter;
+            const {frontmatter} = await getCompileMDX(readDir, slug);
             result.push({filename: slug, frontmatter: frontmatter})
         } catch (error) {
             console.log('not read a file but pass');
             console.log(error);
         }
-    }
-
-    return result;
-}
-
-export async function generationPaging(list: PostListProps[], paging: Paging) {
-    list = list.sort((a, b) => postSort(a.frontmatter, b.frontmatter, paging))
-
-    const result: { [key: number]: { list: PostCardProps[] } } = {};
-
-    for (let i = 0, page = 1; i < paging.total; i += paging.size, page++) {
-        const page_slice: PostCardProps[] = [];
-
-        for (const obj of list.slice(i, i + paging.size)) {
-            const filename = obj.filename.replace('.mdx', '');
-            const frontmatter = obj.frontmatter;
-
-            const props: PostCardProps = {
-                filename: filename,
-                info: {
-                    mainImg: (<string>frontmatter.mainImg),
-                    title: (<string>frontmatter.title),
-                    description: (<string>frontmatter.description),
-                    tags: (<Array<string>>frontmatter.tags),
-                    date: (new Date(<Date>frontmatter.timestamp))
-                }
-            }
-
-            page_slice.push(props)
-        }
-        result[page] = {list: page_slice};
     }
 
     return result;
@@ -115,6 +106,11 @@ export function generationPostCardProps(filename: string, frontmatter: Record<st
     }
 }
 
+/** 주어진 데이터, 현재 페이지 번호, 페이징을 사용하여 페이징 크기에 맞게 현재 페이지의 정보를 반환합니다.
+ * @param list {@link PostListProps}의 데이터들
+ * @param thisPage 현재 페이지
+ * @param paging 페이징 정보
+ * @see  {@link Paging} */
 export async function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
     const result: PostCardProps[] = [];
 
@@ -140,24 +136,22 @@ export async function slicePage(list: PostListProps[], thisPage: number, paging:
     return result;
 }
 
-export const DefaultImg = {src: default_img.src, alt: 'https://www.freepik.com/ Designed by : freepik'}
-
+/** 주어진 경로들의 디렉토리를 탐색하여 모든 MDX 파일에서 사용된 태그의 사용수를 계산합니다.
+ @param dirs 탐색할 디렉토리들 */
 export async function countUsedTags(dirs: string[]) {
     const allSlugs: string[] = [];
 
     for (const dir of dirs) {
         const slugs = await getPostSlugs(dir);
         for (const slug of slugs) {
-            allSlugs.push(path.join(postsDir, dir, slug));
+            allSlugs.push(path.join(PostsDir, dir, slug));
         }
     }
 
     const data: { [tag: string]: number; } = {};
 
     for (const slug of allSlugs) {
-        const source = fs.readFileSync(slug, 'utf8');
-        const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
-        const frontmatter = compiled.frontmatter;
+        const {frontmatter} = await getCompileMDX(slug);
         const tags = frontmatter.tags as string[];
 
         if (tags == undefined || tags.length < 0) continue;

@@ -1,6 +1,6 @@
 import {getPostListData, getPostSlugs, Paging, slicePage} from "@/app/lib/Posts";
-import {PostCard, PostCardProps} from "@/app/components/PostRender";
-import Pagination from "@/app/components/Pagination";
+import {PostCard, PostCardProps} from "@/app/components/post/main/PostRender";
+import Pagination from "@/app/components/post/main/Pagination";
 
 type Props = {
     params: {
@@ -33,13 +33,6 @@ export default async function Page({params}: Props) {
 
 export async function generateStaticParams() {
     const postSlugs = await getPostSlugs('/main');
-    const paging: Paging = new Paging(10, postSlugs.length);
-
-    const map = []
-    for (let i = 1; i <= paging.getTotalPage; i++) {
-        map.push(i.toString());
-    }
-
-    return map.map(i => ({page: i}));
+    return new Paging(10, postSlugs.length).generateStaticParams;
 }
 

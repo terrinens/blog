@@ -1,15 +1,15 @@
 import React from "react";
-import {compileMDX, MDXRemote} from "next-mdx-remote/rsc";
+import {MDXRemote} from "next-mdx-remote/rsc";
 import path from "path";
-import fs from "fs";
 import {userMDXComponents} from "@/app/mdx-componets"
-import {DefaultImg, generationPostCardProps} from "@/app/lib/Posts";
+import {generationPostCardProps, getCompileMDX} from "@/app/lib/Posts";
 import Image from "next/image";
-import {rootPath} from "@/app/lib/Config";
+import {DefaultImg, PostsDir, rootPath} from "@/app/lib/Config";
 
-type PostRenderProps = {
-    deep: string;
+export type PostRenderProps = {
     postName: string;
+    deep: string[];
+    headerException?: boolean;
 }
 
 const PostRenderHeaderBlock = (
@@ -56,10 +56,8 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
     );
 }
 
-export async function PostRender({deep, postName}: PostRenderProps) {
-    const target = path.join(process.cwd(), 'src/posts/', deep, postName + '.mdx');
-    const source = fs.readFileSync(target, "utf8");
-    const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
+export async function PostRender({postName, deep, headerException}: PostRenderProps) {
+    const {source, compiled} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
     const cardProps = generationPostCardProps(postName, compiled.frontmatter)
 
     return (
@@ -68,9 +66,13 @@ export async function PostRender({deep, postName}: PostRenderProps) {
          * RESOLUTION :
          * MDX를 파싱할때 globals.css의 @tailwind base;가 기존의 태그들을 재정의 하고 있었던 탓에
          * <h1> 같이 정상적으로 작동하지 않았음.
+         * 그렇기에 기본 MD 태그들을 재정의하는 prose css 정의를 사용함
          * */
         <div className="prose">
-            <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
+            {headerException
+                ? <div/>
+                : <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
+            }
             <MDXRemote key={'post_body:' + postName} components={userMDXComponents} source={source}
                        options={{parseFrontmatter: true}}
             />
@@ -93,7 +95,7 @@ export type PostCardProps = {
 const dateFormatter = (date: Date) => {
     const year = date.getFullYear();
 
-    if (isNaN(year)) return '기록된 날짜가 없습니다.'
+    if (isNaN(year)) return 'Not Recode Date'
 
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");

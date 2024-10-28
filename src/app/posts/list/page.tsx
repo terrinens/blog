@@ -1,6 +1,6 @@
 import {getPostListData, Paging, slicePage} from "@/app/lib/Posts";
-import {PostCard, PostCardProps} from "@/app/components/PostRender";
-import Pagination from "@/app/components/Pagination";
+import {PostCard, PostCardProps} from "@/app/components/post/main/PostRender";
+import Pagination from "@/app/components/post/main/Pagination";
 
 export default async function Page() {
     const dataList = await getPostListData('/main');
