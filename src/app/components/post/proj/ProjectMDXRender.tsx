@@ -21,7 +21,7 @@ type DocsBreadcrumbProps = {
     baseUrl: string[]
 }
 
-function DocsBreadcrumb({projName, now, dirs, baseUrl}: DocsBreadcrumbProps) {
+function DocsBreadcrumb({projName, now, dirs}: DocsBreadcrumbProps) {
     return (
         <div
             className='mb-5 flex whitespace-nowrap border max-h-24 rounded-xl shadow-sm p-1 dark:bg-neutral-800 dark:border-neutral-700'>
@@ -47,12 +47,13 @@ export type DocsProps = {
 function DocsTreeView({docs_list}: { docs_list: DocsProps }) {
     return (
         <div className='mb-5'>
-            <RootTree dirname={'docs'}>{
+            <RootTree dirname={'docs'} ariaExpanded={true}>{
                 docs_list.entries.map((entry, index) => {
                     const dir = entry.dir;
                     const docs = entry.docs;
                     return (
-                        <SubTree key={`sub-tree-${index}-${dir}`} dirname={dir}>
+                        <SubTree key={`sub-tree-${index}-${dir}`} dirname={dir}
+                                 ariaExpanded={docs_list.entries.length < 5 && docs.length < 5}>
                             <LowerFileEntries>{
                                 docs.map(doc => (
                                     <FileObject key={`file-object-${dir}-${doc}`} filename={doc}
@@ -75,7 +76,8 @@ export async function ProjectInfoRender({props, docs_list}: {
     const postName = props.postName;
 
     const projDir = path.join(PostsDir, ...deep);
-    const {source, compiled} = await getCompileMDX(projDir, postName + '.mdx');
+    /** TODO 최적화 할것 Source 를 제외하고 사용되지 않음 */
+    const {source} = await getCompileMDX(projDir, postName + '.mdx');
 
     const docsDirs = docs_list.entries.flatMap(x => x.dir);
 

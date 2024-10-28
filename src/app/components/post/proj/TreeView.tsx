@@ -1,5 +1,4 @@
 import React from "react";
-import path from "path";
 import Link from "next/link";
 
 function DefaultFileSVG() {
@@ -16,12 +15,12 @@ function DefaultFileSVG() {
     )
 }
 
-function DirEntriesButton({dirname}: { dirname: string }) {
+function DirEntriesButton({dirname, ariaExpanded}: { dirname: string, ariaExpanded?: boolean }) {
     return (
         <div className="hs-accordion-heading py-0.5 flex items-center gap-x-0.5 w-full">
             <button
                 className="hs-accordion-toggle size-6 flex justify-center items-center hover:bg-gray-100 rounded-md focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-                aria-expanded="false"
+                aria-expanded={ariaExpanded}
                 aria-controls="hs-basic-usage-example-tree-collapse-one">
                 <svg className="size-4 text-gray-800" xmlns="http://www.w3.org/2000/svg" width="24"
                      height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"
@@ -51,15 +50,25 @@ function DirEntriesButton({dirname}: { dirname: string }) {
 /** 최상단에서 선언되어야 하는 함수입니다. 최상단에서 디렉토리를 선언하고, 하위 요소를 받습니다.
  * @param id
  * @param dirname 디렉토리 이름
+ * @param ariaExpanded
  * @param children */
-export function RootTree({id, dirname, children}: { id?: string, dirname: string, children?: React.ReactNode }) {
+export function RootTree({id, dirname, ariaExpanded, children}: {
+    id?: string,
+    dirname: string,
+    ariaExpanded?: boolean,
+    children?: React.ReactNode
+}) {
     return (
         <div className="hs-accordion-treeview-root" role="tree" aria-orientation="vertical">
             <div className="hs-accordion-group" role="group" data-hs-accordion-always-open="">
-                <div className="hs-accordion active" role="treeitem" id={id} aria-expanded="true">
+                <div className={`hs-accordion ${ariaExpanded ? 'active' : ''}`}
+                     role="treeitem" id={id}
+                     aria-selected={ariaExpanded}
+                     aria-expanded={ariaExpanded}>
                     <DirEntriesButton dirname={dirname}/>
-                    <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300"
-                         role="group">
+                    <div
+                        className={`hs-accordion-content ${ariaExpanded ? '' : 'hidden'} w-full overflow-hidden transition-[height] duration-300`}
+                        role="group">
                         {children || <div/>}
                     </div>
                 </div>
@@ -71,15 +80,28 @@ export function RootTree({id, dirname, children}: { id?: string, dirname: string
 /** 루트 하위에서 집합체를 사용하기 위한 함수입니다.
  * @param id
  * @param dirname 디렉토리 이름
+ * @param ariaExpanded
  * @param children */
-export function SubTree({id, dirname, children}: { id?: string, dirname: string, children: React.ReactNode }) {
+export function SubTree({id, dirname, ariaExpanded, children}: {
+    id?: string,
+    dirname: string,
+    ariaExpanded?: boolean,
+    children: React.ReactNode
+}) {
     return (
         <div
             className="hs-accordion-group ps-7 relative before:absolute before:top-0 before:start-3 before:w-0.5 before:-ms-px before:h-full before:bg-gray-100"
             role="group">
-            <div className="hs-accordion active" role="treeitem" aria-expanded="true" id={id}>
+            <div className={`hs-accordion ${ariaExpanded ? 'active' : ''}`} role="treeitem"
+                 aria-selected={ariaExpanded}
+                 aria-expanded={ariaExpanded}
+                 id={id}>
                 <DirEntriesButton dirname={dirname}/>
-                {children}
+                <div
+                    className={`hs-accordion-content ${ariaExpanded ? '' : 'hidden'} w-full overflow-hidden transition-[height] duration-300`}
+                    role="group">
+                    {children}
+                </div>
             </div>
         </div>
     )
@@ -95,10 +117,8 @@ export function LowerTree({toggle, children}: { toggle?: boolean, children: Reac
     const accordionProps = toggle ? {} : {'data-hs-accordion-always-open': ''};
 
     return (
-        <div className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300" role="group">
-            <div className={css} role="group" {...accordionProps}>
-                {children}
-            </div>
+        <div className={css} role="group" {...accordionProps}>
+            {children}
         </div>
     );
 }
@@ -108,18 +128,24 @@ export function LowerTree({toggle, children}: { toggle?: boolean, children: Reac
  * @param dirname 디렉토리 이름 ||
  * 선언하지 않을 수도 있습니다. 하지만 선언하지 않을 경우 이후 하위 디렉토리 요소를 선언을 책임지지 않습니다.
  * 최하단의 구조에서 고려하십시오.
+ * @param ariaExpanded
  * @param children */
-export function LowerDirEntries({id, dirname, children}: {
+export function LowerDirEntries({id, dirname, ariaExpanded, children}: {
     id?: string,
     dirname?: string,
+    ariaExpanded?: boolean
     children?: React.ReactNode
 }) {
 
     return (
-        <div className="hs-accordion" role="treeitem" aria-expanded="false" id={id}>
-            {dirname ? <DirEntriesButton dirname={dirname}/> : <div/>}
-            <div className="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
-                 role="group">
+        <div className={`hs-accordion ${ariaExpanded ? 'active' : ''}`} role="treeitem"
+             aria-selected={ariaExpanded}
+             aria-expanded={ariaExpanded}
+             id={id}>
+            {dirname ? <DirEntriesButton dirname={dirname} ariaExpanded={ariaExpanded}/> : <div/>}
+            <div
+                className={`hs-accordion-content ${ariaExpanded ? '' : 'hidden'} w-full overflow-hidden transition-[height] duration-300`}
+                role="group">
                 <div
                     className="ms-3 ps-3 relative before:absolute before:top-0 before:start-0 before:w-0.5 before:-ms-px before:h-full before:bg-gray-100">
                     {children || <div/>}
@@ -132,7 +158,7 @@ export function LowerDirEntries({id, dirname, children}: {
 /** {@link LowerTree}의 종속적인 파일 집합체를 사용하기 위한 함수입니다. {@link LowerTree} 보다 하위 요소에서는 사용하지 마십시오. */
 export function FileEntries({children}: { children: React.ReactNode }) {
     return (
-        <div className="py-0.5 px-1.5" role="treeitem">
+        <div className="py-0.5 px-1.5" role="treeitem" aria-selected={false}>
             {children}
         </div>
     )
@@ -169,6 +195,7 @@ export function FileObject({filename, href, svg}: {
     return (
         <div
             className="hs-accordion-selectable hs-accordion-selected:bg-gray-100 px-2 rounded-md cursor-pointer"
+            aria-selected={false}
             role="treeitem">
             <Link href={href || '#'}>
                 <div className="flex items-center gap-x-3">
@@ -199,10 +226,10 @@ export function SimpleFileObject({filename}: { filename: string }) {
 export function Example() {
     return (
         <div className='mb-5'>
-            <RootTree id={'level1:assets'} dirname={'assets'}>
-                <SubTree id={'level2:css'} dirname={'css'}>
+            <RootTree id={'level1:assets'} dirname={'assets'} ariaExpanded={true}>
+                <SubTree id={'level2:css'} dirname={'css'} ariaExpanded={false}>
                     <LowerTree>
-                        <LowerDirEntries id={'level3:main'} dirname={'main'}>
+                        <LowerDirEntries id={'level3:main'} dirname={'main'} ariaExpanded={true}>
                             <LowerFileEntries>
                                 <FileObject filename={'main.css'}/>
                                 <FileObject filename={'docs.css'}/>

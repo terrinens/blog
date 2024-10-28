@@ -1,4 +1,4 @@
-import {getStaticParams, Props as ParentsProps} from "@/app/projects/view/[type]/[dir]/page";
+import {Props as ParentsProps} from "@/app/projects/view/[type]/[dir]/page";
 import {getDirList, getPostSlugs} from "@/app/lib/Posts";
 import path from "path";
 import {PostRender} from "@/app/components/post/main/PostRender";
@@ -25,7 +25,8 @@ export default async function Page({params}: Props) {
     return (
         <AccordionCase>{
             docsRenders.map((data, index) => (
-                <AccordionBlock key={`AB:${data.title}`} props={{title: data.title, ariaExpanded: true, anchor: true}}>
+                <AccordionBlock key={`AB:${data.title}:${index}`}
+                                props={{title: data.title, ariaExpanded: true, anchor: true}}>
                     {data.render}
                 </AccordionBlock>
             ))
@@ -35,7 +36,17 @@ export default async function Page({params}: Props) {
 
 /** TODO 경로가 끔찍하게 긺. 수정 할 방법 찾을것. */
 export async function generateStaticParams() {
-    const parentStaticParams = await getStaticParams();
+    const types = ['team', 'personal'];
+    const parentStaticParams: { type: string, dir: string; }[] = [];
+
+    await Promise.all(
+        types.map(async type => {
+            const dirs = await getDirList('proj', type);
+            dirs.forEach(dir => {
+                parentStaticParams.push({type: type, dir: dir})
+            })
+        })
+    )
 
     const staticParams: { type: string; dir: string; doc: string; }[] = [];
 

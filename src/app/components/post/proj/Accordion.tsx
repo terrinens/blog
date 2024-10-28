@@ -1,5 +1,11 @@
 import React from "react";
 
+type AccordionProps = {
+    title: string
+    anchor?: boolean
+    ariaExpanded?: boolean
+}
+
 function AccordionButton({props}: { props: AccordionProps }) {
     return (
         <button
@@ -19,12 +25,6 @@ function AccordionButton({props}: { props: AccordionProps }) {
             </svg>
         </button>
     )
-}
-
-type AccordionProps = {
-    title: string
-    anchor?: boolean
-    ariaExpanded?: boolean
 }
 
 export function AccordionBlock({props, children}: { props: AccordionProps, children: React.ReactNode }) {
