@@ -29,7 +29,7 @@ function DocsBreadcrumb({projName, now, dirs, baseUrl}: DocsBreadcrumbProps) {
                 <BreadcrumbPrevious str={'프로젝트'} href={path.join(rootPath, 'projects', 'list')}/>
                 <BreadcrumbPrevious str={projName}/>
                 <BreadcrumbEntries>
-                    <BreadcrumbLowerEntries entries={dirs} baseUrl={baseUrl}/>
+                    <BreadcrumbLowerEntries entries={dirs} baseUrl={[]}/>
                 </BreadcrumbEntries>
                 <BreadcrumbNow str={now}/>
             </BreadcrumbCase>
@@ -48,14 +48,15 @@ function DocsTreeView({docs_list}: { docs_list: DocsProps }) {
     return (
         <div className='mb-5'>
             <RootTree dirname={'docs'}>{
-                docs_list.entries.map(entry => {
+                docs_list.entries.map((entry, index) => {
                     const dir = entry.dir;
                     const docs = entry.docs;
                     return (
-                        <SubTree dirname={dir}>
+                        <SubTree key={`sub-tree-${index}-${dir}`} dirname={dir}>
                             <LowerFileEntries>{
                                 docs.map(doc => (
-                                    <FileObject filename={doc} href={`${dir}#${doc}`}/>
+                                    <FileObject key={`file-object-${dir}-${doc}`} filename={doc}
+                                                href={`${dir}#${doc}`}/>
                                 ))
                             }</LowerFileEntries>
                         </SubTree>

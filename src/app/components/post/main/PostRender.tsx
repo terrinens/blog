@@ -9,6 +9,7 @@ import {DefaultImg, PostsDir, rootPath} from "@/app/lib/Config";
 export type PostRenderProps = {
     postName: string;
     deep: string[];
+    headerException?: boolean;
 }
 
 const PostRenderHeaderBlock = (
@@ -55,7 +56,7 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
     );
 }
 
-export async function PostRender({postName, deep}: PostRenderProps) {
+export async function PostRender({postName, deep, headerException}: PostRenderProps) {
     const {source, compiled} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
     const cardProps = generationPostCardProps(postName, compiled.frontmatter)
 
@@ -68,7 +69,10 @@ export async function PostRender({postName, deep}: PostRenderProps) {
          * 그렇기에 기본 MD 태그들을 재정의하는 prose css 정의를 사용함
          * */
         <div className="prose">
-            <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
+            {headerException
+                ? <div/>
+                : <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
+            }
             <MDXRemote key={'post_body:' + postName} components={userMDXComponents} source={source}
                        options={{parseFrontmatter: true}}
             />

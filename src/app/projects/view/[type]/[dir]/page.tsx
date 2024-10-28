@@ -2,7 +2,7 @@ import {getDirList, getPostSlugs} from "@/app/lib/Posts";
 import {DocsProps, ProjectInfoRender} from "@/app/components/post/proj/ProjectMDXRender";
 import {PostRenderProps} from "@/app/components/post/main/PostRender";
 
-type Props = {
+export type Props = {
     params: {
         type: string;
         dir: string;
@@ -29,7 +29,7 @@ export default async function Page({params}: Props) {
     )
 }
 
-export async function generateStaticParams() {
+export async function getStaticParams() {
     const projList = await Promise.all(
         ['team', 'personal'].map(async deep => {
             const dirs = await getDirList('proj', deep);
@@ -43,4 +43,8 @@ export async function generateStaticParams() {
             dir: dir
         }));
     });
+}
+
+export async function generateStaticParams() {
+    return await getStaticParams();
 }
