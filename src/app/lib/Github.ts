@@ -8,10 +8,11 @@ interface CallAPIOptions {
     noJson?: boolean;
 }
 
-const callAPI = async (url: string, options: CallAPIOptions = {}) => {
+export const callAPI = async (url: string, options: CallAPIOptions = {}) => {
     const {method = 'GET', noToken = false, noJson = false} = options;
 
     const headers = new Headers({'Content-Type': 'application/json'});
+    if (!process.env.GIT_TOKEN) Error('Not Has GitToken')
     if (!noToken) headers.append('Authorization', `Bearer ${process.env.GIT_TOKEN}`);
 
     const response = await fetch(url,
@@ -79,6 +80,7 @@ class LanguagesByte {
     }
 }
 
+/* TODO 현재 모든 브랜치에서 코드 바이트를 계산하고 있음 메인 브랜치에서만 작동하도록 만들것. */
 async function getUserCodeBytes(urls: string[]) {
     const languagesByte = new LanguagesByte();
 
