@@ -14,19 +14,36 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout posts branch
+        uses: actions/checkout@v4
+        with:
+          ref: posts
+          path: posts
+
+      - name: Copy files from posts branch
+        run: |
+          ls
+          mkdir -p "${{ env.TEMP_DIR }}"
+          cp -r ./posts/* "${{ env.TEMP_DIR }}/posts"
+
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: dev
+
+      - name: copy to main
+        run: |
+          cp -r "${{ env.TEMP_DIR }}/posts" "${{ env.WORK_DIR }}/src/"
+          cd src
+          ls
 
       - name: Detect package manager
         id: detect-package-manager
