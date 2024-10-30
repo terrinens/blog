@@ -18,7 +18,7 @@ export default async function Page({params}: Props) {
     const docsRenders = docs.map(doc => {
         return {
             title: doc,
-            render: PostRender({postName: doc.replace('.mdx', ''), deep: [docsPath], headerException: true})
+            render: PostRender({postName: doc.replace('.mdx', ''), deep: [docsPath], headerIgnore: true})
         };
     });
 

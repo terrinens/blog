@@ -1,9 +1,7 @@
 import {PostRenderProps} from "@/app/components/post/main/PostRender";
 import {getCompileMDX} from "@/app/lib/Posts";
 import {PostsDir, rootPath} from "@/app/lib/Config";
-import {MDXRemote} from "next-mdx-remote/rsc";
 import React from "react";
-import {userMDXComponents} from "@/app/mdx-componets";
 import path from "path";
 import {
     BreadcrumbCase,
@@ -77,7 +75,7 @@ export async function ProjectInfoRender({props, docs_list}: {
 
     const projDir = path.join(PostsDir, ...deep);
     /** TODO 최적화 할것 Source 를 제외하고 사용되지 않음 */
-    const {source} = await getCompileMDX(projDir, postName + '.mdx');
+    const {content} = await getCompileMDX(projDir, postName + '.mdx');
 
     const docsDirs = docs_list.entries.flatMap(x => x.dir);
 
@@ -85,7 +83,7 @@ export async function ProjectInfoRender({props, docs_list}: {
         <div className='prose'>
             <DocsBreadcrumb projName={deep[2]} dirs={docsDirs} now={'info'} baseUrl={deep}/>
             <DocsTreeView docs_list={docs_list}/>
-            <MDXRemote components={userMDXComponents} source={source} options={{parseFrontmatter: true}}/>
+            {content}
         </div>
     );
 }
