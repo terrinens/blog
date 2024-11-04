@@ -2,16 +2,52 @@ import React, {useState} from 'react';
 
 interface TypeButtonProps {
     onTypeChange: (type: string) => void;
+    onSave: (postType: string, projectType: string, projectName: string, apiName: string) => void;
 }
 
-export function TypeButton({onTypeChange}: TypeButtonProps) {
+export function TypeButton({onTypeChange, onSave}: TypeButtonProps) {
     const [postType, setPostType] = useState('main');
+    const [projectType, setProjectType] = useState('');
+    const [projectName, setProjectName] = useState('');
+    const [apiName, setApiName] = useState('');
+    const [error, setError] = useState('');
 
     const handlePostTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedType = e.target.value;
         setPostType(selectedType);
         onTypeChange(selectedType);
+
+        if (selectedType !== 'proj') {
+            setProjectType('');
+            setProjectName('');
+            setApiName('');
+            setError('');
+        } else {
+            setProjectType('team');
+        }
     }
+
+    const handleProjTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const selectedType = e.target.value;
+        setProjectType(selectedType);
+    }
+
+    const handleProjNameChange = (e: React.ChangeEvent<HTMLInputElement>,) => {
+        setProjectName(e.target.value);
+    };
+
+    const handleDocumentTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setApiName(e.target.value);
+    };
+
+    const handleSubmit = () => {
+        if (postType === 'proj' && !projectName) {
+            setError('프로젝트 이름은 필수입니다.');
+        } else {
+            onSave(postType, projectType, projectName, apiName);
+        }
+    };
+
 
     return (
         <div className="space-y-4">
@@ -34,11 +70,39 @@ export function TypeButton({onTypeChange}: TypeButtonProps) {
                     id="proj_type"
                     disabled={postType !== 'proj'}
                     className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-500 focus:border-green-500 ${postType !== 'proj' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onChange={handleProjTypeChange}
                 >
                     <option value="team">팀 프로젝트</option>
                     <option value="personal">개인 프로젝트</option>
                 </select>
             </div>
+
+            <div>
+                <label htmlFor="proj_name" className="block text-lg font-medium text-gray-700">프로젝트 이름</label>
+                <input
+                    id="proj_name"
+                    type="text"
+                    disabled={postType !== 'proj'}
+                    value={projectName}
+                    onChange={handleProjNameChange}
+                    className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-500 focus:border-green-500 ${postType !== 'proj' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                />
+                {error && <p className="mt-1 text-red-500">{error}</p>}
+            </div>
+
+            <div>
+                <label htmlFor="document_type" className="block text-lg font-medium text-gray-700">문서</label>
+                <input
+                    id="document_type"
+                    type="text"
+                    disabled={postType !== 'proj'}
+                    value={apiName}
+                    onChange={handleDocumentTypeChange}
+                    className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-green-500 focus:border-green-500 ${postType !== 'proj' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                />
+            </div>
+
+            <button onClick={handleSubmit}>저장</button>
         </div>
     );
 }
