@@ -5,8 +5,9 @@ import React, {useRef, useState} from 'react'
 import {MDXEditorMethods} from "@mdxeditor/editor";
 import {MainTemplate, ProjTemplate, TypeButton} from "./component/TypeButton";
 import path from "path";
+import TimestampCalender, {formatDateTime} from "./component/TimestampCalender";
 
-async function mdxSave(postType: string, content: string, fileName?: string, isApi? :boolean) {
+async function mdxSave(postType: string, content: string, fileName?: string, isApi?: boolean) {
     const response = await fetch(`http://localhost:3000/api/save/post`, {
         method: 'POST',
         headers: {'content-type': 'application/json'},
@@ -39,6 +40,10 @@ function convertImagesInMDX(mdxContent: string) {
     return content;
 }
 
+function updateTimestamp(mdxContent: string) {
+    const newTimestamp = formatDateTime(Date.now())
+    return mdxContent.replace(/(timestamp:\s*)(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d{6})/, `$1${newTimestamp}`);
+}
 
 export default function Home() {
     const ref = useRef<MDXEditorMethods>(null)
@@ -57,9 +62,11 @@ export default function Home() {
 
     const DemoEditor = dynamic(() => import('./component/DemoEditor'), {ssr: false})
 
-    const handleSave = async (postType: string, projectType: string, projectName: string, apiName:string) => {
+    const handleSave = async (postType: string, projectType: string, projectName: string, apiName: string) => {
         if (ref.current) {
-            const content = convertImagesInMDX(ref.current.getMarkdown());
+            let content = convertImagesInMDX(ref.current.getMarkdown());
+            content = updateTimestamp(content);
+
             const isApi = apiName.length > 0;
             const saveType = path.join(postType, projectType, projectName)
             await mdxSave(saveType, content, apiName, isApi);
@@ -68,8 +75,8 @@ export default function Home() {
 
     return (
         <div className="prose">
+            <TimestampCalender/>
             <TypeButton onTypeChange={handleTypeChange} onSave={handleSave}/>
-
             <div style={{border: '1px solid black'}}>
                 <DemoEditor postType={postType} markdown={mdx} editorRef={ref}/>
             </div>

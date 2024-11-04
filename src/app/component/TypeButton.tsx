@@ -111,11 +111,9 @@ export const MainTemplate = `
 ---
 title: Main template
 timestamp: 2024-10-03 09:57:46.310752
-tags: ["react", "mdx", "javascript"]
-description: this is description!!
+tags: []
+description: this is Main template
 ---
-
-import MDXImage from "@_mdx-components/";
 
 # Welcome to My Main Template!!
 This is a sample document written in MDX (Markdown + JSX). MDX allows you to seamlessly mix Markdown and React components. Let's explore some features:
@@ -127,8 +125,8 @@ title: Proj template
 timestamp: 2024-10-03 09:57:46.310752
 start: 2022-02-07
 end: 2023-04-02
-tags: ["react", "java", "spring boot", "jwt"]
-description: this is description!!
+tags: []
+description: this is Proj template
 ---
 
 # Welcome to Proj Template!!
