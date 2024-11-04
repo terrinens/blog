@@ -63,6 +63,6 @@ export async function saveImage({postType, content}: SaveProps) {
     const fileBuffer = await image.arrayBuffer();
     fs.writeFileSync(saveName, Buffer.from(fileBuffer));
 
-    return `../../data/image/${fileName}`;
+    return `../../data/image/${postType}/${fileName}`;
 }
 

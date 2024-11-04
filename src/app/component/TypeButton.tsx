@@ -110,6 +110,7 @@ export function TypeButton({onTypeChange, onSave}: TypeButtonProps) {
 export const MainTemplate = `
 ---
 title: Main template
+mainImg: 
 timestamp: 2024-10-03 09:57:46.310752
 tags: []
 description: this is Main template
@@ -122,6 +123,7 @@ This is a sample document written in MDX (Markdown + JSX). MDX allows you to sea
 export const ProjTemplate = `
 ---
 title: Proj template
+mainImg: 
 timestamp: 2024-10-03 09:57:46.310752
 start: 2022-02-07
 end: 2023-04-02

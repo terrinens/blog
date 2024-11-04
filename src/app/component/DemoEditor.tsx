@@ -32,31 +32,10 @@ import PD from '../../public/post_default.jpg'
 
 /* public외 제대로 접근이 불가능한 소스임.
  * 본 프로젝트의 특성상 MDX는 이미 빌드완료된 소스이기 때문에 /_next/static/media/download.538da40f.jpg 같이 이미지를 참조해서 가져옴.
- * 하지만 해당 코드는 어떤 폴더에 있는 즉, 빌드되지 않은 소스에서 가져오기 때문에 해당 프로젝트 특성처럼 업로드된 이미지를 정상적으로 사용할수없음.
+ * 하지만 해당 코드는 어떤 폴더에 있는 즉, 빌드되지 않은 소스에서 가져오기 때문에 해당 프로젝트 특성처럼 업로드된 이미지를 정상적으로 사용할 수 없음.
  * */
-export function imagePreview(imageSource: string): Promise<string> {
-    console.log(imageSource);
-    const image = new Image();
-    image.src = PD.src;
-
-    return new Promise((resolve) => {
-        image.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = image.width;
-            canvas.height = image.height;
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                ctx.drawImage(image, 0, 0);
-                canvas.toBlob((blob) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                        resolve(reader.result as string);
-                    };
-                    reader.readAsDataURL(blob);
-                });
-            }
-        };
-    });
+export function imagePreview(imageSource: string) {
+    return PD.src;
 }
 
 const imageUpload = async (file: any, postType: string) => {
@@ -75,12 +54,6 @@ const imageUpload = async (file: any, postType: string) => {
     } else {
         return null;
     }
-}
-
-function ImageInsertButton() {
-    const x = imagePlugin();
-    imagePlugin();
-
 }
 
 function Toolbar() {
