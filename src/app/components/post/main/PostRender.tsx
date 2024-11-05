@@ -1,7 +1,5 @@
 import React from "react";
-import {MDXRemote} from "next-mdx-remote/rsc";
 import path from "path";
-import {userMDXComponents} from "@/app/mdx-componets"
 import {generationPostCardProps, getCompileMDX} from "@/app/lib/Posts";
 import Image from "next/image";
 import {DefaultImg, PostsDir, rootPath} from "@/app/lib/Config";
@@ -9,7 +7,7 @@ import {DefaultImg, PostsDir, rootPath} from "@/app/lib/Config";
 export type PostRenderProps = {
     postName: string;
     deep: string[];
-    headerException?: boolean;
+    headerIgnore?: boolean;
 }
 
 const PostRenderHeaderBlock = (
@@ -56,9 +54,11 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
     );
 }
 
-export async function PostRender({postName, deep, headerException}: PostRenderProps) {
-    const {source, compiled} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
-    const cardProps = generationPostCardProps(postName, compiled.frontmatter)
+
+/* Nextjs 14에서 더이상 serialize를 사용해서 데이터를 컴파일링 하지 않는 이유 : https://github.com/hashicorp/next-mdx-remote?tab=readme-ov-file#react-server-components-rsc--nextjs-app-directory-support */
+export async function PostRender({postName, deep, headerIgnore}: PostRenderProps) {
+    const {content, frontmatter} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
+    const cardProps = generationPostCardProps(postName, frontmatter)
 
     return (
         /** RECORD
@@ -68,16 +68,13 @@ export async function PostRender({postName, deep, headerException}: PostRenderPr
          * <h1> 같이 정상적으로 작동하지 않았음.
          * 그렇기에 기본 MD 태그들을 재정의하는 prose css 정의를 사용함
          * */
-        <div className="prose">
-            {headerException
-                ? <div/>
-                : <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
-            }
-            <MDXRemote key={'post_body:' + postName} components={userMDXComponents} source={source}
-                       options={{parseFrontmatter: true}}
-            />
+        <div className="prose">{headerIgnore
+            ? <div/>
+            : <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
+        }
+            {content}
         </div>
-    )
+    );
 }
 
 export type PostCardProps = {

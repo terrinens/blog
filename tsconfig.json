@@ -24,6 +24,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@_mdx-components/*": [
+        "./src/app/components/mdx-components.tsx",
       ]
     }
   },

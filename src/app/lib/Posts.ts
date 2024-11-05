@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import {compileMDX, CompileMDXResult} from "next-mdx-remote/rsc";
+import {compileMDX} from "next-mdx-remote/rsc";
 import {PostCardProps} from "@/app/components/post/main/PostRender";
 import {PostsDir} from "@/app/lib/Config";
+import {userMDXComponents} from "@/app/components/mdx-components";
+import React from "react";
 
 /** 페이징 계산을 위해 만들어진 클래스 입니다. */
 export class Paging {
@@ -59,15 +61,19 @@ export type PostListProps = {
  * @return {source, compiled, frontmatter}
  * */
 export async function getCompileMDX(...readPath: string[]): Promise<{
-    source: string,
-    compiled: CompileMDXResult,
+    content: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
     frontmatter: Record<string, unknown>
 }> {
     const join = path.join(...readPath);
     const source = fs.readFileSync(join, 'utf8');
-    const compiled = await compileMDX({source: source, options: {parseFrontmatter: true}})
+    const compiled = await compileMDX({
+        source: source,
+        options: {parseFrontmatter: true},
+        components: userMDXComponents()
+    })
+    const content = compiled.content;
     const frontmatter = compiled.frontmatter;
-    return {source, compiled, frontmatter}
+    return {content, frontmatter}
 }
 
 /** 기본 Post 저장 위치에서 deep 수준에 따라 MDX 문서들을 가져오고, 이를 {@link PostListProps} 데이터로 가공하여 반환합니다.
@@ -94,6 +100,7 @@ export async function getPostListData(...deep: (string)[]): Promise<PostListProp
 }
 
 export function generationPostCardProps(filename: string, frontmatter: Record<string, unknown>): PostCardProps {
+    if (!(frontmatter.tags instanceof Array)) frontmatter.tags = (frontmatter.tags as string).split(',').map(str => str.trim());
     return {
         filename: filename,
         info: {
@@ -152,7 +159,9 @@ export async function countUsedTags(dirs: string[]) {
 
     for (const slug of allSlugs) {
         const {frontmatter} = await getCompileMDX(slug);
-        const tags = frontmatter.tags as string[];
+
+        const {info} = generationPostCardProps('', frontmatter);
+        const tags = info.tags;
 
         if (tags == undefined || tags.length < 0) continue;
 

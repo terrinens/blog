@@ -1,5 +1,5 @@
 # custom
-src/posts
+src/data
 .env
 
 # Created by https://www.toptal.com/developers/gitignore/api/jetbrains+all,jetbrains+iml,windows,nextjs,node,git
