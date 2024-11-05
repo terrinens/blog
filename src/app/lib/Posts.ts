@@ -45,10 +45,17 @@ export async function getPostSlugs(...deep: (string)[]) {
  * @param deep 기본 포스터 위치에서 하위 디렉토리 수준 */
 export async function getDirList(...deep: (string)[]) {
     const readDir = path.join(PostsDir, ...deep)
-    return fs.readdirSync(readDir).filter(item => {
-        const itemPath = path.join(readDir, item);
-        return fs.statSync(itemPath).isDirectory()
-    });
+
+    try {
+        return fs.readdirSync(readDir).filter(item => {
+            const itemPath = path.join(readDir, item);
+            return fs.statSync(itemPath).isDirectory()
+        });
+    } catch (ignoredError) {
+        ignoredError = '';
+        console.log(`no such dir but ignoring : such dir ? ${deep} ${ignoredError}`);
+        return Promise.resolve([]);
+    }
 }
 
 export type PostListProps = {
