@@ -8,6 +8,7 @@ import path from "path";
 import TimestampCalender, {formatDateTime} from "./component/TimestampCalender";
 import MdxContentLoad from "./component/MdxContentLoad";
 
+
 async function mdxSave(postType: string, content: string, fileName?: string, isApi?: boolean) {
     const response = await fetch(`http://localhost:3000/api/save/post`, {
         method: 'POST',
@@ -26,24 +27,55 @@ async function mdxSave(postType: string, content: string, fileName?: string, isA
 
 function convertImagesInMDX(mdxContent: string) {
     const mdImageRegex = /!\[.*?]\((.*?)\)/g;
-    const imgRegex = /<img\s+height="(\d+)"\s+width="(\d+)"\s+src="(.*?)"\s*\/?>/g;
-    const nextImage = (src: string, height: number = 100, width: number = 100, alt?: string) =>
-        `<Image src='${src}' alt='${alt}' height='${height}' width='${width}'/>`
+    const imgRegex = /<img\s+([^>]+)\/?>/g;
 
-    let content = mdxContent.replace(mdImageRegex, (_, path) => {
-        return nextImage(path);
+    const nextImage = (src: string, height: number = 100, width: number = 100, alt?: string) => {
+        const type = src.split('/')[0];
+        return `<MDXImage type='${type}' src='${src.split('/')[1]}' alt='${alt}' height='${height}' width='${width}'/>`
+    }
+
+    let content = mdxContent.replace(mdImageRegex, (_, src) => {
+        return nextImage(src);
     });
 
-    content = content.replace(imgRegex, (_, height, width, src) => {
-        return nextImage(src, height, width);
+    content = content.replace(imgRegex, (_, propsStr: string) => {
+        const props: { [key: string]: string; } = {};
+        const attrRegex = /(\w+)=['"]([^'"]+)['"]/g;
+        let match;
+
+        while ((match = attrRegex.exec(propsStr)) !== null) {
+            const [_, key, value] = match;
+            props[key] = value;
+        }
+
+        const src = props['src'];
+        props['src'] = src.split('/')[1];
+        props['type'] = src.split('/')[0];
+
+        return `<MDXImage ${Object.entries(props).map(([key, value]) => `${key}="${value}"`).join(' ')} />`;
     })
 
     return content;
 }
 
 function convertImgToMDXImages(mdxContent: string) {
-    const mdImageRegex = /<Image\s+src='([^']+)'\s+alt='([^']*)'\s+height='(\d+)'\s+width='(\d+)'\s*\/>/g;
-    return mdxContent.replace(mdImageRegex, '<img height="$3" width="$4" src="$1"/>');
+    const mdImageRegex = /<MDXImage\s+([^>]+)\/?>/g;
+    return mdxContent.replace(mdImageRegex, (_, propsStr: string) => {
+        const props: { [key: string]: string; } = {};
+
+        const attrRegex = /(\w+)=['"]([^'"]+)['"]/g;
+        let match;
+
+        while ((match = attrRegex.exec(propsStr)) !== null) {
+            const [_, key, value] = match;
+            props[key] = value;
+        }
+
+        props['src'] = path.join(props['type'], props['src']);
+        delete props['type'];
+
+        return `<img ${Object.entries(props).map(([key, value]) => `${key}="${value}"`).join(' ')} />`;
+    });
 }
 
 function updateTimestamp(mdxContent: string) {
