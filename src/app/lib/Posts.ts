@@ -100,6 +100,7 @@ export async function getPostListData(...deep: (string)[]): Promise<PostListProp
 }
 
 export function generationPostCardProps(filename: string, frontmatter: Record<string, unknown>): PostCardProps {
+    if (!(frontmatter.tags instanceof Array)) frontmatter.tags = (frontmatter.tags as string).split(',').map(str => str.trim());
     return {
         filename: filename,
         info: {
@@ -158,7 +159,9 @@ export async function countUsedTags(dirs: string[]) {
 
     for (const slug of allSlugs) {
         const {frontmatter} = await getCompileMDX(slug);
-        const tags = frontmatter.tags as string[];
+
+        const {info} = generationPostCardProps('', frontmatter);
+        const tags = info.tags;
 
         if (tags == undefined || tags.length < 0) continue;
 

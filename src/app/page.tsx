@@ -36,7 +36,6 @@ export default async function Home() {
             <div className='col-span-1 mb-3'>
                 <div className=' grid-cols-4 grid gap-4'>
                     {
-                        /* TODO 프로젝트에 대한 VIEW는 되어있지 않음. 수정할것. */
                         recencyPostBlockData.map(data => (
                             <PostCard
                                 key={'MainRecencyPost:' + data.filename}
