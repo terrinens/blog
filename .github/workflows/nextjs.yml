@@ -3,7 +3,7 @@ name: Deploy Next.js site to Pages
 env:
   GIT_TOKEN: ${{ secrets.BLOG_TOKEN }}
   WORK_DIR: '/home/runner/work/blog/blog'
-  TEMP_DIR: '/home/runner/work/temp_post'
+  TEMP_DIR: '/home/runner/work/temp_post/data'
 
 on:
   push:
@@ -33,17 +33,22 @@ jobs:
       - name: Copy files from posts branch
         run: |
           ls
+          cd posts
+          ls
+
+      - name: Test
+        run: |
           mkdir -p "${{ env.TEMP_DIR }}"
-          cp -r ./posts/* "${{ env.TEMP_DIR }}/posts"
+          cp -r ./posts/src/data/* "${{ env.TEMP_DIR }}"
 
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: main
 
       - name: copy to main
         run: |
-          cp -r "${{ env.TEMP_DIR }}/posts" "${{ env.WORK_DIR }}/src/"
+          cp -r "${{ env.TEMP_DIR }}" "${{ env.WORK_DIR }}/src/"
           cd src
           ls
 
