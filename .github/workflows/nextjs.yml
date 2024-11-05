@@ -51,6 +51,8 @@ jobs:
           cp -r "${{ env.TEMP_DIR }}" "${{ env.WORK_DIR }}/src/"
           cd src
           ls
+          cd data
+          ls
 
       - name: Detect package manager
         id: detect-package-manager
