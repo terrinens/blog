@@ -28,14 +28,21 @@ import {
     toolbarPlugin,
 } from '@mdxeditor/editor'
 import {ForwardedRef} from "react";
-import PD from '../../public/post_default.jpg'
 
 /* public외 제대로 접근이 불가능한 소스임.
  * 본 프로젝트의 특성상 MDX는 이미 빌드완료된 소스이기 때문에 /_next/static/media/download.538da40f.jpg 같이 이미지를 참조해서 가져옴.
  * 하지만 해당 코드는 어떤 폴더에 있는 즉, 빌드되지 않은 소스에서 가져오기 때문에 해당 프로젝트 특성처럼 업로드된 이미지를 정상적으로 사용할 수 없음.
  * */
-export function imagePreview(imageSource: string) {
-    return PD.src;
+export async function imagePreview(imageSource: string) {
+    const split = imageSource.split('/');
+    const type = split[0];
+    const source = split[1];
+
+    const response = await fetch(`http://localhost:3000/api/save/img?type=${type}&source=${source}`, {
+        method: 'GET',
+    })
+    const json = await response.json();
+    return json.image;
 }
 
 const imageUpload = async (file: any, postType: string) => {
@@ -103,7 +110,7 @@ const allPlugins = (postType: string) => [
 
     imagePlugin({
         imageUploadHandler: async (file) => imageUpload(file, postType),
-        imagePreviewHandler: async (imageSource) => imagePreview(imageSource),
+        imagePreviewHandler: async (imageSource) => await imagePreview(imageSource),
     }),
 ]
 
