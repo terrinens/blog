@@ -3,6 +3,7 @@ import path from "path";
 import {generationPostCardProps, getCompileMDX} from "@/app/lib/Posts";
 import Image from "next/image";
 import {DefaultImg, PostsDir, rootPath} from "@/app/lib/Config";
+import {MDXImage} from "@_mdx-components/*";
 
 export type PostRenderProps = {
     postName: string;
@@ -54,8 +55,6 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
     );
 }
 
-
-/* Nextjs 14에서 더이상 serialize를 사용해서 데이터를 컴파일링 하지 않는 이유 : https://github.com/hashicorp/next-mdx-remote?tab=readme-ov-file#react-server-components-rsc--nextjs-app-directory-support */
 export async function PostRender({postName, deep, headerIgnore}: PostRenderProps) {
     const {content, frontmatter} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
     const cardProps = generationPostCardProps(postName, frontmatter)
@@ -104,13 +103,20 @@ const dateFormatter = (date: Date) => {
 
 export function PostCard(props: PostCardProps) {
     const info = props.info;
+
+    const imgSrc = info.mainImg == null ? DefaultImg.src : info.mainImg;
+    const imgClass = 'w-full h-full object-cover';
+    const style: React.CSSProperties = {objectFit: "cover", width: "100%", height: "100%"}
+
+    const img = (info.mainImg == null)
+        ? <Image style={style} className={imgClass} width={'100'} height={'100'} src={DefaultImg.src} alt={'none'}/>
+        : <MDXImage style={style} className={imgClass} type={'main'} src={imgSrc} alt={'none'}/>;
+
     return (
         <div className="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
             <a href={path.join(rootPath, '/posts/view/', props.filename)}>
-                <div className="h-40 flex flex-col justify-center items-center rounded-t-xl">
-                    <Image width={200} height={80} className='w-full, h-full object-cover'
-                           src={info.mainImg == null ? DefaultImg.src : info.mainImg}
-                           alt={info.mainImg == null ? DefaultImg.alt : ''}/>
+                <div className="w-full h-40 flex flex-col justify-center items-center rounded-t-xl">
+                    {img}
                 </div>
                 <div className="p-2 md:p-4">
                     <div className='text-center pt-1 text-sm text-gray-500'>
@@ -144,5 +150,5 @@ export function PostCard(props: PostCardProps) {
                 </div>
             </a>
         </div>
-    )
+    );
 }

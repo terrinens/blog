@@ -8,9 +8,11 @@ type MDXImageType = {
 }
 
 /*https://stackoverflow.com/a/65681762/23506904*/
-export function MDXImage({type, src, alt = '', width = 100, height = 100, style}: MDXImageType) {
+export function MDXImage({type, src, alt = '', width = 100, height = 100, style, className}: {
+    className?: string
+} & MDXImageType) {
     const image = require(`../../data/image/${type}/${src}`);
-    return <Image src={image.default} alt={alt} width={width} height={height} style={style}/>;
+    return <Image src={image.default} alt={alt} width={width} height={height} className={className} style={style}/>;
 }
 
 /*

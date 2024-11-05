@@ -107,7 +107,12 @@ export async function getPostListData(...deep: (string)[]): Promise<PostListProp
 }
 
 export function generationPostCardProps(filename: string, frontmatter: Record<string, unknown>): PostCardProps {
-    if (!(frontmatter.tags instanceof Array)) frontmatter.tags = (frontmatter.tags as string).split(',').map(str => str.trim());
+    if (!(frontmatter.tags instanceof Array)) {
+        frontmatter.tags = (frontmatter.tags as string).split(',').map(str => str.trim());
+    }
+
+    frontmatter.tags = (frontmatter.tags as string[]).filter(tag => tag.length > 0);
+
     return {
         filename: filename,
         info: {
