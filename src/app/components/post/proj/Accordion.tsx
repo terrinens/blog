@@ -40,7 +40,7 @@ export function AccordionBlock({props, children}: { props: AccordionProps, child
 
     return (
         <div
-            className={`${props.ariaExpanded ? 'active' : ''} mb-5 hs-accordion hs-accordion-active:border-gray-200 bg-white border border-transparent rounded-xl dark:hs-accordion-active:border-neutral-700 dark:bg-neutral-800 dark:border-transparent`}
+            className={`${props.ariaExpanded ? 'active' : ''} w-full items-center max-w-xl  mb-5 hs-accordion hs-accordion-active:border-gray-200 bg-white border border-transparent rounded-xl dark:hs-accordion-active:border-neutral-700 dark:bg-neutral-800 dark:border-transparent`}
             id={props.title}>
             <AccordionButton props={props}/>
             {props.anchor ? (
@@ -54,7 +54,7 @@ export function AccordionBlock({props, children}: { props: AccordionProps, child
 
 export function AccordionCase({children}: { children: React.ReactNode }) {
     return (
-        <div className="hs-accordion-group" data-hs-accordion-always-open=''>
+        <div className="hs-accordion-group flex justify-center items-center w-full mx-auto pt-5 px-0 sm:px-6 lg:px-8" data-hs-accordion-always-open=''>
             {children}
         </div>
     )

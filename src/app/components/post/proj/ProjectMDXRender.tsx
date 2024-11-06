@@ -80,7 +80,7 @@ export async function ProjectInfoRender({props, docs_list}: {
     const docsDirs = docs_list.entries.flatMap(x => x.dir);
 
     return (
-        <div className='prose'>
+        <div className='prose w-full'>
             <DocsBreadcrumb projName={deep[2]} dirs={docsDirs} now={'info'} baseUrl={deep}/>
             <DocsTreeView docs_list={docs_list}/>
             {content}

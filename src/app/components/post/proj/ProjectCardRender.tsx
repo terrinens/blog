@@ -60,13 +60,13 @@ function ProjCard(key: number, type: string, prop: PostCardProps) {
     const dir = prop.filename;
 
     return (
-        <div key={`info:${key}`} className='p-4 border border-gray-200 shadow-sm rounded-xl mb-5 items-center'>
+        <div key={`info:${key}`} className='w-full p-4 border border-gray-200 shadow-sm rounded-xl mb-5 items-center'>
             <a
-                className="my-4 group flex flex-col focus:outline-none mb-1 h-80 w-full md:w-96 lg:w-full"
+                className="my-4 group flex flex-col focus:outline-none mb-1 h-80 w-full"
                 href={path.join(rootPath, 'projects/view', type, dir)}>
-                <div className="h-60 w-full relative flex justify-center overflow-hidden bg-gray-100 rounded-2xl">
+                <div className="h-60 w-full relative flex justify-center overflow-hidden rounded-2xl">
                     <Image fill
-                           style={{objectFit: 'cover'}}
+                           style={{objectFit: 'contain'}}
                            className="object-cover group-hover:scale-105 group-focus:scale-105 transition-transform duration-500 ease-in-out rounded-2xl"
                            src={info.mainImg == null ? DefaultImg.src : info.mainImg}
                            alt="Project Image"
@@ -93,7 +93,7 @@ function ProjCard(key: number, type: string, prop: PostCardProps) {
 
 function generationCards(type: string, props: PostCardProps[]) {
     return (
-        <div className='mt-2'>
+        <div className='mt-2 max-w-xl w-full flex flex-col items-center'>
             {
                 props.map((prop, index) => {
                     return (

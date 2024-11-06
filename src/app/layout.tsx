@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import PrelineScript from "@/app/components/PrelineScript";
+import ScriptsLoad from "@_components/ScriptsLoad";
 import Header from "@/app/components/frame/Header";
 import Main from "@/app/components/frame/Main";
 import Footer from "@/app/components/frame/Footer";
@@ -19,7 +19,7 @@ export default function RootLayout({children}: RootLayoutProps) {
             {children}
         </Main>
         <Footer/>
-        <PrelineScript/>
+        <ScriptsLoad/>
         </body>
         </html>
     );
