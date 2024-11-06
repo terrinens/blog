@@ -1,4 +1,4 @@
-import {getAllCodeBytes} from "@/app/lib/Github";
+import {getAllCodeBytes} from "@/app/lib/GithubCodeByte";
 
 const ChartColors: string[] = [
     "#1C64F2",

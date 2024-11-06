@@ -1,6 +1,7 @@
 import type {MDXComponents} from "mdx/types";
 import Image from "next/image";
 import React from "react";
+import GitMembers from "@_components/post/proj/GitMembers";
 
 type MDXImageType = {
     type: string, src: string, alt?: string, width?: number, height?: number,
@@ -43,6 +44,7 @@ export function MDXImage({type, src, alt = '', width = 100, height = 100, style,
 export function userMDXComponents(mdxComponents?: MDXComponents): MDXComponents {
     return {
         ...mdxComponents,
-        MDXImage
+        MDXImage,
+        GitMembers
     };
 }
