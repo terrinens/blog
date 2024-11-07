@@ -2,6 +2,7 @@ import type {MDXComponents} from "mdx/types";
 import Image from "next/image";
 import React from "react";
 import GitMembers from "@_components/post/proj/GitMembers";
+import GitContributors, {ForceCreateGitContributors} from "@_components/post/proj/GitContributors";
 
 type MDXImageType = {
     type: string, src: string, alt?: string, width?: number, height?: number,
@@ -45,6 +46,8 @@ export function userMDXComponents(mdxComponents?: MDXComponents): MDXComponents 
     return {
         ...mdxComponents,
         MDXImage,
-        GitMembers
+        GitMembers,
+        GitContributors,
+        ForceCreateGitContributors,
     };
 }

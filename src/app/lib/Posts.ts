@@ -3,7 +3,7 @@ import path from 'path';
 import {compileMDX} from "next-mdx-remote/rsc";
 import {PostCardProps} from "@/app/components/post/main/PostRender";
 import {PostsDir} from "@/app/lib/Config";
-import {userMDXComponents} from "@/app/components/mdx-components";
+import {userMDXComponents} from "@_components/MDXComponents";
 import React from "react";
 
 /** 페이징 계산을 위해 만들어진 클래스 입니다. */

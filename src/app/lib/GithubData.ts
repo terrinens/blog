@@ -7,9 +7,9 @@ export type SimpleGitUserInfo = {
 }
 
 export type GitUserInfo = {
-    createdAt: Date;
     blog: string | undefined
     publicRepos: number;
+    bio: string;
 } & SimpleGitUserInfo;
 
 function genSimpleGitUserInfo(userJson: Record<string, any>): SimpleGitUserInfo {
@@ -23,9 +23,9 @@ function genGitUserInfo(userJson: Record<string, any>): GitUserInfo {
     const simpleInfo = genSimpleGitUserInfo(userJson);
     const blog = userJson.blog;
     const publicRepos = userJson.public_repos;
-    const createdAt = new Date(userJson.created_at);
+    const bio = userJson.bio;
 
-    return {...simpleInfo, blog, publicRepos, createdAt};
+    return {...simpleInfo, blog, publicRepos, bio};
 }
 
 export async function getOrgMemberSimpleInfo(orgName: string, option?: { token?: string }) {
@@ -43,6 +43,17 @@ export async function getOrgMemberSimpleInfo(orgName: string, option?: { token?:
     return simples;
 }
 
+export async function callUserInfos(...userNames: string[]) {
+    const calls = userNames.map(name => {
+        const api = `https://api.github.com/users/${name}`;
+        return callAPI(api);
+    })
+
+    const jsons = await Promise.all(calls);
+
+    return jsons.map(json => genGitUserInfo(json));
+}
+
 export async function getOrgContributorsInfo(
     orgName: string, repName: string,
     option?: { token?: string; forceAdd?: string[] }) {
@@ -53,11 +64,12 @@ export async function getOrgContributorsInfo(
 
     if (json.length < 0) return [];
 
+    const forceInfos: GitUserInfo[] = [];
     if (option && option.forceAdd) {
         const forceList = option.forceAdd
-            .filter(name => !json.some((user: Record<string, any>) => user.login === name))
-            .map(name => ({url: `https://api.github.com/users/${name}`}));
-        json = json.concat(forceList);
+            .filter(name => !json.some((user: Record<string, any>) => user.login === name));
+
+        forceInfos.push(...(await callUserInfos(...forceList)))
     }
 
     const userInfos: GitUserInfo[] = [];
@@ -66,5 +78,6 @@ export async function getOrgContributorsInfo(
         userInfos.push(genGitUserInfo(userData));
     }
 
-    return userInfos;
+    return userInfos.concat(forceInfos);
 }
+

@@ -26,7 +26,7 @@
         "./src/*"
       ],
       "@_mdx-components/*": [
-        "./src/app/components/mdx-components.tsx"
+        "./src/app/components/MDXComponents.tsx"
       ],
       "@_components/*": [
         "./src/app/components/*"

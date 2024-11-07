@@ -24,7 +24,7 @@ function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, pop
                     <p className="m-0 p-0 text-base font-semibold leading-none text-gray-900 dark:text-white">
                         {simpleInfo.name}
                     </p>
-                    <p className="m-0 p-0 mb-3 text-sm font-normal" style={{color: 'rgb(107, 114, 128)'}}>
+                    <p>
                         <a href={simpleInfo.gitURL} style={{textDecoration: 'none', color: 'inherit'}}>
                             {`${simpleInfo.name}@github.com`}
                         </a>
@@ -39,7 +39,7 @@ function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, pop
 export default async function GitMembers({orgName, token}: { orgName: string, token: string }) {
     const simpleInfos = await getOrgMemberSimpleInfo(orgName, {token: token});
     return (
-        <div className={'mb-5'}>
+        <div className={'not-prose mb-5'}>
             <div className={'flex'}>
                 {simpleInfos.map((info, index) => (
                     <GitMember key={index} simpleInfo={info} popoverId={`${info.name}:${index}`}/>
