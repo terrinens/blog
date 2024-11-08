@@ -31,6 +31,7 @@ import {
 } from '@mdxeditor/editor'
 import {ForwardedRef} from "react";
 import {gitMemberComponentDescriptors, InsertGitMember,} from "@/app/component/MDX/GitMember";
+import {gitContributorsComponentDescriptors, InsertGitContributors} from "@/app/component/MDX/GitContributors";
 
 /* public외 제대로 접근이 불가능한 소스임.
  * 본 프로젝트의 특성상 MDX는 이미 빌드완료된 소스이기 때문에 /_next/static/media/download.538da40f.jpg 같이 이미지를 참조해서 가져옴.
@@ -84,10 +85,11 @@ function Toolbar() {
             <CreateLink/>
             <InsertCodeBlock/>
             <InsertTable/>
-
             <InsertImage/>
 
+            <Separator/>
             <InsertGitMember/>
+            <InsertGitContributors/>
         </>
     )
 }
@@ -120,7 +122,12 @@ const allPlugins = (postType: string) => [
         imagePreviewHandler: async (imageSource) => await imagePreview(imageSource),
     }),
 
-    jsxPlugin({jsxComponentDescriptors: [gitMemberComponentDescriptors]})
+    jsxPlugin({
+        jsxComponentDescriptors: [
+            gitMemberComponentDescriptors,
+            gitContributorsComponentDescriptors,
+        ]
+    })
 ]
 
 

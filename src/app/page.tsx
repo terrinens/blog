@@ -125,7 +125,7 @@ export default function Home() {
     };
 
     return (
-        <div>
+        <div className={'bg-white'}>
             <MDXContentLoad onFileLoad={handleMainFileLoad} labelName={'불러오기'}/>
             <TimestampCalender/>
             <TypeButton onTypeChange={handleTypeChange} onSave={handleSave}/>

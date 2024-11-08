@@ -10,7 +10,7 @@ export type SimpleGitUserInfo = {
     avatarURL: string;
 }
 
-const simpleInfos = [
+const dummyInfos = [
     {
         name: "Belieb3764",
         gitURL: "https://github.com/Belieb3764",
@@ -68,11 +68,11 @@ function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, pop
     )
 }
 
-export function DummyElement({orgName, token}: { orgName: string, token: string }) {
+export function DummyElement() {
     return (
         <div className={'not-prose mb-5'}>
             <div className={'flex'}>
-                {simpleInfos.map((info, index) => (
+                {dummyInfos.map((info, index) => (
                     <GitMember key={index} simpleInfo={info} popoverId={`${info.name}:${index}`}/>
                 ))}
             </div>
