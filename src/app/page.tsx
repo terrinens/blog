@@ -6,8 +6,9 @@ import {MDXEditorMethods} from "@mdxeditor/editor";
 import {MainTemplate, ProjTemplate, TypeButton} from "./component/TypeButton";
 import path from "path";
 import TimestampCalender, {formatDateTime} from "./component/TimestampCalender";
-import MdxContentLoad from "./component/MdxContentLoad";
+import MDXContentLoad from "./component/MDX/MDXContentLoad";
 
+import '../../node_modules/@mdxeditor/editor/dist/style.css';
 
 async function mdxSave(postType: string, content: string, fileName?: string, isApi?: boolean) {
     const response = await fetch(`http://localhost:3000/api/save/post`, {
@@ -124,8 +125,8 @@ export default function Home() {
     };
 
     return (
-        <div className="prose">
-            <MdxContentLoad onFileLoad={handleMainFileLoad} labelName={'불러오기'}/>
+        <div>
+            <MDXContentLoad onFileLoad={handleMainFileLoad} labelName={'불러오기'}/>
             <TimestampCalender/>
             <TypeButton onTypeChange={handleTypeChange} onSave={handleSave}/>
             <div style={{border: '1px solid black'}}>

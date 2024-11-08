@@ -1,4 +1,5 @@
 'use client'
+
 import {
     BlockTypeSelect,
     BoldItalicUnderlineToggles,
@@ -14,6 +15,7 @@ import {
     InsertImage,
     InsertTable,
     InsertThematicBreak,
+    jsxPlugin,
     linkDialogPlugin,
     linkPlugin,
     listsPlugin,
@@ -28,6 +30,7 @@ import {
     toolbarPlugin,
 } from '@mdxeditor/editor'
 import {ForwardedRef} from "react";
+import {gitMemberComponentDescriptors, InsertGitMember,} from "@/app/component/MDX/GitMember";
 
 /* public외 제대로 접근이 불가능한 소스임.
  * 본 프로젝트의 특성상 MDX는 이미 빌드완료된 소스이기 때문에 /_next/static/media/download.538da40f.jpg 같이 이미지를 참조해서 가져옴.
@@ -83,9 +86,12 @@ function Toolbar() {
             <InsertTable/>
 
             <InsertImage/>
+
+            <InsertGitMember/>
         </>
     )
 }
+
 
 const allPlugins = (postType: string) => [
     toolbarPlugin({toolbarContents: () => <Toolbar/>}),
@@ -108,19 +114,24 @@ const allPlugins = (postType: string) => [
         }
     }),
 
+
     imagePlugin({
         imageUploadHandler: async (file) => imageUpload(file, postType),
         imagePreviewHandler: async (imageSource) => await imagePreview(imageSource),
     }),
+
+    jsxPlugin({jsxComponentDescriptors: [gitMemberComponentDescriptors]})
 ]
 
 
 export default function DemoEditor({editorRef, postType, ...props}: {
     editorRef: ForwardedRef<MDXEditorMethods> | null, postType: string
 } & MDXEditorProps) {
+
+
     return (
         <MDXEditor
-            contentEditableClassName="prose max-w-full font-sans"
+            contentEditableClassName="max-w-full font-sans"
             plugins={allPlugins(postType)}
             {...props}
             ref={editorRef}

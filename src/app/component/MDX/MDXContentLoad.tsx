@@ -14,7 +14,7 @@ const Button = (labelName: string, handleFileChange) => (
     </div>
 )
 
-const MdxContentLoad = ({onFileLoad, labelName}) => {
+const MDXContentLoad = ({onFileLoad, labelName}) => {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
 
@@ -34,4 +34,4 @@ const MdxContentLoad = ({onFileLoad, labelName}) => {
 };
 
 
-export default MdxContentLoad;
+export default MDXContentLoad;
