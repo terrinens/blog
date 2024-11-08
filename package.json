@@ -12,15 +12,23 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@mdxeditor/editor": "^3.14.0",
+    "@mdxeditor/editor": "^3.17.0",
+    "esbuild": "^0.24.0",
+    "flowbite": "^2.5.2",
     "next": "14.2.15",
+    "preline": "^2.5.1",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.9",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/glob": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.20",
+    "glob": "^11.0.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
     "typescript": "^5"
