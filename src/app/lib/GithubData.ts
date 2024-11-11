@@ -58,7 +58,7 @@ export async function getOrgContributorsInfo(
     orgName: string, repName: string,
     option?: { token?: string; forceAdd?: string[] }) {
 
-    let json = await callAPI(`https://api.github.com/repos/${orgName}/${repName}/contributors`,
+    const json = await callAPI(`https://api.github.com/repos/${orgName}/${repName}/contributors`,
         option ? {replaceToken: option.token} : {}
     )
 
