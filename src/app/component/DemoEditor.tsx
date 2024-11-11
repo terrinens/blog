@@ -6,6 +6,7 @@ import {
     codeBlockPlugin,
     codeMirrorPlugin,
     CodeToggle,
+    ConditionalContents,
     CreateLink,
     frontmatterPlugin,
     headingsPlugin,
@@ -76,29 +77,35 @@ const imageUpload = async (file: any, postType: string) => {
 
 function Toolbar() {
     return (
-        <>
-            <InsertFrontmatter/>
-            <InsertThematicBreak/>
-            <BlockTypeSelect/>
-            <Separator/>
+        <ConditionalContents options={[
+            {
+                fallback: () => (
+                    <>
+                        <InsertFrontmatter/>
+                        <InsertThematicBreak/>
+                        <BlockTypeSelect/>
+                        <Separator/>
 
-            <CodeToggle/>
-            <BoldItalicUnderlineToggles/>
-            <Separator/>
+                        <CodeToggle/>
+                        <BoldItalicUnderlineToggles/>
+                        <Separator/>
 
-            <ListsToggle/>
-            <Separator/>
+                        <ListsToggle/>
+                        <Separator/>
 
-            <CreateLink/>
-            <InsertCodeBlock/>
-            <InsertTable/>
-            <InsertImage/>
+                        <CreateLink/>
+                        <InsertCodeBlock/>
+                        <InsertTable/>
+                        <InsertImage/>
 
-            <Separator/>
-            <InsertGitMember/>
-            <InsertGitContributors/>
-            <InsertForceCreateGitContributors/>
-        </>
+                        <Separator/>
+                        <InsertGitMember/>
+                        <InsertGitContributors/>
+                        <InsertForceCreateGitContributors/>
+                    </>
+                )
+            }
+        ]}/>
     )
 }
 
@@ -147,10 +154,11 @@ export default function DemoEditor({editorRef, postType, ...props}: {
 
     return (
         <MDXEditor
-            contentEditableClassName="max-w-full font-sans"
-            plugins={allPlugins(postType)}
+            className="full-demo-mdxeditor"
+            contentEditableClassName="prose max-w-full font-sans"
             {...props}
             ref={editorRef}
+            plugins={allPlugins(postType)}
         />
     )
 }
