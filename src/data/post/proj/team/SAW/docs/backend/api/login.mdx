@@ -1,0 +1,87 @@
+---
+title: API::Login
+mainImg: ' '
+timestamp: Thu Oct 03 2024 18:57:46 GMT+0900 (한국 표준시)
+start: 2022-02-07T00:00:00.000Z
+end: 2023-04-02T00:00:00.000Z
+tags: ' '
+description: SAW Backend Login API
+---
+
+# Login
+
+해당 문서는 Login API를 설명하는 문서입니다.
+
+## 새유저 생성
+
+### POST /user/create
+
+#### Content-Type: application/json
+
+```txt
+{
+  "userID": "string",
+  "password": "string",
+  "userName": "string"
+}
+```
+
+### 반환값
+
+```txt
+{
+ "code" : 201
+ "message" : "새 유저 생성에 성공했습니다."
+}
+```
+
+***
+
+## 로그인
+
+### POST /user?userID=\{\{userID}}\&password=\{\{password}}
+
+#### Content-Type: application/x-www-form-urlencoded
+
+### 반환값
+
+```txt
+Authorization : token
+Refresh-Token : ref-token
+
+{
+ "code" : 201
+ "message" : "성공적으로 로그인 되었습니다."
+}
+```
+
+###
+
+***
+
+## 프로필 수정
+
+### PUT /user
+
+#### Content-Type: application/json
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+{
+  "userName": "string"
+}
+```
+
+### 반환값
+
+```txt
+{
+ "code" : 201
+ "message" : "유저 프로필 업데이트가 정상적으로 처리됐습니다."
+}
+```
+
+###

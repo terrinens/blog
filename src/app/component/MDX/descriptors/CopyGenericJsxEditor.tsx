@@ -97,7 +97,13 @@ const CopyGenericJsxEditor = ({mdastNode, descriptor, TargetNode}: {
 
             {descriptor.hasChildren && TargetNode
                 ? <TargetNode {...Object.fromEntries(
-                    Object.entries(properties).map(([key, value]) => [key, value])
+                    Object.entries(properties).map(([key, value]) => {
+                        if (typeof value === 'string' && value.includes(',')) {
+                            const arrayValue = value.split(',').map(item => item.trim());
+                            return [key, arrayValue];
+                        }
+                        return [key, value];
+                    })
                 )} />
                 : (<span>{mdastNode.name}</span>)}
         </div>

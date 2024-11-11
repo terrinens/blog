@@ -1,0 +1,175 @@
+---
+title: API::FoodMap
+mainImg: ' '
+timestamp: 2024-10-03T09:57:46.310Z
+start: 2022-02-07T00:00:00.000Z
+end: 2023-04-02T00:00:00.000Z
+tags: ' '
+description: SAW Backend FoodMap API
+---
+
+# FoodMap
+
+해당 문서는 FoodMap API를 설명하는 문서입니다.
+
+## 모든 포스팅 반환
+
+### GET /posts/foodmap
+
+
+
+#### 반환값&#x20;
+
+```txt
+[
+  {
+    "id": 46,
+    "title": "MNzlbBcIpNgFBpyJwjV2VW9xGMjucx3Y6sM_O0asgKq_z_dk3_1PnDHKpivcdDdUpb9amTkcEzLdt_zUYcfqC5mYfuDlSKjNhFG_nI14n7G7NlJfAE__oc7cmPT",
+    "description": "having funing storrrrrrrrrrrrrrrrrrrrrrrrry!!!",
+    "date": "2024-10-08T23:18:20.333485",
+    "images": [
+      "http://{{minioURL}}:8151/foodmap750a1d9c-91cf-4ed0-a2d1-7cd837a033d5_image.jpg"
+    ],
+    "coordinates": [
+      3.8968985,
+      5.5012736
+    ]
+  },
+  {
+    "id": 45,
+    "title": "jvGNs4srO54SpZvXyKtQwXtrq3hktfX6YAQdXxA5icXOthJAWN_qUqMmAqcTmGZhUjj1Lz_CHsE8gTRutch22QWNEx7ttJwUaThUjP0WGVc2IWjri5uOvt0Y7F0",
+    "description": "having funing storrrrrrrrrrrrrrrrrrrrrrrrry!!!",
+    "date": "2024-10-08T23:18:19.901989",
+    "images": [
+      "http://{{minioURL}}:8151/foodmap66a7931f-da36-4399-b20c-5e85e85266c3_image.jpg"
+    ],
+    "coordinates": [
+      7.473716,
+      10.418908
+    ]
+  },
+  /* ... */
+]
+```
+
+
+
+***
+
+## 푸드맵 새 포스팅
+
+### POST /posts/foodmap
+
+#### Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+--WebAppBoundary
+Content-Disposition: form-data; name="dto"
+Content-Type: application/json
+
+{
+  "title": "{{$random.alphanumeric(123)}}",
+  "date": "{{$isoTimestamp}}",
+  "coordinates": [{{$random.float(12)}}, {{$random.float(12)}}],
+  "description": "having funing storrrrrrrrrrrrrrrrrrrrrrrrry!!!"
+}
+
+--WebAppBoundary
+Content-Disposition: form-data; name="files"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< path/to/some.jpg
+```
+
+### 반환값
+
+```txt
+{
+ "code" : 201,
+ "message" : "데이터 등록에 성공했습니다."
+}
+```
+
+***
+
+## 푸드맵 수정
+
+### PUT /posts/foodmap/\{\{postID}}
+
+#### Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+--WebAppBoundary
+Content-Disposition: form-data; name="dto"
+Content-Type: application/json
+
+{
+  "title": "{{$random.alphanumeric(123)}}",
+  "date": "{{$isoTimestamp}}",
+  "coordinates": [{{$random.float(12)}}, {{$random.float(12)}}],
+  "description": "updatingggggg having funing storrrrrrrrrrrrrrrrrrrrrrrrry!!!"
+}
+
+--WebAppBoundary
+Content-Disposition: form-data; name="files"; filename="image.jpg"
+Content-Type: image/jpeg
+
+< path/to/some.jpg
+```
+
+### 반환값
+
+```txt
+{
+ "code" : 201,
+ "message" : "데이터 수정에 성공했습니다."
+}
+```
+
+***
+
+## 푸드맵 삭제
+
+### DELETE /posts/foodmap/34
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+###
+
+### 반환값
+
+```txt
+{
+ "code" : 204
+}
+```
+
+***
+
+## 푸드맵 영구 삭제
+
+### DELETE /posts/foodmap/admin/33?cause=\{\{cause}}
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+
+
+### 반환값
+
+```txt
+{
+ "code" : 204
+}
+```

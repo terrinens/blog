@@ -1,0 +1,393 @@
+# POST
+
+해당 문서는 게시글을 작성하는데 필요한 POST API를 설명하는 문서입니다.
+
+## 게시글 조회
+
+### GET /posts/post/\{\{postID}}
+
+#### Content-Type: application/json
+
+### 반환값
+
+```txt
+{
+  "id": 1,
+  "userName": "_2Ng3fjr",
+  "title": "modify 71tmno0CGgonrt84pidNl0tXs_946J4POJ543F1PcLtU2FRNOE197IsiG",
+  "content": "modify <p>9feLpiDAzCasijwlY_DT6082lvwKQqKQQoKgtUf2qMtq4wmHZbxPzZVFrX2CBHue_xqlsiLv3P1S2xEfgpPnp2Boc8Uj6DVldpSje7olL8O9axWCzCMBTcw_8iUUve15Q525COtMgAfDaXpJd</p> </br> XzsoaNtQFRC_zhX2Bhtk7kxYEOmnW1KjHw9j0s1eU4eSx7RDQh8TSzA2wlS2DOt0TfFLjeZp56Gk2yEO5IPKcFKyyj9wisrUsGT02F04euVeujfFV89J5mkT4xxqjCoIUpU2DXmJFo9ReNwSNlX78ZRdOSpZW",
+  "summary": null,
+  "atCreatedDate": "2024-10-08T21:01:16.376982",
+  "atUpdatedDate": "2024-10-08T21:01:16.376982",
+  "thumbnail": null
+}
+```
+
+***
+
+## 새 게시글 작성
+
+### POST /posts/post
+
+#### Content-Type: application/json
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+{
+  "title": "{{$random.alphanumeric(57)}}",
+  "content": "<p>{{$random.alphanumeric(145)}}</p> </br> {{$random.alphanumeric(157)}}"
+}
+```
+
+### 반환값
+
+```txt
+{
+ "code" : 201
+ "message" : "게시글 작성 완료"
+}
+```
+
+***
+
+## 게시글 수정
+
+### PUT /posts/post/\{\{postID}}
+
+#### Content-Type: application/json
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+{
+  "title": "modify {{$random.alphanumeric(57)}}",
+  "content": "modify <p>{{$random.alphanumeric(145)}}</p> </br> {{$random.alphanumeric(157)}}"
+}
+```
+
+### 반환값
+
+```txt
+{
+ "code" : 201
+ "message" : "게시글 수정 완료"
+}
+```
+
+***
+
+## 게시글 삭제
+
+### DELETE /posts/post/47
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+
+
+### 반환값&#x20;
+
+```txt
+{
+ "code" : 204
+}
+```
+
+###
+
+***
+
+## 어드민 요청 삭제
+
+### DELETE /posts/post/admin/12?cause=\{\{$random.alphanumeric(8)}}
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+
+
+### 반환값&#x20;
+
+```txt
+{
+ "code" : 204
+}
+```
+
+***
+
+## 게시글 파일 업로드
+
+### POST http://localhost:8080/posts/post/file-upload?
+
+### &#x20;   postId=\{\{postID}}
+
+#### Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="cat.jpg"
+Content-Type: image/jpeg
+< path/to/some.jpg
+```
+
+***
+
+### 반환값
+
+```txt
+{
+ "code" : 200
+ "message" : http:{{minioURL}}/board//post/{{imageURL}}
+}
+```
+
+## 게시글 리스트
+
+### GET posts/post/list/\{\{page}}/\{\{size}}
+
+
+
+### 반환값&#x20;
+
+```txt
+{
+  "totalPages": 1,
+  "totalElements": 15,
+  "number": 0,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "first": true,
+  "last": true,
+  "numberOfElements": 15,
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 15,
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "size": 15,
+  "content": [
+    {
+      "id": 63,
+      "userName": "_2Ng3fjr",
+      "title": "nolHWYQCuIp4Ppe_Ezlanr4dghn_06ewvsl_LWK7YMiqPxY87Za3Odvn6",
+      "content": null,
+      "summary": "XK3bxDdpie0X6jn_X4Y6hh_9LENPEaZYuBB9EvZFdh9uO0AsvWGJo4u1TkYLYCyjfSSqcOlIw5CIVK_7ZSipSXmTjXTttBdAQHzz1MpQH63BNfIVQqPiQlsNRrXrTlKCGhLU2oSRhSOoFk8Fr",
+      "atCreatedDate": "2024-11-11T21:59:37.53033",
+      "atUpdatedDate": "2024-11-11T21:59:37.53033",
+      "thumbnail": null
+    },
+    {
+      "id": 62,
+      "userName": "_2Ng3fjr",
+      "title": "K5KbRyJyps3W6D6wHcvakDQa5JcjZ7Vyrh4kvYA0QjgIiHwPs7N33Dv3Z",
+      "content": null,
+      "summary": "82fHY8YGn4wsEgUDjdLauM1Nk4jFvp28i6dQNVIOp0FojnSwZzEzDNqWJV754ik6uyITcOPWawCZzkde3g4ONAQMw97x2UT4FbYK7LvmC2Mlm9ZNOLAdKb5ceYnOK0Cg3lGVZWwbaAPeAoqQV",
+      "atCreatedDate": "2024-11-11T21:58:56.266477",
+      "atUpdatedDate": "2024-11-11T21:58:56.266477",
+      "thumbnail": null
+    },
+    /* ... */
+  }
+]
+```
+
+###
+
+***
+
+## 임시 저장 게시글 디테일
+
+### GET /posts/post/draft/8
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+### 반환값
+
+```txt
+{
+  "title": "<p>drafftttt!!! modifydddd!!!</p> \n uEzWCpNdkyGrarsf modify g",
+  "content": "qujSqlqZUlrBckWNdDccBjHbDoDsTdkpcwcneUqfIErgDZmocYYguhMmCnklXByviTrwWbygbNNeeTDcqnFMyahASOgCoBABQItBKstSWndJRSZflmokMZGziuVlAcDnesBhCgLAToJxwxwGwGnqRTcNYsnlwHnuQIgnVLnPbXxNVRcizyJiCAesZBKhYkRkZTvuWaxQLNptZvmRnUIbdMJAQENRjSTcqAPoupsyrwCHlNfXBBMoDY"
+}
+```
+
+***
+
+## 새 임시 저장
+
+### POST /posts/post/draft
+
+#### Content-Type: application/json
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+{
+  "title": "{{$random.alphanumeric(157)}}",
+  "content": "<p>{{$random.alphanumeric(579)}}</p>"
+}
+```
+
+### 반환값
+
+```txt
+{
+  "id": 65,
+  "message": "임시 저장이 완료되었습니다."
+}
+```
+
+***
+
+## 임시 저장에서 정식 포스팅으로 변경
+
+### POST /posts/post/draft/\{\{draft\_id}}
+
+#### Content-Type: application/x-www-form-urlencoded
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+### 반환값
+
+```txt
+{
+ "message" : "임시저장에서 정식 포스팅으로 성공적으로 완료되었습니다."
+}
+```
+
+***
+
+## 임시 저장된 포스트 수정
+
+### PUT /posts/post/draft/\{\{draft\_id}}
+
+#### Content-Type: application/json
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+```txt
+{
+  "title": "posting {{$random.alphanumeric(157)}}",
+  "content": "i am posting hahahaha!!! <p>{{$random.alphanumeric(579)}}</p>"
+}
+```
+
+### 반환값
+
+```txt
+{
+ "code" : 201
+ "message": "임시 저장이 업데이트 되었습니다."
+}
+```
+
+***
+
+## 임시 저장 삭제
+
+### DELETE /posts/post/draft/\{\{draft\_id}}
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+### 반환값
+
+```txt
+{
+ "code" : 204
+}
+```
+
+***
+
+## 임시 저장 리스트
+
+### GET /posts/post/draft/list/\{\{page}}/\{\{size}}
+
+#### Authorization: \{\{access\_token}}
+
+#### Refresh-Token: \{\{refresh\_token}}
+
+### 반환값
+
+```txt
+{
+  "totalPages": 1,
+  "totalElements": 6,
+  "number": 0,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "first": true,
+  "last": true,
+  "numberOfElements": 6,
+  "pageable": {
+    "pageNumber": 0,
+    "pageSize": 15,
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "size": 15,
+  "content": [
+    {
+      "id": 29,
+      "userName": null,
+      "title": "xtGbGpHhCDZVBqPdbh31n2ICoV6DvaPeQJ9Flh_BHopjFXxXiRFw2tLhFbeoyv6PSMc7Iabbppxvtch2kcC_DURDZ34eX9SRqml8sNYsZbjDS28PyE8YkpYXS8SFwAmvO0LGB3JnGHmZ72MDCAkR456ztfDeK",
+      "content": "<p>oDdHirarTkCSUWlA0DHJ3PatGwcbrHE2rlU8OP45brEH3lSXoancX1SbAGSw6wCsa8eXgKnkKZRiwJtqJA662Rmca4fs9VZu8r0lV98for2dtjDMton5uKuFu9Gy5XtyOdvKkLRF5v4RxJ6S5qMTF2egPI1nc9Hrm0l2FI_RcTCEy4crzpS3hXEVa59EEeV1U2Ehqfze0CYwCvbVGxqXTeoOV8nMorIniFcTWEj8qJHLuaTQYVgca_f2ksTjnPKjhpPB6SvQot7j0LG9Q8eEpDE9eapatzsYNFvjQaC5cJ9r3dt0mS8Seb73VnN8szK5aConB724G8iQH_g0bX24fWB8JbxNhqijqetnRN0s_866JebrbUj0Lsmk0rjVK7vgwRnPyCnEL8WUZlb81vUecVM0nYePtyhxcbgUYra5B3XLjTwksFNHSqprMd32tguka6bWrJRLbHMSENiazDIiTS_lUL2g_D5H5OLjbcTFi0wkGl2F_8VTZvnrNRxbJLWM07kPDv4IqriXQb5_3ugtapXEnR_lh8eo_LAW15PyW4JfwZpP9AA5_ZBmKKI04TIRfH4</p>",
+      "summary": null,
+      "atCreatedDate": "2024-10-08T21:57:04.018293",
+      "atUpdatedDate": "2024-10-08T21:57:04.018293",
+      "thumbnail": null
+    },
+    {
+      "id": 28,
+      "userName": null,
+      "title": "lRFjTbmjav5vRiMe7ZOkDIlUJksCNqaJHAC5xMcF672WDBpR1WDPdkTRb0ecnnR3bPNsm5qbmlyYp_bLzNwExSN7ryKSINoCvtMrEJf89J_YZku5pzO6PPosW5BnfQJZ2eNs_MjcrOqqDz_kF74t53giTkuDf",
+      "content": "<p>cso6DcSLLJTYLEHWDDk9LQ3qiu7wflI0IMrHWjo_ahPZL40afdW08eKRmQRb7wsNqNsok7cPWlUFtJrJW4fnyLFOFuFjLPf74PIUfIXtyRmiac8JTe8TP4L9dp2QWlAAvn0KtfY_VEpPhFsKtsFCtwcxlO9dHPlDCnysCmhaI7hsCZXcTVozs_12S1a1reWK1z5R8FBM2H1wsQZdDvfEEGwlMNr0icfbtai3q09Pi8NhqPpiodyDO2cW0mk6k2aaodKdiZrMCRN5LsK_3sIaAm7t3LriAh34Gv4nva9q5F7g61oMiTsDfeEaE6BLzI5GLLW16PPoxjE0WDdypMEsGHX3ejjTHzEOAx7D1K0kSzCe_pRnNSm0nZGXZdrb6bDWZPl9Wjiot_SPPbgKCc6DxcNN1MfN8GAncMCgxjnc1CPSuTcxWfejZx_KxXT4aIfgdbPeTqKuj5w8TiKJu4jDZEPkWwQdx3hEujvUo6B5mLGnnIp_RW32gmW5go1CjftowerPbBE0zo1sQQSj6wVs7IgVE1T4ciHLbWb63X1nYHOdcxE_etBLz1LM8sT2SnyvlqO</p>",
+      "summary": null,
+      "atCreatedDate": "2024-10-08T21:52:51.067229",
+      "atUpdatedDate": "2024-10-08T21:52:51.067229",
+      "thumbnail": null
+    },
+    /* ... */
+ ]
+}
+```
