@@ -190,3 +190,39 @@ export async function countUsedTags(dirs: string[]) {
 
     return data;
 }
+
+export interface DirectoryNode {
+    name: string,
+    type: "dir" | "file",
+    children?: DirectoryNode[];
+}
+
+export function getDocsTreeNode(projPath: string): DirectoryNode {
+    const dirPath = path.join(PostsDir, 'proj', projPath);
+
+    const result: DirectoryNode = {
+        name: path.basename(projPath),
+        type: 'dir',
+        children: []
+    };
+
+    const push = (add: DirectoryNode) => {
+        if (!result.children) result.children = [];
+        result.children.push(add)
+    }
+
+    const items = fs.readdirSync(dirPath);
+    items.forEach(item => {
+        const itemPath = path.join(dirPath, item);
+        const stats = fs.statSync(itemPath);
+
+        if (stats.isDirectory()) {
+            const childNode = getDocsTreeNode(path.join(projPath, item));
+            push(childNode)
+        } else {
+            push({name: item, type: 'file'});
+        }
+    });
+
+    return result;
+}

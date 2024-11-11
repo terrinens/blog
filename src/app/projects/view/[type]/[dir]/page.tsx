@@ -1,5 +1,5 @@
-import {getDirList, getPostSlugs} from "@/app/lib/Posts";
-import {DocsProps, ProjectInfoRender} from "@/app/components/post/proj/ProjectMDXRender";
+import {getDirList, getDocsTreeNode} from "@/app/lib/Posts";
+import {ProjectInfoRender} from "@/app/components/post/proj/ProjectMDXRender";
 import {PostRenderProps} from "@/app/components/post/main/PostRender";
 
 export type Props = {
@@ -14,18 +14,10 @@ export default async function Page({params}: Props) {
     const deep = ['proj', type, dir];
     const props: PostRenderProps = {postName: 'info', deep: deep}
 
-    const docs_dirs = await getDirList(...deep, 'docs');
-    const docs_list: DocsProps = {
-        entries: await Promise.all(
-            docs_dirs.map(async dir => {
-                const docs = await getPostSlugs(...deep, 'docs', dir);
-                return {dir: dir, docs: docs}
-            })
-        )
-    }
+    const dirNods = getDocsTreeNode(`${type}/${dir}/docs`)
 
     return (
-        <ProjectInfoRender props={props} docs_list={docs_list}/>
+        <ProjectInfoRender props={props} dirNods={dirNods}/>
     )
 }
 

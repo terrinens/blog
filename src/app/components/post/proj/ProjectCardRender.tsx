@@ -58,6 +58,7 @@ function GenTags(title: string, tag: string) {
 function ProjCard(key: number, type: string, prop: PostCardProps) {
     const info = prop.info;
     const dir = prop.filename;
+    const mainImageSrc = info.mainImg == null || info.mainImg.trim().length <= 0 ? DefaultImg.src : info.mainImg;
 
     return (
         <div key={`info:${key}`} className='w-full p-4 border border-gray-200 shadow-sm rounded-xl mb-5 items-center'>
@@ -68,7 +69,7 @@ function ProjCard(key: number, type: string, prop: PostCardProps) {
                     <Image fill
                            style={{objectFit: 'contain'}}
                            className="object-cover group-hover:scale-105 group-focus:scale-105 transition-transform duration-500 ease-in-out rounded-2xl"
-                           src={info.mainImg == null ? DefaultImg.src : info.mainImg}
+                           src={mainImageSrc}
                            alt="Project Image"
                            sizes="(max-width: 768px) 100vw, 50vw"
                     />

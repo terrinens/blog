@@ -1,5 +1,5 @@
 import {PostRenderProps} from "@/app/components/post/main/PostRender";
-import {getCompileMDX} from "@/app/lib/Posts";
+import {DirectoryNode, getCompileMDX} from "@/app/lib/Posts";
 import {PostsDir, rootPath} from "@/app/lib/Config";
 import React from "react";
 import path from "path";
@@ -10,7 +10,14 @@ import {
     BreadcrumbNow,
     BreadcrumbPrevious
 } from "@/app/components/post/proj/Breadcrumb";
-import {FileObject, LowerFileEntries, RootTree, SubTree} from "@/app/components/post/proj/TreeView";
+import {
+    FileEntries,
+    FileObject,
+    LowerDirEntries,
+    LowerFileEntries,
+    RootTree,
+    SubTree
+} from "@/app/components/post/proj/TreeView";
 
 type DocsBreadcrumbProps = {
     projName: string,
@@ -35,54 +42,125 @@ function DocsBreadcrumb({projName, now, dirs}: DocsBreadcrumbProps) {
     )
 }
 
-export type DocsProps = {
-    entries: {
-        dir: string;
-        docs: string[];
-    }[]
+function DocsLowerTree({dirNods}: { dirNods: DirectoryNode[] }) {
+    const files: string[] = []
+    const lowerTree = dirNods.map((node, index) => {
+        if (node.type === 'dir') {
+            return (
+                <LowerDirEntries dirname={node.name} ariaExpanded={true} key={`LDE:${index}`}>
+                    {node.children ? <DocsLowerTree dirNods={node.children}/> : null}
+                </LowerDirEntries>
+            )
+        } else {
+            files.push(node.name);
+        }
+    })
+
+    return <>
+        {lowerTree}
+        {files.length > 0
+            ? <LowerFileEntries>
+                {files.map((file, index) => (
+                    <FileObject filename={file} key={`${dirNods.keys()}:${file}:${index}`}/>
+                ))}
+            </LowerFileEntries>
+            : null
+        }
+    </>
 }
 
-function DocsTreeView({docs_list}: { docs_list: DocsProps }) {
+function DocsSubTree({dirNods}: { dirNods: DirectoryNode[] }) {
+    const files: string[] = [];
+    const subTrees = dirNods.map((node, index) => {
+        if (node.type === 'dir' && node.children) {
+            return (
+                <SubTree dirname={node.name} key={`subtree:${index}`}>
+                    <DocsLowerTree dirNods={node.children} key={`DLT-${node.name}-${index}`}/>
+                </SubTree>
+            )
+        } else {
+            files.push(node.name);
+        }
+    })
+
+    return <>
+        {subTrees}
+        {files.length > 0
+            ? (
+                <FileEntries>
+                    {files.map((file, index) =>
+                        (<FileObject filename={file} key={`${file}:${index}`}/>))}
+                </FileEntries>
+            )
+            : null
+        }
+    </>
+}
+
+function DocsTreeView({dirNods}: { dirNods: DirectoryNode }) {
+    const body = <>
+        {
+            dirNods.children?.map((node, index) => {
+                const name = node.name;
+                const dirs = [];
+                const files = [];
+
+                if (node.type === 'dir') {
+                    const deepChildren = node.children;
+                    const element =
+                        <SubTree dirname={name} ariaExpanded={true} key={`R-subtree-${name}-${index}`}
+                                 id={`subtree:-${index}`}>
+                            {deepChildren
+                                ? <DocsSubTree dirNods={deepChildren} key={`DST-${name}-${index}`}/>
+                                : null
+                            }
+                        </SubTree>;
+
+                    dirs.push(element);
+                } else {
+                    files.push(node.name)
+                }
+
+                return <div key={`body:${node.name}:${index}`}>
+                    {dirs}
+                    {files
+                        ? <FileEntries>
+                            {files.map((file, index) => (
+                                <FileObject filename={file} key={`fileObject-${index}`}/>
+                            ))}
+                        </FileEntries>
+                        : null
+                    }
+                </div>
+            })
+        }
+    </>
+
+
     return (
         <div className='mb-5'>
-            <RootTree dirname={'docs'} ariaExpanded={true}>{
-                docs_list.entries.map((entry, index) => {
-                    const dir = entry.dir;
-                    const docs = entry.docs;
-                    return (
-                        <SubTree key={`sub-tree-${index}-${dir}`} dirname={dir}
-                                 ariaExpanded={docs_list.entries.length < 5 && docs.length < 5}>
-                            <LowerFileEntries>{
-                                docs.map(doc => (
-                                    <FileObject key={`file-object-${dir}-${doc}`} filename={doc}
-                                                href={`${dir}#${doc}`}/>
-                                ))
-                            }</LowerFileEntries>
-                        </SubTree>
-                    )
-                })
-            }</RootTree>
+            <RootTree dirname={dirNods.name} ariaExpanded={true}>
+                {body}
+            </RootTree>
+            <FileObject filename={'info.mdx'}/>
         </div>
     )
 }
 
-export async function ProjectInfoRender({props, docs_list}: {
+export async function ProjectInfoRender({props, dirNods}: {
     props: PostRenderProps,
-    docs_list: DocsProps
+    dirNods: DirectoryNode
 }) {
     const deep = props.deep;
     const postName = props.postName;
 
     const projDir = path.join(PostsDir, ...deep);
-    /** TODO 최적화 할것 Source 를 제외하고 사용되지 않음 */
     const {content} = await getCompileMDX(projDir, postName + '.mdx');
-
-    const docsDirs = docs_list.entries.flatMap(x => x.dir);
 
     return (
         <div className='prose w-full'>
-            <DocsBreadcrumb projName={deep[2]} dirs={docsDirs} now={'info'} baseUrl={deep}/>
-            <DocsTreeView docs_list={docs_list}/>
+            <DocsBreadcrumb projName={deep[2]} dirs={['1', '2', '3']} now={'info'} baseUrl={deep}/>
+            <DocsTreeView dirNods={dirNods}/>
             {content}
         </div>
     );
