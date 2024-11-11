@@ -102,7 +102,7 @@ export function TypeButton({onTypeChange, onSave}: TypeButtonProps) {
                 />
             </div>
 
-            <button onClick={handleSubmit}>저장</button>
+            <button className='border border-black mb-5' onClick={handleSubmit}>저장</button>
         </div>
     );
 }

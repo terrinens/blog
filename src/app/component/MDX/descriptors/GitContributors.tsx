@@ -1,7 +1,7 @@
 import {Button, insertJsx$, JsxComponentDescriptor, usePublisher} from "@mdxeditor/editor";
-import {CopyGenericJsxEditor} from "@/app/component/MDX/CopyEditor";
+import CopyGenericJsxEditor from "@/app/component/MDX/descriptors/CopyGenericJsxEditor";
 import React from "react";
-import {SimpleGitUserInfo} from "@/app/component/MDX/GitMember";
+import {SimpleGitUserInfo} from "@/app/component/MDX/descriptors/GitMember";
 
 export declare function GitContributors({orgName, repName, role, forceAdd, token}: {
     orgName: string,
@@ -17,7 +17,7 @@ export type GitUserInfo = {
     bio: string;
 } & SimpleGitUserInfo;
 
-function Card({info, role}: { info: GitUserInfo, role?: string }) {
+export function Card({info, role}: { info: GitUserInfo, role?: string }) {
     return (
         <div
             className="max-w-72 flex flex-col rounded-xl p-4 md:p-6 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
@@ -74,7 +74,7 @@ function Card({info, role}: { info: GitUserInfo, role?: string }) {
     );
 }
 
-const dummyInfos = [
+export const dummyInfos = [
     {
         "name": "terrinens",
         "gitURL": "https://github.com/terrinens",
@@ -101,7 +101,7 @@ const dummyInfos = [
     }
 ];
 
-function DummyElement({role}: { role?: string }) {
+export function DummyElement({role}: { role?: string }) {
     return (
         <div className="not-prose max-w-[85rem] pl-0 pb-5 mx-auto">
             <div className="grid grid-cols-2 sm:grid-cols-2 sm:gap-2 md:gap-3 lg:grid-cols-4 lg:gap-6 gap-6">
@@ -115,6 +115,7 @@ function DummyElement({role}: { role?: string }) {
 
 export const gitContributorsComponentDescriptors: JsxComponentDescriptor = {
     name: 'GitContributors',
+    defaultExport: true,
     kind: 'flow',
     source: '@_components/post/proj/GitContributors',
     props: [

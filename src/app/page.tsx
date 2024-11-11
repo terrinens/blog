@@ -9,6 +9,7 @@ import TimestampCalender, {formatDateTime} from "./component/TimestampCalender";
 import MDXContentLoad from "./component/MDX/MDXContentLoad";
 
 import '../../node_modules/@mdxeditor/editor/dist/style.css';
+import {convertImagesInMDX, convertImgToMDXImages} from "@/app/component/MDX/descriptors/MDXImage";
 
 async function mdxSave(postType: string, content: string, fileName?: string, isApi?: boolean) {
     const response = await fetch(`http://localhost:3000/api/save/post`, {
@@ -26,58 +27,6 @@ async function mdxSave(postType: string, content: string, fileName?: string, isA
     else console.log('error');
 }
 
-function convertImagesInMDX(mdxContent: string) {
-    const mdImageRegex = /!\[.*?]\((.*?)\)/g;
-    const imgRegex = /<img\s+([^>]+)\/?>/g;
-
-    const nextImage = (src: string, height: number = 100, width: number = 100, alt?: string) => {
-        const type = src.split('/')[0];
-        return `<MDXImage type='${type}' src='${src.split('/')[1]}' alt='${alt}' height='${height}' width='${width}'/>`
-    }
-
-    let content = mdxContent.replace(mdImageRegex, (_, src) => {
-        return nextImage(src);
-    });
-
-    content = content.replace(imgRegex, (_, propsStr: string) => {
-        const props: { [key: string]: string; } = {};
-        const attrRegex = /(\w+)=['"]([^'"]+)['"]/g;
-        let match;
-
-        while ((match = attrRegex.exec(propsStr)) !== null) {
-            const [_, key, value] = match;
-            props[key] = value;
-        }
-
-        const src = props['src'];
-        props['src'] = src.split('/')[1];
-        props['type'] = src.split('/')[0];
-
-        return `<MDXImage ${Object.entries(props).map(([key, value]) => `${key}="${value}"`).join(' ')} />`;
-    })
-
-    return content;
-}
-
-function convertImgToMDXImages(mdxContent: string) {
-    const mdImageRegex = /<MDXImage\s+([^>]+)\/?>/g;
-    return mdxContent.replace(mdImageRegex, (_, propsStr: string) => {
-        const props: { [key: string]: string; } = {};
-
-        const attrRegex = /(\w+)=['"]([^'"]+)['"]/g;
-        let match;
-
-        while ((match = attrRegex.exec(propsStr)) !== null) {
-            const [_, key, value] = match;
-            props[key] = value;
-        }
-
-        props['src'] = path.join(props['type'], props['src']);
-        delete props['type'];
-
-        return `<img ${Object.entries(props).map(([key, value]) => `${key}="${value}"`).join(' ')} />`;
-    });
-}
 
 function updateTimestamp(mdxContent: string) {
     const newTimestamp = formatDateTime(Date.now())
@@ -116,9 +65,6 @@ export default function Home() {
     }
 
     const handleMainFileLoad = (content) => {
-        /* MDX Editor는 <Image> 같은 커스텀 노드를 인식하지 못하여 그 이하의 글들을 전부 못불러오게됨.
-         * 그래서 기존의 md 태그들을 활용해 변경해주어야 함.
-         * Image 노드만 그런지는 차후 테스트 해봐야함. */
         const conversionContent = convertImgToMDXImages(content);
         setMdx(conversionContent);
         setIsLoad(true);
@@ -129,7 +75,7 @@ export default function Home() {
             <MDXContentLoad onFileLoad={handleMainFileLoad} labelName={'불러오기'}/>
             <TimestampCalender/>
             <TypeButton onTypeChange={handleTypeChange} onSave={handleSave}/>
-            <div style={{border: '1px solid black'}}>
+            <div className={'prose border-2 border-solid border-black overflow-y-auto'}>
                 <DemoEditor postType={postType} markdown={mdx} editorRef={ref}/>
             </div>
         </div>

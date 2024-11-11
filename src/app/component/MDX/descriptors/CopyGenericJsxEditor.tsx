@@ -81,16 +81,12 @@ const genJsxEditorOnChange = (
 }
 
 
-export const CopyGenericJsxEditor = ({mdastNode, descriptor, TargetNode}: {
-    TargetNode: React.ComponentType<any>;
+const CopyGenericJsxEditor = ({mdastNode, descriptor, TargetNode}: {
+    TargetNode?: React.ComponentType<any>;
 } & JsxEditorProps) => {
     const properties = useMemoProperties({mdastNode, descriptor});
     const onChange = genJsxEditorOnChange({mdastNode, descriptor});
     const shouldRenderComponentName = descriptor.props.length == 0 && descriptor.hasChildren && descriptor.kind === 'flow'
-
-    const element = (<TargetNode {...Object.fromEntries(
-        Object.entries(properties).map(([key, value]) => [key, value])
-    )} />)
 
     return (
         <div>
@@ -99,9 +95,13 @@ export const CopyGenericJsxEditor = ({mdastNode, descriptor, TargetNode}: {
             {descriptor.props.length > 0 ?
                 <PropertyPopover properties={properties} title={mdastNode.name ?? ''} onChange={onChange}/> : null}
 
-            {descriptor.hasChildren
-                ? element
+            {descriptor.hasChildren && TargetNode
+                ? <TargetNode {...Object.fromEntries(
+                    Object.entries(properties).map(([key, value]) => [key, value])
+                )} />
                 : (<span>{mdastNode.name}</span>)}
         </div>
     )
 }
+
+export default CopyGenericJsxEditor

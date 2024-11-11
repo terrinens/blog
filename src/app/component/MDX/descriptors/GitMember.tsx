@@ -1,5 +1,5 @@
 import {Button, insertJsx$, JsxComponentDescriptor, usePublisher} from "@mdxeditor/editor";
-import {CopyGenericJsxEditor} from "@/app/component/MDX/CopyEditor";
+import CopyGenericJsxEditor from "@/app/component/MDX/descriptors/CopyGenericJsxEditor";
 import React from "react";
 
 declare function GitMembers({orgName, token}: { orgName: string, token: string }): Promise<Element>
