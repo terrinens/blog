@@ -32,7 +32,8 @@ export function saveMDX({postType, isApi, fileName, content}: SaveProps) {
 
                 const deep = fileName.split('/').slice(0, -1).join('/');
                 const apiPath = path.join(projPath, 'docs', deep);
-                if (!fs.existsSync(apiPath)) fs.mkdirSync(apiPath);
+                if (!fs.existsSync(apiPath))
+                    fs.mkdirSync(apiPath, {recursive: true});
 
                 saveFile();
             } else {

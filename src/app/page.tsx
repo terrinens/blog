@@ -75,8 +75,8 @@ export default function Home() {
             <MDXContentLoad onFileLoad={handleMainFileLoad} labelName={'불러오기'}/>
             <TimestampCalender/>
             <TypeButton onTypeChange={handleTypeChange} onSave={handleSave}/>
-            <div className={'prose border-2 border-solid border-black overflow-y-auto'}>
-                <DemoEditor postType={postType} markdown={mdx} editorRef={ref}/>
+            <div className={'w-full border-2 border-solid border-black overflow-y-auto'}>
+                <DemoEditor className={'prose'} postType={postType} markdown={mdx} editorRef={ref}/>
             </div>
         </div>
     )
