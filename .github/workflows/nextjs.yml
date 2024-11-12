@@ -2,6 +2,7 @@ name: Deploy Next.js site to Pages
 
 env:
   GIT_TOKEN: ${{ secrets.BLOG_TOKEN }}
+  GIT_SAW_TOKEN: ${{ secrets.SAW_TOKEN }}
   WORK_DIR: '/home/runner/work/blog/blog'
   TEMP_DIR: '/home/runner/work/temp_post/data'
 
