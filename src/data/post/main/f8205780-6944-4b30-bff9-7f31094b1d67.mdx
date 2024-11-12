@@ -1,0 +1,129 @@
+---
+title: Git 조직 비공개 레파지토리에 대한 요청 방식
+mainImg:
+timestamp: 2024-10-03T09:57:46.310Z
+tags: Git API
+description: Git 조직 비공개 레파지토리에 대한 요청 해결기 입니다.
+---
+
+@SAW
+
+# Git 조직 비공개 레파지토리에 대한 요청 방식
+
+해당 Git의 조직 레파지토리가 기본적으로 Privaet로 설정되어있어서 무조건 권한이 필요했다.
+
+그래서 내 계정은 정상적으로 조직 레파지토리에 접근이 가능하니 내가 토큰을 만들어 권한을 할당하면 가능하겠구나라고 생각했다.
+
+그렇기에 아래와 같이 권한을 할당했다. 보안성을 위해 극히 일부 권한만 주어져야했다.
+
+* 권한 개요
+
+<MDXImage height="504" width="364" src="e22e8d43-1c80-4dd6-8f85-2eec9f8a836b.png" type="main" />
+
+그렇게 토큰을 생성하고 다음과 같이 요청 해보았다.
+
+하지만 결과는 처참했다.
+
+* 요청 (해당 토큰은 삭제됨 걱정하지 말것)
+
+<MDXImage height="176" width="740" src="83acafa6-6df8-4a9e-b1cd-8592dfa0f660.png" type="main" />
+
+* 결과
+
+<MDXImage height="267" width="740" src="4ba081aa-02bf-44e9-aeb3-3ebbab876d24.png" type="main" />
+
+404 에러를 반환하며 찾지 못했다고 나왔다.
+
+그래서 회사내에 내가 Member로 제한 되어 있어서 안되는건가 하고 내 레파지토리에 직접 요청을 해보기로 했다.
+
+* 요청
+
+<MDXImage height="100" width="652" src="1b483a77-216b-4de3-97b3-f03a52489460.png" type="main" />
+
+* 결과
+
+<MDXImage height="264" width="469" src="068f3917-5142-49ae-9282-523231ef11f1.png" type="main" />
+
+
+
+결과는 성공적이였다! (이후 /release 도 요청 해보았다)
+
+내가 만들었던 토큰으로 요청을 했더니 성공적으로 반환이 되었다.
+
+작업을 하던 도중에 무언가 이상한점을 발견했다.
+
+git의 주소는 개인과 조직의 주소 자체값이 달랐던거 같은데…?
+
+하지만 여전히 요청하는 방식은 동일하다는것을 발견했다.
+
+하지만 의심해볼만한 부분이라는건 분명했다.
+
+그래서 [git api 문서](https://docs.github.com/ko/rest/repos/repos?apiVersion=2022-11-28#list-organization-repositories)를 참조했다.
+
+그리고 해결책을 발견했다….
+
+기존 : [https://api.github.com/repos/OWNER/REPO/](https://api.github.com/repos/OWNER/REPO/releases)
+
+조직 :  [https://api.github.com/orgs/ORG/repos](https://api.github.com/orgs/ORG/repos)
+
+요청 해야하는 주소가 달랐던것이다!
+
+그래서 당장 시도해봤다.
+
+* 요청
+
+<MDXImage height="59" width="506" src="4529f683-a122-4d04-a65c-628ed7c614bc.png" type="main" />
+
+* 결과
+
+<MDXImage height="207" width="514" src="635ca548-cd59-4de0-a1e1-0bb6b0fe9c1b.png" type="main" />
+
+
+
+결과는 Forbidden…. 권한 부족이였다.
+
+권한이 오너로 승격되고 나서 다시 한번 시도 했다.
+
+레파지토리가 정상적으로 조회되기 시작했으나, private 레파지토리는 조회가 되지 않는 현상이 발생하기 시작했다.
+
+여러가지 방법을 사용해보기도 요청 인수에 invisilvle = private를 요청해봐도 여전히 빈값이였다.
+
+그래서 한번더 토큰에 권한을 보기로 했을때 떠오른것이 있었다.
+
+어떤 액세스에 대한 토큰인지 설정하는 부분이 존재했다는거!
+
+그래서 조직 설정 페이지로 들어가 액세스 토큰을 허용 하는 페이지를 찾았다…
+
+* 위치
+
+<MDXImage height="142" width="287" src="16fac6bd-1515-4cd4-8c46-3f595e10891e.png" type="main" />
+
+* 다음과 같이 설정했다.
+
+<MDXImage height="848" width="688" src="7afdc029-bd0e-4c45-94ce-df8fde89884a.png" type="main" />
+
+그리고 난 뒤에 내 개인 설정 페이지에 가서 다시 토큰을 발급 하기 위해 돌아갔다.
+
+그리고 오너를 조직 대상으로 설정 할 수 있게 되었다….
+
+* 오너 설정 (O = 개인 ㅁ = 조직 )
+
+<MDXImage height="202" width="379" src="82669925-1982-4d4a-b856-3cbec778b66f.png" type="main" />
+
+오너 설정을 해당 조직으로 초점을 맞추고 상황에 맞는 권한을 할당 한 후 생성을 하고나서 요청을 해봤다…
+
+* 요청
+
+<MDXImage height="88" width="444" src="269d5dcc-8efd-4bef-b18f-3103b74e20db.png" type="main" />
+
+* 응답
+
+<MDXImage height="263" width="485" src="9ba030c7-1388-495f-89f2-1be0b2a65352.png" type="main" />
+
+성공적이였다!!! 이제 드디어 정상적으로 조직 private 레파지토리에 접근이 가능해졌다!!!
+
+결론적으론 토큰을 생성하는 부분에서 조직을 대상으로 진행해야지만 가능했던것이였다.
+
+조직에서 내가 오너 권한이 필요한것이 아닌 조직 설정에서 개인 토큰으로 접근 가능함을 열어줘야 했던것이였다.
+
+이전에 조직 설정을 깊게 살펴보지 않았다면 정말 해결에 오래 걸렸을것이다.
