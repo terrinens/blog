@@ -12,7 +12,7 @@ type Props = ParentsProps & {
 
 export default async function Page({params}: Props) {
     const {type, dir, docs} = params;
-    const docsPath = path.join('proj', type, dir, ...docs.map(decodeURI))
+    const docsPath = path.join('proj', type, dir, ...docs.map(decodeURIComponent))
     const slug = await getPostSlugs(docsPath);
 
     const docsRenders = slug.map(doc => {
@@ -51,7 +51,7 @@ export async function generateStaticParams() {
     const router = parentStaticParams.map(params => {
         const node = getDocsTreeNode(path.join(params.type, params.dir, 'docs'));
         const docs = getDirectoryNames(node);
-        const routerDocs = docs.map(dir => dir.split(path.sep).map(encodeURI))
+        const routerDocs = docs.map(dir => dir.split(path.sep).map(encodeURIComponent))
 
         const type = params.type;
         const dir = params.dir;

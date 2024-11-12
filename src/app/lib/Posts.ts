@@ -1,4 +1,5 @@
 import fs from 'fs';
+import * as pfs from 'fs/promises'
 import path from 'path';
 import {compileMDX} from "next-mdx-remote/rsc";
 import {PostCardProps} from "@/app/components/post/main/PostRender";
@@ -38,7 +39,12 @@ export class Paging {
  * @param deep 기본 포스터 위치에서 하위 디렉토리 수준 */
 export async function getPostSlugs(...deep: (string)[]) {
     const readDir = deep.length > 0 ? path.join(PostsDir, ...deep) : PostsDir;
-    return fs.readdirSync(readDir).filter(file => file.endsWith('.mdx'));
+    try {
+        const files = await pfs.readdir(decodeURIComponent(readDir), {encoding: 'utf-8'})
+        return files.filter(file => file.endsWith('.mdx'));
+    } catch (err) {
+        throw err
+    }
 }
 
 /** 기본 Post 저장 위치에서 deep 수준에 따라서 디렉토리를 찾습니다.
@@ -233,7 +239,7 @@ export function getDocsTreeNode(projPath: string): DirectoryNode {
 
 /** 디렉토리에 종속된 파일이 존재하는 경우에만 디렉토리를 반환하는 재귀적 함수입니다. */
 export function getDirectoryNames(dirNode: DirectoryNode, currentPath: string = ''): string[] {
-    let result: string[] = [];
+    const result: string[] = [];
 
     const newPath = path.join(currentPath, dirNode.name);
 

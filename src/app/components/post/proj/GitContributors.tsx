@@ -1,11 +1,12 @@
 import {callUserInfos, getOrgContributorsInfo, GitUserInfo} from "@/app/lib/GithubData";
+import Image from "next/image";
 
 function Card({info, role}: { info: GitUserInfo, role?: string }) {
     return (
         <div
             className="max-w-72 flex flex-col rounded-xl p-4 md:p-6 bg-white border border-gray-200 dark:bg-neutral-900 dark:border-neutral-700">
             <div className="flex items-center gap-x-4">
-                <img className="rounded-full size-20" src={info.avatarURL} alt="Avatar"/>
+                <Image width={80} height={80} className="rounded-full size-20" src={info.avatarURL} alt="Avatar"/>
                 <div className="grow">
                     <h3 className="font-medium text-gray-800 dark:text-neutral-200">
                         {info.name}
