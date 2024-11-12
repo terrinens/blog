@@ -107,11 +107,15 @@ export async function getPostListData(...deep: (string)[]): Promise<PostListProp
 }
 
 export function generationPostCardProps(filename: string, frontmatter: Record<string, unknown>): PostCardProps {
-    if (!(frontmatter.tags instanceof Array)) {
-        frontmatter.tags = (frontmatter.tags as string).split(',').map(str => str.trim());
+    if (frontmatter.tags != undefined) {
+        if (!(frontmatter.tags instanceof Array)) {
+            frontmatter.tags = (frontmatter.tags as string).trim();
+            frontmatter.tags = (frontmatter.tags as string).split(',')
+                .filter(tag => tag.length > 0);
+        } else {
+            frontmatter.tags = frontmatter.tags.map(x => x.trim())
+        }
     }
-
-    frontmatter.tags = (frontmatter.tags as string[]).filter(tag => tag.length > 0);
 
     return {
         filename: filename,
@@ -224,5 +228,22 @@ export function getDocsTreeNode(projPath: string): DirectoryNode {
         }
     });
 
+    return result;
+}
+
+/** 디렉토리에 종속된 파일이 존재하는 경우에만 디렉토리를 반환하는 재귀적 함수입니다. */
+export function getDirectoryNames(dirNode: DirectoryNode, currentPath: string = ''): string[] {
+    let result: string[] = [];
+
+    const newPath = path.join(currentPath, dirNode.name);
+
+    if (dirNode.children?.find(node => node.type === 'file')) {
+        result.push(newPath);
+    } else if (dirNode.children) {
+        for (const children of dirNode.children) {
+            const deepResult = getDirectoryNames(children, newPath)
+            if (deepResult) result.push(...deepResult);
+        }
+    }
     return result;
 }

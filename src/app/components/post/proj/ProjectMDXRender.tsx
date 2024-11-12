@@ -1,5 +1,5 @@
 import {PostRenderProps} from "@/app/components/post/main/PostRender";
-import {DirectoryNode, getCompileMDX} from "@/app/lib/Posts";
+import {DirectoryNode, getCompileMDX, getDirectoryNames} from "@/app/lib/Posts";
 import {PostsDir, rootPath} from "@/app/lib/Config";
 import React from "react";
 import path from "path";
@@ -42,13 +42,14 @@ function DocsBreadcrumb({projName, now, dirs}: DocsBreadcrumbProps) {
     )
 }
 
-function DocsLowerTree({dirNods}: { dirNods: DirectoryNode[] }) {
+function DocsLowerTree({dirNods, baseURL}: { dirNods: DirectoryNode[], baseURL: string }) {
     const files: string[] = []
     const lowerTree = dirNods.map((node, index) => {
         if (node.type === 'dir') {
+            const unique = `LDE:${index}:${node.name}`
             return (
-                <LowerDirEntries dirname={node.name} ariaExpanded={true} key={`LDE:${index}`}>
-                    {node.children ? <DocsLowerTree dirNods={node.children}/> : null}
+                <LowerDirEntries dirname={node.name} ariaExpanded={true} id={unique} key={unique}>
+                    {node.children ? <DocsLowerTree baseURL={baseURL} dirNods={node.children}/> : null}
                 </LowerDirEntries>
             )
         } else {
@@ -61,7 +62,7 @@ function DocsLowerTree({dirNods}: { dirNods: DirectoryNode[] }) {
         {files.length > 0
             ? <LowerFileEntries>
                 {files.map((file, index) => (
-                    <FileObject filename={file} key={`${dirNods.keys()}:${file}:${index}`}/>
+                    <FileObject href={`${baseURL}#${file}`} filename={file} key={`${dirNods.keys()}:${file}:${index}`}/>
                 ))}
             </LowerFileEntries>
             : null
@@ -69,13 +70,14 @@ function DocsLowerTree({dirNods}: { dirNods: DirectoryNode[] }) {
     </>
 }
 
-function DocsSubTree({dirNods}: { dirNods: DirectoryNode[] }) {
+function DocsSubTree({dirNods, baseURL}: { dirNods: DirectoryNode[], baseURL: string }) {
     const files: string[] = [];
     const subTrees = dirNods.map((node, index) => {
         if (node.type === 'dir' && node.children) {
             return (
                 <SubTree dirname={node.name} key={`subtree:${index}`}>
-                    <DocsLowerTree dirNods={node.children} key={`DLT-${node.name}-${index}`}/>
+                    <DocsLowerTree baseURL={path.join(baseURL, node.name)} dirNods={node.children}
+                                   key={`DLT-${node.name}-${index}`}/>
                 </SubTree>
             )
         } else {
@@ -89,7 +91,7 @@ function DocsSubTree({dirNods}: { dirNods: DirectoryNode[] }) {
             ? (
                 <FileEntries>
                     {files.map((file, index) =>
-                        (<FileObject filename={file} key={`${file}:${index}`}/>))}
+                        (<FileObject href={`${baseURL}#${file}`} filename={file} key={`${file}:${index}`}/>))}
                 </FileEntries>
             )
             : null
@@ -111,7 +113,8 @@ function DocsTreeView({dirNods}: { dirNods: DirectoryNode }) {
                         <SubTree dirname={name} ariaExpanded={true} key={`R-subtree-${name}-${index}`}
                                  id={`subtree:-${index}`}>
                             {deepChildren
-                                ? <DocsSubTree dirNods={deepChildren} key={`DST-${name}-${index}`}/>
+                                ? <DocsSubTree dirNods={deepChildren} baseURL={path.join('docs', node.name)}
+                                               key={`DST-${name}-${index}`}/>
                                 : null
                             }
                         </SubTree>;
@@ -136,7 +139,6 @@ function DocsTreeView({dirNods}: { dirNods: DirectoryNode }) {
         }
     </>
 
-
     return (
         <div className='mb-5'>
             <RootTree dirname={dirNods.name} ariaExpanded={true}>
@@ -157,9 +159,12 @@ export async function ProjectInfoRender({props, dirNods}: {
     const projDir = path.join(PostsDir, ...deep);
     const {content} = await getCompileMDX(projDir, postName + '.mdx');
 
+    const docsDirs = getDirectoryNames(dirNods)
+        .map(dir => dir.split(path.sep).join('/'));
+
     return (
         <div className='prose w-full'>
-            <DocsBreadcrumb projName={deep[2]} dirs={['1', '2', '3']} now={'info'} baseUrl={deep}/>
+            <DocsBreadcrumb projName={deep[2]} dirs={docsDirs} now={'info'} baseUrl={deep}/>
             <DocsTreeView dirNods={dirNods}/>
             {content}
         </div>
