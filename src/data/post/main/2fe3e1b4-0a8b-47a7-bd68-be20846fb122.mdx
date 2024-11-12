@@ -1,0 +1,85 @@
+---
+title: SSH 전송 해결기
+mainImg: ' '
+timestamp: 2024-10-01T09:57:46.310Z
+tags: Jenkins, CI/CD, SSH
+description: Jenkins 에서 내부 네트워크 SSH 통신 해결기
+---
+
+@SAW
+
+# SSH 전송 해결기
+
+## 구축 과정
+
+### SSH 포트 관련 설정
+
+SSH 통신은 기본적으로 22번 포트를 사용했으나 동적으로 변경을 위해 다음과 같이 등록했습니다.
+
+```txt
+uf allow ssh
+```
+
+접속을 하다, 자꾸 패스워드가 틀리다고 나와 다음과 같은 설정값을 변경해줘야 했습니다.
+
+```txt
+vi /etc/ssh/sshd_config
+PermitRootLogin yes
+PasswordAuthentication yes
+```
+
+
+
+이후 다른 CT에서 SSH 접속을 시도시, 정상적으로 접근이 가능한것을 알았으므로 이제 SSH-Key로 접근이 가능하게 설정을 하는 과정이 필요했습니다.
+
+젠킨스에서 sh로 해당 과정을 진행하는데 비밀번호를 미리 입력 할 순 없었으므로 키를 설정했어야 했습니다.
+
+(정확히는 가능했지만 보안상 좋진 않았습니다. sshpass 참조)
+
+접속을 실행할 Jenkins를 실행하고 있는 터미널에서 자신의 SSH키를 Backend Server에 추가하여 비밀번호 없이 자신의 키로 접근 가능하게 만들었습니다.
+
+```txt
+ssh-keygen -t rsa
+ssh-copy-id user@remote_host
+```
+
+그 이후 터미널에서 정상적으로 보내지는지 확인을 해보았습니다.
+
+```txt
+scp SAW_BackEnd-0.0.1-SNAPSHOT.jar 계정@주소:/home/jars/test.jar
+```
+
+<MDXImage height="35" width="452" src="39b08a61-5c11-4c84-a62e-d2685a6c8036.png" type="main" />
+
+이후 제대로 보내지는것을 확인하고 젠킨스에서 테스트를 해보기로 했습니다.
+
+하지만 예상과 다르게 오류가 발생했습니다.
+
+<MDXImage type='main' src='b2dfa734-b4dd-4c09-99ad-13378ac999c3.png' alt='undefined' height='100' width='100'/>
+
+호스트 키가 확인되지 않았기에 연결이 끊겼습니다.
+
+그렇다면 젠킨스의 실행자가 root가 아닐 가능성이 있기에 해당 서비스를 어떤 사용자가 실행시켰는지 확인할 필요가 있었습니다.
+
+```txt
+ps -ef | grep jenkins
+```
+
+확인 결과 jenkins를 실행한 사용자는 root가 아닌 jenkins로 되어있었습니다.
+
+그렇다면 앞서 ssh를 작업했던 과정을 jenkins로 진행을 해야 했습니다.
+
+사용자가 진짜로 존재하는지 우선적으로 확인해보았습니다.
+
+```txt
+cut -d: -f1 /etc/passwd
+```
+
+확인후 jenkins와 jenkins-admin 두 계정이 확인되었고 현재 실행자는 jenkins이니 해당 계정으로 우선적으로 시도해보았습니다.
+
+그리고 예상이 맞았고, 정상적으로 전송이 완료되었습니다.
+
+## 과정에서 얻은것
+
+☀️ 때로는 단순한 방법이 최고다.
+하지만 보안성은 고려하자!
