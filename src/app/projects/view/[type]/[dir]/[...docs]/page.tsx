@@ -1,8 +1,10 @@
 import {Props as ParentsProps} from "@/app/projects/view/[type]/[dir]/page";
-import {getDirectoryNames, getDirList, getDocsTreeNode, getPostSlugs} from "@/app/lib/Posts";
+import {DirectoryNode, getDirectoryNames, getDirList, getDocsTreeNode, getPostSlugs} from "@/app/lib/Posts";
 import path from "path";
 import {PostRender} from "@/app/components/post/main/PostRender";
 import {AccordionBlock, AccordionCase} from "@/app/components/post/proj/Accordion";
+import fs from "fs";
+import {PostsDir} from "@/app/lib/Config";
 
 type Props = ParentsProps & {
     params: ParentsProps['params'] & {
@@ -49,7 +51,11 @@ export async function generateStaticParams() {
     )
 
     const router = parentStaticParams.map(params => {
-        const node = getDocsTreeNode(path.join(params.type, params.dir, 'docs'));
+        const nodePath = path.join(params.type, params.dir, 'docs')
+
+        if (!fs.existsSync(path.join(PostsDir, 'proj', nodePath))) return;
+
+        const node: DirectoryNode = getDocsTreeNode(nodePath);
         const docs = getDirectoryNames(node);
         const routerDocs = docs.map(dir => dir.split(path.sep).map(encodeURIComponent))
 

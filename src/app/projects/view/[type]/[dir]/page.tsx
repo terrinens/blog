@@ -1,6 +1,9 @@
-import {getDirList, getDocsTreeNode} from "@/app/lib/Posts";
+import {DirectoryNode, getDirList, getDocsTreeNode} from "@/app/lib/Posts";
 import {ProjectInfoRender} from "@/app/components/post/proj/ProjectMDXRender";
 import {PostRenderProps} from "@/app/components/post/main/PostRender";
+import fs from "fs";
+import {PostsDir} from "@/app/lib/Config";
+import path from "path";
 
 export type Props = {
     params: {
@@ -13,8 +16,15 @@ export default async function Page({params}: Props) {
     const {type, dir} = params;
     const deep = ['proj', type, dir];
     const props: PostRenderProps = {postName: 'info', deep: deep}
+    const nodePath = `${type}/${dir}/docs`
+    let dirNods: DirectoryNode;
 
-    const dirNods = getDocsTreeNode(`${type}/${dir}/docs`)
+    if (fs.existsSync(path.join(PostsDir, 'proj', nodePath))) {
+        dirNods = getDocsTreeNode(nodePath)
+    } else {
+        console.info(`Docs 문서를 찾지 못했습니다. 빈값으로 랜더링을 시도합니다.`);
+        dirNods = {name: "docs is empty", type: 'dir'};
+    }
 
     return (
         <ProjectInfoRender props={props} dirNods={dirNods}/>
