@@ -1,0 +1,67 @@
+---
+title: 젠킨스 빌드 트리거가 작동하지 않았던 문제
+mainImg: e231a31f-77ac-4ffd-b11e-f9217f57c876.png
+timestamp: 2024-10-03T09:57:46.310Z
+tags: Jenkins, CI/CD
+description: Jenkins GitHub hook trigger for GITScm 플러그인에 대한 잘못된 사용방식을 고치기.
+---
+
+@SAW
+
+# 젠킨스 빌드 트리거가 작동하지 않았습니다.
+
+<MDXImage height="445" width="650" src="1a20f9ee-04ec-47f2-ad90-cf791ef3b29c.png" type="main" />
+
+## 자세한 문제사항
+
+### 😭 무슨 문제 사항이 있었나요?
+
+SAW 알파 빌드에서 webhook 트리거에 자동으로 빌드가 되지 않았습니다.
+
+### 🧐 어디가 문제였었나요?
+
+설정에서 Build Triggers를 설정할때 GitHub hook trigger for GITScm polling이 문제였습니다.
+
+해당 플러그인은 Git 이벤트중 브랜치 Push에만 반응하는 플러그인이였으므로
+
+GIT에서 전송되는 hook 이벤트와 맞지 않았고,
+
+해당 젠킨스 파이프라인이 요구하는 릴리즈에만 반응하는 그런 시나리오에는 작동하지 않았습니다.
+
+GitHub hook 트리거를 릴리즈 생성시에만 반응하도록 만들었기 때문입니다.
+
+## 해결 방안
+
+### 1. [\*\*Generic Webhook Trigger](https://plugins.jenkins.io/generic-webhook-trigger/) 플러그인 사용\*\*
+
+해당 플러그인은 url 요청에 좀더 자세히 제어하기 위한 플러그인 입니다.
+
+기존 Github hook 플러그인들은 push 혹은 브랜치 안에 JenkinsFile이 존재하지 않으면 작동하지 않았기에 더 정밀한 제어가 필요했습니다.
+
+그렇기에 해당 플러그인을 선택하였습니다.
+
+### 2. 트리거 설정
+
+하지만 **Generic Webhook Trigger**를 사용하게 되면 해당 플러그인을 사용하는 모든 빌드에 이벤트를 전달하게 됐습니다.
+
+그렇기 때문에 필터링을 거쳐, 해당 레파지토리일 경우에만 작업을 진행했어야 했습니다.
+
+필터에 필요한 각각의 값을 변수에 할당하여 평가식을 진행했습니다.
+
+action, rep, org 는 정확하게 정해져 있기 때문에 text가 완벽하게 일치해야 했으므로 해당 방식으로 필터를 설정했습니다.
+
+<MDXImage type='main' src='f6bfa7a7-11fa-4dd5-afa6-ccebe0de225a.png' alt='undefined' height='100' width='100'/>
+
+### 3. 흐름도의 변경
+
+흐름도에도 약간의 변화가 생겼습니다.
+기존에는 git에 릴리즈 정보를 요청을 했지만  hook에서 정보값이 넘어온다는것을 발견하고선 해당 정보로 다운로드를 진행하게 만들었습니다.
+
+**기존**
+<MDXImage height="382" width="553" src="e7fda4a9-aa6a-4d93-8a88-85f3185c4771.png" type="main" />
+
+**변경**
+<MDXImage height="445" width="650" src="1a20f9ee-04ec-47f2-ad90-cf791ef3b29c.png" type="main" />
+
+## 과정에서 얻은것
+☀️ 훅 플러그인의 쓰임새 및, 정규식
