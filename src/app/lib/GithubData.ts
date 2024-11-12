@@ -62,20 +62,25 @@ export async function getOrgContributorsInfo(
         option ? {replaceToken: option.token} : {}
     )
 
-    if (json.length < 0) return [];
+    if (json.length <= 0) return [];
 
     const forceInfos: GitUserInfo[] = [];
     if (option && option.forceAdd) {
-        const forceList = option.forceAdd
-            .filter(name => !json.some((user: Record<string, any>) => user.login === name));
-
-        forceInfos.push(...(await callUserInfos(...forceList)))
+        if (json.length != undefined) {
+            const forceList = option.forceAdd
+                .filter(name => !json.some((user: Record<string, any>) => user.login === name));
+            forceInfos.push(...(await callUserInfos(...forceList)))
+        } else {
+            forceInfos.push(...(await callUserInfos(...option.forceAdd)))
+        }
     }
 
     const userInfos: GitUserInfo[] = [];
-    for (const data of json) {
-        const userData = await callAPI(data.url, {noToken: true});
-        userInfos.push(genGitUserInfo(userData));
+    if (json.length != undefined) {
+        for (const data of json) {
+            const userData = await callAPI(data.url, {noToken: true});
+            userInfos.push(genGitUserInfo(userData));
+        }
     }
 
     return userInfos.concat(forceInfos);

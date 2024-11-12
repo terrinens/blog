@@ -2,7 +2,6 @@ import React from "react";
 
 type AccordionProps = {
     title: string
-    anchor?: boolean
     ariaExpanded?: boolean
 }
 
@@ -32,7 +31,7 @@ export function AccordionBlock({props, children}: { props: AccordionProps, child
         <div id="hs-basic-active-bordered-collapse-one"
              className={`${props.ariaExpanded ? '' : 'hidden'} hs-accordion-content w-full overflow-hidden transition-[height] duration-300`}
              role="region" aria-labelledby="hs-active-bordered-heading-one">
-            <div className="pb-4 px-5">
+            <div className="pb-4 px-5 flex justify-center items-center">
                 {children}
             </div>
         </div>
@@ -40,21 +39,21 @@ export function AccordionBlock({props, children}: { props: AccordionProps, child
 
     return (
         <div
-            className={`${props.ariaExpanded ? 'active' : ''} w-full items-center max-w-xl  mb-5 hs-accordion hs-accordion-active:border-gray-200 bg-white border border-transparent rounded-xl dark:hs-accordion-active:border-neutral-700 dark:bg-neutral-800 dark:border-transparent`}
+            className={`${props.ariaExpanded ? 'active' : ''} w-full max-w-6xl  mb-5 hs-accordion hs-accordion-active:border-gray-200 bg-white border border-transparent rounded-xl dark:hs-accordion-active:border-neutral-700 dark:bg-neutral-800 dark:border-transparent`}
             id={props.title}>
             <AccordionButton props={props}/>
-            {props.anchor ? (
-                <a href={`#${props.title}`}>
-                    {block}
-                </a>
-            ) : (block)}
+            <a href={`#${props.title}`}>
+                {block}
+            </a>
         </div>
     )
 }
 
 export function AccordionCase({children}: { children: React.ReactNode }) {
     return (
-        <div className="hs-accordion-group flex justify-center items-center w-full mx-auto pt-5 px-0 sm:px-6 lg:px-8" data-hs-accordion-always-open=''>
+        <div
+            className="hs-accordion-group flex flex-col justify-center items-center w-full mx-auto pt-5 px-0 sm:px-6 lg:px-8"
+            data-hs-accordion-always-open=''>
             {children}
         </div>
     )

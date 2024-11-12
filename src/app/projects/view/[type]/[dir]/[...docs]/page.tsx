@@ -1,21 +1,21 @@
 import {Props as ParentsProps} from "@/app/projects/view/[type]/[dir]/page";
-import {getDirList, getPostSlugs} from "@/app/lib/Posts";
+import {getDirectoryNames, getDirList, getDocsTreeNode, getPostSlugs} from "@/app/lib/Posts";
 import path from "path";
 import {PostRender} from "@/app/components/post/main/PostRender";
 import {AccordionBlock, AccordionCase} from "@/app/components/post/proj/Accordion";
 
 type Props = ParentsProps & {
     params: ParentsProps['params'] & {
-        doc: string;
+        docs: string[];
     }
 }
 
 export default async function Page({params}: Props) {
-    const {type, dir, doc} = params;
-    const docsPath = path.join('proj', type, dir, 'docs', doc)
-    const docs = await getPostSlugs(docsPath);
+    const {type, dir, docs} = params;
+    const docsPath = path.join('proj', type, dir, ...docs.map(decodeURI))
+    const slug = await getPostSlugs(docsPath);
 
-    const docsRenders = docs.map(doc => {
+    const docsRenders = slug.map(doc => {
         return {
             title: doc,
             render: PostRender({postName: doc.replace('.mdx', ''), deep: [docsPath], headerIgnore: true})
@@ -26,7 +26,7 @@ export default async function Page({params}: Props) {
         <AccordionCase>{
             docsRenders.map((data, index) => (
                 <AccordionBlock key={`AB:${data.title}:${index}`}
-                                props={{title: data.title, ariaExpanded: true, anchor: true}}>
+                                props={{title: data.title, ariaExpanded: true}}>
                     {data.render}
                 </AccordionBlock>
             ))
@@ -48,16 +48,17 @@ export async function generateStaticParams() {
         })
     )
 
-    const staticParams: { type: string; dir: string; doc: string; }[] = [];
+    const router = parentStaticParams.map(params => {
+        const node = getDocsTreeNode(path.join(params.type, params.dir, 'docs'));
+        const docs = getDirectoryNames(node);
+        const routerDocs = docs.map(dir => dir.split(path.sep).map(encodeURI))
 
-    await Promise.all(parentStaticParams.map(async proj => {
-        const type = proj.type;
-        const dir = proj.dir;
-        const docs = await getDirList('proj', type, dir, 'docs');
-        docs.forEach(doc => {
-            staticParams.push({type: type, dir: dir, doc: doc});
-        })
-    }))
+        const type = params.type;
+        const dir = params.dir;
 
-    return staticParams;
+        return routerDocs.map(routerParams => ({type, dir, docs: routerParams}))
+    });
+
+    return router.flat();
 }
+
