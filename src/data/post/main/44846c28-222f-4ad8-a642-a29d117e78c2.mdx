@@ -1,0 +1,184 @@
+---
+title: NextJS MDX에서 img 사용하기
+mainImg: ' 8339c377-1edd-4b3e-9eb2-70fec156ec9a.png'
+timestamp: 2024-11-13T07:08:37.716Z
+tags: NextJS
+description: NextJS에서 SSR 환경에서 MDX 이미지를 가져오는 방법
+---
+
+@Git\_Blog
+
+<MDXImage height="153" width="373" src="8339c377-1edd-4b3e-9eb2-70fec156ec9a.png" type="main" />
+
+# 시작하기 전에
+
+이글은 NextJS에서 MDX를 사용할때 이미지가 가져와지지 않는 문제에 대해서 다루고 있습니다.
+
+하지만 특정 디렉토리가 아닌 public 폴더에 이미지를 저장하실분들이라면은 이글을 보지 않아도 충분히 해결이 가능합니다.
+
+
+
+# NextJS MDX에서 img 사용하기
+
+일반적으로 md 문서를 사용할때는 img 태그를 사용해서 경로를 가져와서 사용을 합니다.
+
+그리고 img 태그에 src 경로를 줄때 서버에 요청을 해서 경로를 가져오거나, 아니면 정적 파일 경로를 통해서 가져옵니다.
+
+하지만 MDX는 이야기가 달라집니다.
+
+# MDX 컴파일
+
+우선 MDX에 내용을 온전히 읽어오기 위해서는 컴파일 단계를 거쳐야합니다.
+
+컴파일 단계를 거치지 않아도 MDX 문서를 읽어들일수 있지만 어디까지나 Text 형태로써 불러들이거나, 그저 MD 처럼 불러오게 되죠.
+
+MDX가 컴파일 단계가 필요한 이유는 MDX 특유의 작성 방식때문입니다.
+
+```txt
+---
+title: Git 블로그
+timestamp: Thu Oct 03 2024 18:57:46 GMT+0900 (한국 표준시)
+tags: Node, Next.js, Typescript, Git Page
+description: 'Git Page & Next.js 14 블로그 개발기 '
+---
+
+# Git Page & Next.Js 블로그 개발 프로젝트
+
+## 기술 스택&#x20;
+
+* Next.js 14
+* Node
+* Typescript
+* Git Page
+* GitHub Actions
+* MDX
+
+<SomeComponent role="작성자" forceAdd={["terrinens"]} />
+```
+
+예시 내용처럼 --- 으로 시작해서 --- 으로 끝나는 부분이 frontmatter라고 불리는 직역하자면 *전문(본문을 제외한 속표지·머리말·차례 등,)* 입니다.
+
+또는 예시 코드에서 보이는 \<SomeComponent/> 처럼 node의 컴포넌트를 사용하기 때문에 이를 해석하기 위해서는 컴파일이 반드시 필요합니다.
+
+만약에 컴파일 단계를 거치지 않고 그대로 불러오게 된다면 다음과 같이 되어버리죠.
+
+<MDXImage height="449" width="532" src="c7184afc-9c65-44a7-9b02-acafc639e5dc.png" type="main" />
+
+그대로 frontmatter의 값이 노출이되며, frontmatter는 딱히 특별한 태그 처리가 되어있지 않기 때문에 텍스트 그대로 나오게 됩니다.&#x20;
+
+그리고 만약 예시처럼 컴포넌트가 있으면은 컴포넌트는 해석조차 되지 않아서 오류가 발생합니다.
+
+그렇기 때문에 MDX를 사용하려면 컴파일 단계가 필요하죠.
+
+# 컴파일을 해도 문제다.
+
+문제는 컴파일을해서 해석을 진행을 해도 이미지를 불러오는것은 다른 방법이 필요하다는겁니다.
+
+컴파일 단계에서 img 태그 소스에서 이미지를 가져오려고 시도하는것이 컴파일 단계에서 진행이 되는데, 이때 src는 컴파일된 위치에서부터 탐색을 시작합니다.
+
+이때, src가 특정 uri를 나타낸다면은 소스를 받아오겠지만, 로컬 경로에 있는 이미지 소스를 가져올때 문제가 발생하죠. 컴파일 단계에서 자신의 위치가 어딘지 모른다는겁니다.
+
+../path/to 같이 사용해도 ./path/to 같이 사용해도 어디를 참조하는지 정확히 모릅니다.
+
+그렇기 때문에 다른 방식이 필요합니다.
+
+# 컴파일시 컴포넌트를 전달하는법
+
+MDX에서 이미지를 불러오기 위해서는 컴포넌트가 지원이 가능하다는것을 이용을 해야합니다.&#x20;
+
+그리고 우선은 컴포넌트 참조를 어떻게 전달해야할지 정해야겠죠.
+
+우선은 제가 MDX컴파일을 진행한것은 Next-MDX-Remote 라는 라이브러리입니다. 해당 라이브러리를 기준으로 진행하겠습니다.
+
+[***<u>Next-MDX-Remote 라이브러리</u>***](https://www.npmjs.com/package/next-mdx-remote/v/0.5.1)
+
+mdx-remote에서 컴파일을 진행시에는 어떤 컴포넌트를 사용할것인가, 이를 정의를 해두어야 합니다.&#x20;
+
+다음과 같은 컴파일 코드가 있습니다.
+
+```tsx
+export async function getCompileMDX(...readPath: string[]): Promise<{
+    content: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
+    frontmatter: Record<string, unknown>
+}> {
+    const join = path.join(...readPath);
+    const source = fs.readFileSync(join, 'utf8');
+  
+    // 실제 컴파일
+    const compiled = await compileMDX({
+        source: source,
+        options: {parseFrontmatter: true},
+        // 컴포넌트 전달
+        components: userMDXComponents()
+    })
+    const content = compiled.content;
+    const frontmatter = compiled.frontmatter;
+    return {content, frontmatter}
+}
+```
+
+소스코드를 보시면은 compileMDX 함수에서 componets라는 매개변수를 요구하고 있습니다.
+
+이는 어렵게 생각하지 않고, 그냥 컴포넌트를 참조형식으로 사용하면 됩니다.
+
+userMDXComponets의 예시 코드를 한번 봅시다.
+
+```tsx
+import {SomeComponent} from "@_components/post/proj/SomeComponents";
+
+export function userMDXComponents(mdxComponents?: MDXComponents): MDXComponents {
+    return {
+        ...mdxComponents,
+        SomeComponent,
+    };
+}
+```
+
+MDX에서 사용가능한 컴포넌트들을 import하고 이를 참조형식으로 전달하고 있습니다.
+
+또한, 각 레이아웃에서만 사용할수있는 컴포넌트들을 더 정의할 수 있게 여지를 두고 있죠.
+
+이렇게 기본적인 컴포넌트 참조가 완성되었습니다.
+
+# 약간의 해킹같은 방식이 필요하다.
+
+그렇다면 이글에서 작성하고자 했던 내용이 드디어 나옵니다. MDX에서 이미지를 가져오기 위해서는 어떻게 해야할까요?&#x20;
+
+이를 해결하기 위해서는 컴포넌트로 해결을 해주어야 합니다.
+
+그리고 이미지 최적화를 위해서 NextJS의 Image 컴포넌트를 사용해보도록 하겠습니다.
+
+다음과 같이 컴포넌트를 정의해봅시다.
+
+```tsx
+export function MDXImage({src, alt = ''}) {
+    const image = require(`../../data/image//${src}`);
+    return <Image src={image.default} alt={alt}/>;
+}
+```
+
+코드를 자세히 보시면은 눈치채셨을겁니다. image 변수에 require로 실제 데이터의 위치를 전달해주고, 이를 통해서 파일의 소스를 가져오고 있습니다.
+
+그렇습니다. 이렇기 때문에 **약간의 해킹 같은 방식**이라고 표현합니다. 실제로는 아주 위험한 방식입니다만, 현재로서는 가장 직관적이고, 쉬운 방법입니다.&#x20;
+
+해당 해결 방식은 다음의 글에서 참조했습니다.
+
+[How to use images in a \`.mdx\` file outside of \`public/\` folder while using \`next-mdx-remote\` in Next JS?](https://stackoverflow.com/a/65681762/23506904)
+
+
+
+이로써 실제로 이미지를 가져올수 있게 되었습니다.&#x20;
+
+```txt
+// MDX중 일부
+GitHub Pages에서 배포를 진행하면서 모든 것을 정적 사이트에 맞춰 개발해야 했기 때문에 검색하는 데 어려움이 많았습니다.
+
+검색을 해도 Pages Router 방식의 자료들이 많이 나와서 참고를 하기가 어려웠습니다.&#x20;
+
+*<u>각 라우터별 함수 정의 방식</u>*
+
+<MDXImage alt="undefined" src="5b61297e-ccdf-4ba6-a2c3-6b8f956089b4.png"/>
+
+```
+
+<MDXImage height="397" width="580" src="962d53c5-c588-4852-8188-826fc93178fa.png" type="main" />

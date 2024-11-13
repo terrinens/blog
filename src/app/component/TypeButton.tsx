@@ -14,16 +14,18 @@ export function TypeButton({onTypeChange, onSave}: TypeButtonProps) {
 
     const handlePostTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedType = e.target.value;
-        setPostType(selectedType);
-        onTypeChange(selectedType);
+        if (selectedType !== postType) {
+            setPostType(selectedType);
+            onTypeChange(selectedType);
 
-        if (selectedType !== 'proj') {
-            setProjectType('');
-            setProjectName('');
-            setApiName('');
-            setError('');
-        } else {
-            setProjectType('team');
+            if (selectedType !== 'proj') {
+                setProjectType('');
+                setProjectName('');
+                setApiName('');
+                setError('');
+            } else {
+                setProjectType('team');
+            }
         }
     }
 
@@ -34,6 +36,7 @@ export function TypeButton({onTypeChange, onSave}: TypeButtonProps) {
 
     const handleProjNameChange = (e: React.ChangeEvent<HTMLInputElement>,) => {
         setProjectName(e.target.value);
+        if (error) setError('');
     };
 
     const handleDocumentTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,11 +110,23 @@ export function TypeButton({onTypeChange, onSave}: TypeButtonProps) {
     );
 }
 
+const formatDate = (date: Date): string => {
+    const year: number = date.getFullYear();
+    const month: string = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+    const day: string = String(date.getDate()).padStart(2, '0');
+    const hours: string = String(date.getHours()).padStart(2, '0');
+    const minutes: string = String(date.getMinutes()).padStart(2, '0');
+    const seconds: string = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds: string = String(date.getMilliseconds()).padStart(3, '0'); // 밀리초는 3자리로 맞춤
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+};
+
 export const MainTemplate = `
 ---
 title: Main template
 mainImg: 
-timestamp: 2024-10-03 09:57:46.310752
+timestamp: ${formatDate(new Date(Date.now()))}
 tags: []
 description: this is Main template
 ---
@@ -124,7 +139,7 @@ export const ProjTemplate = `
 ---
 title: Proj template
 mainImg: 
-timestamp: 2024-10-03 09:57:46.310752
+timestamp: ${formatDate(new Date(Date.now()))}
 start: 2022-02-07
 end: 2023-04-02
 tags: []

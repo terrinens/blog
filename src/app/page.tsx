@@ -52,6 +52,7 @@ export default function Home() {
     }
 
     const DemoEditor = dynamic(() => import('./component/DemoEditor'), {ssr: false})
+    const MemoizedDemoEditor = React.memo(DemoEditor);
 
     const handleSave = async (postType: string, projectType: string, projectName: string, apiName: string) => {
         if (ref.current) {
@@ -76,7 +77,7 @@ export default function Home() {
             <TimestampCalender/>
             <TypeButton onTypeChange={handleTypeChange} onSave={handleSave}/>
             <div className={'w-full border-2 border-solid border-black'}>
-                <DemoEditor postType={postType} markdown={mdx} editorRef={ref}/>
+                <MemoizedDemoEditor editorRef={ref} postType={postType} markdown={mdx}/>
             </div>
         </div>
     )

@@ -125,7 +125,6 @@ const allPlugins = (postType: string) => [
         codeBlockLanguages: {
             java: 'Java',
             js: 'JavaScript',
-            css: 'CSS',
             txt: 'text',
             tsx: 'TypeScript'
         }
