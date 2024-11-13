@@ -85,7 +85,10 @@ export type PostCardProps = {
         tags: string[];
         date: Date;
     },
+
     tagRender?: boolean
+    imgRender?: boolean
+    dateRender?: boolean
 }
 
 const dateFormatter = (date: Date) => {
@@ -101,7 +104,7 @@ const dateFormatter = (date: Date) => {
     return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
-export function PostCard(props: PostCardProps) {
+export function PostCard({imgRender = true, dateRender = true, tagRender = true, ...props}: PostCardProps) {
     const info = props.info;
 
     const imgSrc = info.mainImg == null ? DefaultImg.src : info.mainImg;
@@ -115,13 +118,17 @@ export function PostCard(props: PostCardProps) {
     return (
         <div className="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
             <a href={path.join(rootPath, '/posts/view/', props.filename)}>
-                <div className="w-full h-40 flex flex-col justify-center items-center rounded-t-xl">
-                    {img}
-                </div>
+                {imgRender
+                    ? (<div className="w-full h-40 flex flex-col justify-center items-center rounded-t-xl">{img}</div>)
+                    : null
+                }
+
                 <div className="p-2 md:p-4">
-                    <div className='text-center pt-1 text-sm text-gray-500'>
-                        {info.date != null || undefined || {} ? dateFormatter(info.date) : '기록된 날짜가 없습니다.'}
-                    </div>
+                    {dateRender
+                        ? (<div
+                            className='text-center pt-1 text-sm text-gray-500'>{info.date != null || undefined || {} ? dateFormatter(info.date) : '기록된 날짜가 없습니다.'}</div>)
+                        : null
+                    }
 
                     <h3 className="text-center text-xl font-semibold text-gray-800">
                         {info.title}
@@ -134,19 +141,17 @@ export function PostCard(props: PostCardProps) {
                         </text>
                     </div>
 
-                    {
-                        props.tagRender
-                            ? (<div className="mt-1.5">
-                                <ul className="flex flex-row justify-center overflow-hidden *:rounded-full *:border *:border-gray-300 *:bg-gray-50 *:px-2 *:py-0.5 dark:text-sky-300 dark:*:border-sky-500/15 dark:*:bg-sky-500/10 ...">
-                                    {info.tags.map(tag => (
-                                        <li key={tag}
-                                            className="mx-1 inline-block px-1 py-0.5 text-sm text-black mr-1 mt-0.5">{tag}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>)
-                            : null
-                    }
+                    {tagRender
+                        ? (<div className="mt-1.5">
+                            <ul className="flex flex-row justify-center overflow-hidden *:rounded-full *:border *:border-gray-300 *:bg-gray-50 *:px-2 *:py-0.5 dark:text-sky-300 dark:*:border-sky-500/15 dark:*:bg-sky-500/10 ...">
+                                {info.tags.map(tag => (
+                                    <li key={tag}
+                                        className="mx-1 inline-block px-1 py-0.5 text-sm text-black mr-1 mt-0.5">{tag}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>)
+                        : null}
                 </div>
             </a>
         </div>

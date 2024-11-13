@@ -5,12 +5,10 @@ import {rootPath} from "@/app/lib/Config";
 import path from "path";
 
 const Header = () => {
-
-
     return (
         <header className="sticky top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full text-sm">
             <nav
-                className="mt-4 relative max-w-2xl w-full bg-white border border-gray-200 rounded-[2rem] mx-2 py-2.5 md:flex md:items-center md:justify-between md:py-0 md:px-4 md:mx-auto">
+                className="mt-4 relative max-w-3xl w-full bg-white border border-gray-200 rounded-[2rem] mx-2 py-2.5 md:flex md:items-center md:justify-between md:py-0 md:px-4 md:mx-auto">
                 <div className="px-4 md:px-0 flex justify-between items-center">
                     <div>
                         <a className="flex rounded-md text-xl font-semibold focus:outline-none focus:opacity-80"
