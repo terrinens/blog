@@ -9,7 +9,6 @@ type MDXImageType = {
     style?: React.CSSProperties
 }
 
-/*https://stackoverflow.com/a/65681762/23506904*/
 export function MDXImage({type, src, alt = '', width = 100, height = 100, style, className}: {
     className?: string
 } & MDXImageType) {

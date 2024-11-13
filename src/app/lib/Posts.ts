@@ -123,6 +123,14 @@ export function generationPostCardProps(filename: string, frontmatter: Record<st
         }
     }
 
+    Object.entries(frontmatter).forEach(([key, value]) => {
+        if (typeof value == 'string') {
+            frontmatter[key] = value.trim();
+        } else if (value instanceof Array) {
+            frontmatter[key] = value.map(val => (val as string).trim())
+        }
+    })
+
     return {
         filename: filename,
         info: {
