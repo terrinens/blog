@@ -150,12 +150,12 @@ function CodeByteTable({chartData}: { chartData: ChartDataProps }) {
 
 export default function LanguageBlock({chartData}: { chartData: ChartDataProps }) {
     return (
-        <div className="container mx-auto w-full">
-            <div className='grid grid-cols-2 gap-1'>
-                <div className='col-span-1 p-4'>
+        <div className="container w-full m-0">
+            <div className='grid xl:grid-cols-3 lg:grid-cols-3 grid-cols-2 gap-1'>
+                <div className='pl-0 col-span-1 p-4'>
                     <CodeByteGraph chartData={chartData}/>
                 </div>
-                <div className='col-span-1 p-4'>
+                <div className='xl:col-span-2 lg:col-span-2 col-span-1 p-4 w-full'>
                     <CodeByteTable chartData={chartData}/>
                 </div>
             </div>

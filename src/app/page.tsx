@@ -1,9 +1,9 @@
 import TagBlock from "@/app/components/main_frame/TagBlock";
-import {PostCard} from "@/app/components/post/main/PostRender";
 import dynamic from "next/dynamic";
 import {generationPostCardProps, getPostListData, Paging} from "@/app/lib/Posts";
 import {ChartDataProps, generationChartData} from "@/app/components/main_frame/LanguageBlockData";
-import MainContainer from "@_components/main_frame/MainContainer";
+import MainContainer, {MainContainerGrid} from "@_components/main_frame/MainContainer";
+import RecencyPostsBlock from "@_components/main_frame/RecencyPostsBlock";
 
 export async function RecencyPostBlockData() {
     const allList = [...await getPostListData('/main'), ...await getPostListData('/proj')];
@@ -38,25 +38,15 @@ export default async function Home() {
 
             <MainContainer>
                 <div className='col-span-1 mb-3'>
-                    <div className=' grid-cols-4 grid gap-4'>
-                        {
-                            recencyPostBlockData.map(data => (
-                                <PostCard
-                                    key={'MainRecencyPost:' + data.filename}
-                                    filename={data.filename.replace('.mdx', '')} info={data.info}
-                                    tagRender={false}
-                                    imgRender={false}
-                                    dateRender={false}
-                                />
-                            ))
-                        }
-                    </div>
+                    <RecencyPostsBlock props={recencyPostBlockData}/>
                 </div>
             </MainContainer>
 
-            <div className='col-span-1'>
-                <LanguageBlock chartData={chartData}/>
-            </div>
+            <MainContainer>
+                <MainContainerGrid title={'Github 기여 언어 Byte'}>
+                    <LanguageBlock chartData={chartData}/>
+                </MainContainerGrid>
+            </MainContainer>
         </div>
     );
 }

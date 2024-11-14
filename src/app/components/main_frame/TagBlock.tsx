@@ -1,4 +1,5 @@
 import {countUsedTags} from "@/app/lib/Posts";
+import {MainContainerGrid} from "@_components/main_frame/MainContainer";
 
 export default async function TagBlock() {
     const result = await countUsedTags(['main', 'proj']);
@@ -7,12 +8,9 @@ export default async function TagBlock() {
         <div className="w-full">
             <div
                 className="scroll-hidden max-h-[calc(3*4rem)] flex justify-center">
-                <div className={'grid-cols-2'}>
-                    <div className={'prose'}>
-                        <h2 className={'mb-3'}>총 태그 사용 수</h2>
-                    </div>
-
-                    <div className="grid grid-cols-7 sm:grid-cols-8 md:grid-cols-10 md:gap-4 lg:grid-cols-11 lg:gap-5 xl:grid-cols-12 xl:gap-7 gap-4">
+                <MainContainerGrid title={'블로그 태그 사용 수'}>
+                    <div
+                        className="grid grid-cols-7 sm:grid-cols-8 md:grid-cols-10 md:gap-4 lg:grid-cols-11 lg:gap-5 xl:grid-cols-12 xl:gap-7 gap-4">
                         {
                             Object.entries(result).map(([key, value]) => (
                                 <div key={'TagCountBlockParents:' + key} className={'flex items-center justify-center'}>
@@ -21,7 +19,7 @@ export default async function TagBlock() {
                             ))
                         }
                     </div>
-                </div>
+                </MainContainerGrid>
             </div>
         </div>
     );

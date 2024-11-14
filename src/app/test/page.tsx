@@ -4,5 +4,5 @@ import {RecencyPostBlockData} from "@/app/page";
 
 export default async function Page() {
     const recencyPostBlockData = await RecencyPostBlockData();
-    return (<RecencyPostsBlock props={recencyPostBlockData} />)
+    return (<RecencyPostsBlock props={recencyPostBlockData.slice(1)} />)
 }
