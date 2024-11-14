@@ -1,5 +1,6 @@
-import {PostCard, PostCardProps} from "@_components/post/main/PostRender";
+import {PostCardProps} from "@_components/post/main/ServerPostRender";
 import {MainContainerGrid} from "@_components/main_frame/MainContainer";
+import {PostCard} from "@_components/post/main/ClientPostRender";
 
 const SliceBlock = ({props}: { props: [PostCardProps, PostCardProps] }) => {
     return (

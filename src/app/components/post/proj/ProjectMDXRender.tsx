@@ -1,5 +1,5 @@
-import {PostRenderProps} from "@/app/components/post/main/PostRender";
-import {DirectoryNode, getCompileMDX, getDirectoryNames} from "@/app/lib/Posts";
+import {PostRenderProps} from "@_components/post/main/ServerPostRender";
+import {DirectoryNode, getCompileMDX, getDirectoryNames} from "@/app/lib/ServerPosts";
 import {PostsDir, rootPath} from "@/app/lib/Config";
 import React from "react";
 import path from "path";

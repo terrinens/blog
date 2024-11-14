@@ -1,5 +1,5 @@
-import {getPostSlugs} from "@/app/lib/Posts";
-import {PostRender} from "@/app/components/post/main/PostRender";
+import {getPostSlugs} from "@/app/lib/ServerPosts";
+import {ServerPostRender} from "@_components/post/main/ServerPostRender";
 
 type Props = {
     params: {
@@ -10,7 +10,7 @@ type Props = {
 export default async function Page(props: Props) {
     const {id} = props.params;
     return (
-        <PostRender deep={['/main']} postName={id}/>
+        <ServerPostRender deep={['/main']} postName={id}/>
     )
 }
 

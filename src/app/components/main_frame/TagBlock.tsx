@@ -1,4 +1,4 @@
-import {countUsedTags} from "@/app/lib/Posts";
+import {countUsedTags} from "@/app/lib/ServerPosts";
 import {MainContainerGrid} from "@_components/main_frame/MainContainer";
 
 export default async function TagBlock() {

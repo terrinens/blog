@@ -1,7 +1,7 @@
 import {Props as ParentsProps} from "@/app/projects/view/[type]/[dir]/page";
-import {DirectoryNode, getDirectoryNames, getDirList, getDocsTreeNode, getPostSlugs} from "@/app/lib/Posts";
+import {DirectoryNode, getDirectoryNames, getDirList, getDocsTreeNode, getPostSlugs} from "@/app/lib/ServerPosts";
 import path from "path";
-import {PostRender} from "@/app/components/post/main/PostRender";
+import {ServerPostRender} from "@_components/post/main/ServerPostRender";
 import {AccordionBlock, AccordionCase} from "@/app/components/post/proj/Accordion";
 import fs from "fs";
 import {PostsDir} from "@/app/lib/Config";
@@ -20,7 +20,7 @@ export default async function Page({params}: Props) {
     const docsRenders = slug.map(doc => {
         return {
             title: doc,
-            render: PostRender({postName: doc.replace('.mdx', ''), deep: [docsPath], headerIgnore: true})
+            render: ServerPostRender({postName: doc.replace('.mdx', ''), deep: [docsPath], headerIgnore: true})
         };
     });
 

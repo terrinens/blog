@@ -2,38 +2,10 @@ import fs from 'fs';
 import * as pfs from 'fs/promises'
 import path from 'path';
 import {compileMDX} from "next-mdx-remote/rsc";
-import {PostCardProps} from "@/app/components/post/main/PostRender";
 import {PostsDir} from "@/app/lib/Config";
 import {userMDXComponents} from "@_components/MDXComponents";
 import React from "react";
-
-/** 페이징 계산을 위해 만들어진 클래스 입니다. */
-export class Paging {
-    size: number;
-    total: number;
-    sort: any;
-
-    static default_sort(a: any, b: any) {
-        a = new Date(a.timestamp);
-        b = new Date(b.timestamp);
-        return b.getTime() - a.getTime();
-    }
-
-    constructor(size: number, total: any[] | number, sort?: any) {
-        this.size = size;
-        this.total = (total instanceof Array) ? total.length : total
-        this.sort = sort;
-    }
-
-    get getTotalPage() {
-        return Math.ceil(this.total / this.size);
-    }
-
-    get generateStaticParams() {
-        return Array.from({length: this.getTotalPage}, (_, index) =>
-            ({page: String(index + 1)}))
-    }
-}
+import {generationPostCardProps} from "@/app/lib/ClientPost";
 
 /** 기본 Post 저장 위치에서 deep 수준에 따라 MDX 파일을 찾습니다.
  * @param deep 기본 포스터 위치에서 하위 디렉토리 수준 */
@@ -108,67 +80,6 @@ export async function getPostListData(...deep: (string)[]): Promise<PostListProp
         } catch (error) {
             console.log('not read a file but pass');
             console.log(error);
-        }
-    }
-
-    return result;
-}
-
-export function generationPostCardProps(filename: string, frontmatter: Record<string, unknown>): PostCardProps {
-    if (frontmatter.tags != undefined) {
-        if (!(frontmatter.tags instanceof Array)) {
-            frontmatter.tags = (frontmatter.tags as string).trim();
-            frontmatter.tags = (frontmatter.tags as string).split(',')
-                .filter(tag => tag.length > 0);
-        } else {
-            frontmatter.tags = frontmatter.tags.map(x => x.trim())
-        }
-    }
-
-    Object.entries(frontmatter).forEach(([key, value]) => {
-        if (typeof value == 'string') {
-            frontmatter[key] = value.trim();
-        } else if (value instanceof Array) {
-            frontmatter[key] = value.map(val => (val as string).trim())
-        }
-    })
-
-    return {
-        filename: filename,
-        info: {
-            mainImg: (<string>frontmatter.mainImg),
-            title: (<string>frontmatter.title),
-            description: (<string>frontmatter.description),
-            tags: (<Array<string>>frontmatter.tags),
-            date: (new Date(<Date>frontmatter.timestamp))
-        }
-    }
-}
-
-/** 주어진 데이터, 현재 페이지 번호, 페이징을 사용하여 페이징 크기에 맞게 현재 페이지의 정보를 반환합니다.
- * @param list {@link PostListProps}의 데이터들
- * @param thisPage 현재 페이지
- * @param paging 페이징 정보
- * @see  {@link Paging} */
-export async function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
-    const result: PostCardProps[] = [];
-
-    const push = (obj: { filename: string, frontmatter: Record<string, unknown> }) => {
-        const filename = obj.filename.replace('.mdx', '');
-        const frontmatter = obj.frontmatter;
-        const props: PostCardProps = generationPostCardProps(filename, frontmatter);
-        result.push(props);
-    }
-
-    if (thisPage == 1) {
-        for (const obj of list.slice(0, thisPage * paging.size)) {
-            push(obj)
-        }
-    } else {
-        const startSlice = ((thisPage - 1) * paging.size) - 1;
-        const endSlice = paging.size * thisPage - 1;
-        for (const obj of list.slice(startSlice, endSlice)) {
-            push(obj)
         }
     }
 

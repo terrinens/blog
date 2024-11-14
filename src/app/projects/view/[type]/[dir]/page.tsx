@@ -1,6 +1,6 @@
-import {DirectoryNode, getDirList, getDocsTreeNode} from "@/app/lib/Posts";
+import {DirectoryNode, getDirList, getDocsTreeNode} from "@/app/lib/ServerPosts";
 import {ProjectInfoRender} from "@/app/components/post/proj/ProjectMDXRender";
-import {PostRenderProps} from "@/app/components/post/main/PostRender";
+import {PostRenderProps} from "@_components/post/main/ServerPostRender";
 import fs from "fs";
 import {PostsDir} from "@/app/lib/Config";
 import path from "path";

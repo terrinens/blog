@@ -1,6 +1,7 @@
-import {generationPostCardProps, getCompileMDX, getDirList, PostListProps} from "@/app/lib/Posts";
+import {getCompileMDX, getDirList, PostListProps} from "@/app/lib/ServerPosts";
 import {ProjectCard} from "@/app/components/post/proj/ProjectCardRender";
 import {PostsDir} from "@/app/lib/Config";
+import {generationPostCardProps} from "@/app/lib/ClientPost";
 
 const getProjNameList = async (type: string) => {
     return getDirList('/proj', type)

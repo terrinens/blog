@@ -2,7 +2,7 @@
 
 import React from "react";
 import {DefaultImg, rootPath} from "@/app/lib/Config";
-import {PostCardProps} from "@/app/components/post/main/PostRender";
+import {PostCardProps} from "@_components/post/main/ServerPostRender";
 import path from "path";
 import ExportedImage from "next-image-export-optimizer";
 

@@ -6,7 +6,7 @@
   "homepage": "https://terrinens.github.io/blog/",
   "repository": "https://github.com/terrinens/blog",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev && next-image-export-optimizer",
     "build": "next build && next-image-export-optimizer",
     "start": "next start",
     "lint": "next lint"

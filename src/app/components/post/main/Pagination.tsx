@@ -1,33 +1,9 @@
-import {Paging} from "@/app/lib/Posts";
-import path from "path";
-import {rootPath} from "@/app/lib/Config";
+'use client'
 
-const PaginationItem = ({page, baseUrl, nowPage = false}: { page: number, baseUrl: string, nowPage?: boolean }) => {
-    let css = "px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-100";
-    if (nowPage) {
-        css = css.replace('bg-white', 'bg-green-200');
-    }
+import React from "react";
 
-    return (
-        <li>
-            <a href={path.join(rootPath, baseUrl, page.toString())}
-               className={css}>
-                {page}
-            </a>
-        </li>
-    )
-}
-
-interface PaginationProps {
-    thisPage: number
-    paging: Paging;
-    baseURL: string;
-}
-
-function calculationPageNumbers(nowPage: number, paging: Paging) {
-    const buttonMaxSize = 7;
-    const totalPageCount = paging.getTotalPage;
-
+function calculationPageNumbers(nowPage: number, totalPageCount: number) {
+    const buttonMaxSize = 3;
     const halfSize = Math.floor(buttonMaxSize / 2);
 
     if (totalPageCount <= buttonMaxSize) {
@@ -48,38 +24,121 @@ function calculationPageNumbers(nowPage: number, paging: Paging) {
     return Array.from({length: endPage - startPage + 1}, (_, i) => startPage + i);
 }
 
-export default function Pagination({thisPage, baseURL, paging}: PaginationProps) {
-    const buttons = calculationPageNumbers(thisPage, paging);
 
-    const preUrl = path.join(baseURL, String((thisPage - 1)))
-    const nextUrl = path.join(baseURL, String((thisPage + 1)))
+type ButtonProps = {
+    pageNumber: number;
+    currentPage?: boolean;
+    onClickEvent: React.MouseEventHandler<HTMLButtonElement>;
+}
 
-    let preCss = 'px-3 py-2 ml-0 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100';
-    if (thisPage - 1 <= 0) preCss = 'pointer-events-none ' + preCss.replace('bg-white', 'bg-gray-400');
-
-    let nextCss = 'px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100'
-    if (thisPage + 1 >= paging.getTotalPage) nextCss = 'pointer-events-none ' + nextCss.replace('bg-white', 'bg-gray-400');
-
+const PageButton = ({pageNumber, currentPage, onClickEvent}: ButtonProps) => {
     return (
-        <div className="flex justify-center mt-6">
-            <nav aria-label="Page navigation">
-                <ul className="inline-flex -space-x-px">
-                    <li>
-                        <a href={preUrl} className={preCss} aria-label="Previous">이전</a>
-                    </li>
-                    {
-                        buttons.map(pNumber => (
-                            pNumber == thisPage
-                                ? <PaginationItem key={'page_number:' + pNumber} page={pNumber} baseUrl={baseURL}
-                                                  nowPage={true}/>
-                                : <PaginationItem key={'page_number:' + pNumber} page={pNumber} baseUrl={baseURL}/>
-                        ))
-                    }
-                    <li>
-                        <a href={nextUrl} className={nextCss}>다음</a>
-                    </li>
-                </ul>
-            </nav>
+        <button type="button"
+                onClick={onClickEvent}
+                className={`${currentPage ? 'bg-gray-200' : ''} min-h-[38px] min-w-[38px] flex justify-center items-center  text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-none focus:bg-gray-300 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-600 dark:text-white dark:focus:bg-neutral-500`}
+                aria-current="page">{pageNumber}
+        </button>
+    )
+}
+
+const TooltipButton = ({pageNumber, next, onClickEvent}: { next?: boolean } & ButtonProps) => {
+    return (
+        <div className="hs-tooltip inline-block">
+            <button type="button"
+                    onClick={onClickEvent}
+                    className="hs-tooltip-toggle group min-h-[38px] min-w-[38px] flex justify-center items-center text-gray-400 hover:text-blue-600 p-2 text-sm rounded-lg focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-neutral-500 dark:hover:text-blue-500 dark:focus:bg-white/10">
+                <span className="group-hover:hidden text-xs">•••</span>
+                {next
+                    ? <svg className="group-hover:block hidden shrink-0 size-5" xmlns="http://www.w3.org/2000/svg"
+                           width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m6 17 5-5-5-5"></path>
+                        <path d="m13 17 5-5-5-5"></path>
+                    </svg>
+                    : <svg className="group-hover:block hidden shrink-0 size-5" xmlns="http://www.w3.org/2000/svg"
+                           width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                           strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="m18 7-5 5 5 5"></path>
+                        <path d="m11 7-5 5 5 5"></path>
+                    </svg>
+                }
+
+                <span
+                    className="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded shadow-sm dark:bg-neutral-700"
+                    role="tooltip">
+          {next ? 'Next' : 'Previous'} {pageNumber} pages
+        </span>
+            </button>
         </div>
     )
+}
+
+export default function Pagination({nowPageNumber = 1, totalPage, onPageChange}: {
+    nowPageNumber?: number,
+    totalPage: number,
+    onPageChange?: (page: number) => void
+}) {
+    const [currentPage, setCurrentPage] = React.useState(nowPageNumber);
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        onPageChange ? onPageChange(page) : null;
+    }
+
+    const genNumbers = calculationPageNumbers(currentPage, totalPage);
+    const previousPage = genNumbers[0] - 1;
+    const nextPage = genNumbers[genNumbers.length - 1] + 1;
+
+    const buttonProps = (pageNumber: number, currentPage?: boolean): ButtonProps => ({
+        onClickEvent: () => handlePageChange(pageNumber),
+        pageNumber: pageNumber,
+        currentPage: currentPage
+    })
+
+    return (
+        <nav className="flex items-center gap-x-1" aria-label="Pagination">
+            <button type="button"
+                    className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex jusify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+                    aria-label="Previous">
+                <svg className="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                     strokeLinejoin="round">
+                    <path d="m15 18-6-6 6-6"></path>
+                </svg>
+                <span className="sr-only">Previous</span>
+            </button>
+            <div className="flex items-center gap-x-1">
+                {1 === currentPage - 2 && <PageButton {...buttonProps(1)}/>}
+                {1 < previousPage &&
+                    (<>
+                        <PageButton {...buttonProps(previousPage - 1)}/>
+                        <TooltipButton {...buttonProps(previousPage)}/>
+                    </>)
+                }
+
+                {genNumbers.map(num => <PageButton
+                    key={`page:button:${num}`}{...buttonProps(num, num == currentPage)}/>)}
+
+                {totalPage > nextPage - 1 &&
+                    (<>
+                        {totalPage > nextPage &&
+                            <TooltipButton {...buttonProps(nextPage)} next={true}/>}
+                        {totalPage === nextPage &&
+                            <PageButton {...buttonProps(totalPage)}/>}
+                        {totalPage > nextPage &&
+                            <PageButton {...buttonProps(totalPage)}/>}
+                    </>)
+                }
+            </div>
+            <button type="button"
+                    className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex jusify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10"
+                    aria-label="Next">
+                <span className="sr-only">Next</span>
+                <svg className="shrink-0 size-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                     strokeLinejoin="round">
+                    <path d="m9 18 6-6-6-6"></path>
+                </svg>
+            </button>
+        </nav>
+    );
 }

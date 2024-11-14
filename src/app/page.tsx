@@ -1,9 +1,10 @@
 import TagBlock from "@/app/components/main_frame/TagBlock";
 import dynamic from "next/dynamic";
-import {generationPostCardProps, getPostListData, Paging} from "@/app/lib/Posts";
+import {getPostListData} from "@/app/lib/ServerPosts";
 import {ChartDataProps, generationChartData} from "@/app/components/main_frame/LanguageBlockData";
 import MainContainer, {MainContainerGrid} from "@_components/main_frame/MainContainer";
 import RecencyPostsBlock from "@_components/main_frame/RecencyPostsBlock";
+import {generationPostCardProps, Paging} from "@/app/lib/ClientPost";
 
 export async function RecencyPostBlockData() {
     const allList = [...await getPostListData('/main'), ...await getPostListData('/proj')];
