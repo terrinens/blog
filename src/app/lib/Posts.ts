@@ -97,6 +97,8 @@ export async function getPostListData(...deep: (string)[]): Promise<PostListProp
     const readDir = deep ? path.join(PostsDir, ...deep) : PostsDir
     const mdList = await getPostSlugs(...deep);
 
+    if (mdList.length <= 0) return [];
+
     const result: PostListProps[] = [];
 
     for (const slug of mdList) {

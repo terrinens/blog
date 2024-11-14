@@ -1,19 +1,25 @@
 import type {MDXComponents} from "mdx/types";
-import Image from "next/image";
 import React from "react";
 import GitMembers from "@_components/post/proj/GitMembers";
 import GitContributors, {ForceCreateGitContributors} from "@_components/post/proj/GitContributors";
+import ExportedImage from "next-image-export-optimizer";
 
 type MDXImageType = {
     type: string, src: string, alt?: string, width?: number, height?: number,
     style?: React.CSSProperties
 }
 
-export function MDXImage({type, src, alt = '', width = 100, height = 100, style, className}: {
+export function MDXImage({type, src, alt = '', width, height, className, style}: {
     className?: string
 } & MDXImageType) {
     const image = require(`../../data/image/${type}/${src}`);
-    return <Image src={image.default} alt={alt} width={width} height={height} className={className} style={style}/>;
+    const info = image.default;
+
+    return <ExportedImage
+        className={className} style={style}
+        src={info.src} alt={alt}
+        width={width ?? info.width} height={height ?? info.height}
+    />
 }
 
 /*

@@ -1,9 +1,9 @@
 import React from "react";
 import path from "path";
 import {generationPostCardProps, getCompileMDX} from "@/app/lib/Posts";
-import Image from "next/image";
 import {DefaultImg, PostsDir, rootPath} from "@/app/lib/Config";
 import {MDXImage} from "@_mdx-components/*";
+import ExportedImage from "next-image-export-optimizer";
 
 export type PostRenderProps = {
     postName: string;
@@ -112,12 +112,12 @@ export function PostCard({imgRender = true, dateRender = true, tagRender = true,
     const style: React.CSSProperties = {objectFit: "cover", width: "100%", height: "100%"}
 
     const img = (info.mainImg == null)
-        ? <Image style={style} className={imgClass} width={'100'} height={'100'} src={DefaultImg.src} alt={'none'}/>
+        ? <ExportedImage style={style} className={imgClass} width={'100'} height={'100'} src={DefaultImg.src} alt={'none'}/>
         : <MDXImage style={style} className={imgClass} type={'main'} src={imgSrc} alt={'none'}/>;
 
     return (
         <div className="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
-            <a href={path.join(rootPath, '/posts/view/', props.filename)}>
+            <a href={path.join(rootPath, '/posts/view/', props.filename.replace('.mdx', ''))}>
                 {imgRender
                     ? (<div className="w-full h-40 flex flex-col justify-center items-center rounded-t-xl">{img}</div>)
                     : null

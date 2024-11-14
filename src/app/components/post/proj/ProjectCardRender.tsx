@@ -2,9 +2,9 @@
 
 import React from "react";
 import {DefaultImg, rootPath} from "@/app/lib/Config";
-import Image from "next/image";
 import {PostCardProps} from "@/app/components/post/main/PostRender";
 import path from "path";
+import ExportedImage from "next-image-export-optimizer";
 
 export function DataDisplay({team, personal}: { team: React.ReactNode, personal: React.ReactNode }) {
     const [isTeam, setIsTeam] = React.useState(true);
@@ -66,12 +66,12 @@ function ProjCard(key: number, type: string, prop: PostCardProps) {
                 className="my-4 group flex flex-col focus:outline-none mb-1 h-80 w-full"
                 href={path.join(rootPath, 'projects/view', type, dir)}>
                 <div className="h-60 w-full relative flex justify-center overflow-hidden rounded-2xl">
-                    <Image fill
-                           style={{objectFit: 'contain'}}
-                           className="object-cover group-hover:scale-105 group-focus:scale-105 transition-transform duration-500 ease-in-out rounded-2xl"
-                           src={mainImageSrc}
-                           alt="Project Image"
-                           sizes="(max-width: 768px) 100vw, 50vw"
+                    <ExportedImage fill
+                                   style={{objectFit: 'contain'}}
+                                   className="object-cover group-hover:scale-105 group-focus:scale-105 transition-transform duration-500 ease-in-out rounded-2xl"
+                                   src={mainImageSrc}
+                                   alt="Project Image"
+                                   sizes="(max-width: 768px) 100vw, 50vw"
                     />
                 </div>
 

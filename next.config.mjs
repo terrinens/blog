@@ -27,7 +27,6 @@ const prefix = process.env.NODE_ENV === 'production'
 const nextConfig = {
     reactStrictMode: true,
     assetPrefix: prefix,
-    /* basePath 문제? build 할때 파일을 가져오기를 기대하는것이 아닌 reop에서 직접 가져오게 시도. */
     basePath: prefix,
     trailingSlash: true,
     output: 'export',
@@ -35,9 +34,23 @@ const nextConfig = {
     distDir: 'out',
 
     images: {
-        unoptimized: true,
+        loader: "custom",
+        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        unoptimized: process.env.NODE_ENV !== 'production'
+    },
+    transpilePackages: ["next-image-export-optimizer"],
+    env: {
+        nextImageExportOptimizer_imageFolderPath: "data/image",
+        nextImageExportOptimizer_exportFolderPath: "out",
+        nextImageExportOptimizer_quality: "75",
+        nextImageExportOptimizer_storePicturesInWEBP: "true",
+        nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
+        nextImageExportOptimizer_generateAndUseBlurImages: "true",
+        nextImageExportOptimizer_remoteImageCacheTTL: "0",
     },
 };
+
 
 const withMDX = createdMDX()
 

@@ -5,11 +5,11 @@ import {generationPostCardProps, getPostListData, Paging} from "@/app/lib/Posts"
 import {ChartDataProps, generationChartData} from "@/app/components/main_frame/LanguageBlockData";
 import MainContainer from "@_components/main_frame/MainContainer";
 
-async function RecencyPostBlockData() {
+export async function RecencyPostBlockData() {
     const allList = [...await getPostListData('/main'), ...await getPostListData('/proj')];
     allList.sort((a, b) => Paging.default_sort(a.frontmatter, b.frontmatter));
 
-    const sliceCount = 4;
+    const sliceCount = 6;
     const sliceList = allList.slice(0, sliceCount);
     return sliceList.map(data => generationPostCardProps(data.filename, data.frontmatter));
 }

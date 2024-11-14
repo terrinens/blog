@@ -1,12 +1,12 @@
 import {getOrgMemberSimpleInfo, SimpleGitUserInfo} from "@/app/lib/GithubData";
 import React from "react";
-import Image from "next/image";
+import ExportedImage from "next-image-export-optimizer";
 
 function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, popoverId: string }) {
     return (
         <div className={'flex items-center ml-2'}>
             <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg">
-                <Image src={simpleInfo.avatarURL}
+                <ExportedImage src={simpleInfo.avatarURL}
                      data-popover-target={popoverId}
                      height={40} width={40}
                      className="w-full h-full rounded-full object-cover m-0"
@@ -19,7 +19,7 @@ function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, pop
                 <div className="p-3">
                     <div className="flex items-center mb-2">
                         <a href={simpleInfo.gitURL}>
-                            <Image height={40} width={40} className="w-10 h-10 rounded-full m-0"
+                            <ExportedImage height={40} width={40} className="w-10 h-10 rounded-full m-0"
                                    src={simpleInfo.avatarURL}
                                    alt={simpleInfo.name}/>
                         </a>
