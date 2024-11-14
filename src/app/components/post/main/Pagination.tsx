@@ -81,7 +81,7 @@ export default function Pagination({nowPageNumber = 1, totalPage, onPageChange}:
     const [currentPage, setCurrentPage] = React.useState(nowPageNumber);
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-        onPageChange ? onPageChange(page) : null;
+        onPageChange?.(page);
     }
 
     const genNumbers = calculationPageNumbers(currentPage, totalPage);

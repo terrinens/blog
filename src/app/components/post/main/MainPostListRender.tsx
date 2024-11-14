@@ -3,20 +3,20 @@
 import {PostListProps} from "@/app/lib/ServerPosts";
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
 import Pagination from "@_components/post/main/Pagination";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {Paging, slicePage} from "@/app/lib/ClientPost";
 import {PostCard} from "@_components/post/main/ClientPostRender";
 
 
 export default function MainPostListRender({props}: { props: PostListProps[] }) {
-    const paging = new Paging(6, props.length);
+    const paging = useMemo(() => new Paging(12, props.length), [props.length]);
     const [cardData, setCardData] = useState<PostCardProps[]>([]);
     const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
         const data = slicePage(props, page, paging);
         setCardData(data);
-    }, [props.length, page]);
+    }, [props, paging, page]);
 
     const handlePageChange = (page: number) => {
         setPage(page);
