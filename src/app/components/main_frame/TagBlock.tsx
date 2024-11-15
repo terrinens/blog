@@ -8,7 +8,10 @@ export default async function TagBlock() {
         <div className="w-full">
             <div
                 className="scroll-hidden max-h-[calc(3*4rem)] flex justify-center">
-                <MainContainerGrid title={'블로그 태그 사용 수'}>
+                <MainContainerGrid title={'블로그 태그 사용 수'} option={{
+                    id: 'total_tags_used_block',
+                    tooltipText: '모든 포스터의 태그 사용 횟수를 나타내고 있는 블록입니다.'
+                }}>
                     <div
                         className="grid grid-cols-7 sm:grid-cols-8 md:grid-cols-10 md:gap-4 lg:grid-cols-11 lg:gap-5 xl:grid-cols-12 xl:gap-7 gap-4">
                         {

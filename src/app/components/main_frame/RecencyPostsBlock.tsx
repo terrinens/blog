@@ -1,5 +1,4 @@
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
-import {MainContainerGrid} from "@_components/main_frame/MainContainer";
 import {PostCard} from "@_components/post/main/ClientPostRender";
 
 const SliceBlock = ({props}: { props: [PostCardProps, PostCardProps] }) => {
@@ -20,15 +19,14 @@ export default function RecencyPostsBlock({props}: { props: PostCardProps[] }) {
     }
 
     return (
-        <MainContainerGrid title={'블로그 최신 포스터'}>
-            <div id="indicators-carousel" className="relative w-full" data-carousel="static">
-                <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
-                    {slicedProps.map((data, index) => (<SliceBlock key={index} props={data}/>))}
-                </div>
+        <div id="indicators-carousel" className="relative w-full" data-carousel="static">
+            <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
+                {slicedProps.map((data, index) => (<SliceBlock key={index} props={data}/>))}
+            </div>
 
-                <button type="button"
-                        className="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                        data-carousel-prev>
+            <button type="button"
+                    className="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                    data-carousel-prev>
         <span
             className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-800/30  group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-gray-800/70 group-focus:outline-none">
             <svg className="w-4 h-4 text-white  rtl:rotate-180" aria-hidden="true"
@@ -38,10 +36,10 @@ export default function RecencyPostsBlock({props}: { props: PostCardProps[] }) {
             </svg>
             <span className="sr-only">Previous</span>
         </span>
-                </button>
-                <button type="button"
-                        className="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-                        data-carousel-next>
+            </button>
+            <button type="button"
+                    className="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                    data-carousel-next>
         <span
             className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-800/30 group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-gray-800/70 group-focus:outline-none">
             <svg className="w-4 h-4 text-white rtl:rotate-180" aria-hidden="true"
@@ -51,8 +49,7 @@ export default function RecencyPostsBlock({props}: { props: PostCardProps[] }) {
             </svg>
             <span className="sr-only">Next</span>
         </span>
-                </button>
-            </div>
-        </MainContainerGrid>
+            </button>
+        </div>
     )
 }
