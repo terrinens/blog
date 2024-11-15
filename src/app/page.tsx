@@ -5,6 +5,7 @@ import {ChartDataProps, generationChartData} from "@/app/components/main_frame/L
 import MainContainer, {MainContainerGrid} from "@_components/main_frame/MainContainer";
 import RecencyPostsBlock from "@_components/main_frame/RecencyPostsBlock";
 import {generationPostCardProps, Paging} from "@/app/lib/ClientPost";
+import Banner from "@_components/main_frame/Banner";
 
 export async function RecencyPostBlockData() {
     const allList = [...await getPostListData('/main'), ...await getPostListData('/proj')];
@@ -30,24 +31,27 @@ export default async function Home() {
     })
 
     return (
-        <div className='grid grid-cols-1 gap-4'>
-            <MainContainer>
-                <div className='col-span-1 mb-3'>
-                    <TagBlock key={'TagBlock'}/>
-                </div>
-            </MainContainer>
+        <>
+            <Banner/>
+            <div className='grid grid-cols-1 gap-4'>
+                <MainContainer>
+                    <div className='col-span-1 mb-3'>
+                        <TagBlock key={'TagBlock'}/>
+                    </div>
+                </MainContainer>
 
-            <MainContainer>
-                <div className='col-span-1 mb-3'>
-                    <RecencyPostsBlock props={recencyPostBlockData}/>
-                </div>
-            </MainContainer>
+                <MainContainer>
+                    <div className='col-span-1 mb-3'>
+                        <RecencyPostsBlock props={recencyPostBlockData}/>
+                    </div>
+                </MainContainer>
 
-            <MainContainer>
-                <MainContainerGrid title={'Github 기여 언어 Byte'}>
-                    <LanguageBlock chartData={chartData}/>
-                </MainContainerGrid>
-            </MainContainer>
-        </div>
+                <MainContainer>
+                    <MainContainerGrid title={'Github 기여 언어 Byte'}>
+                        <LanguageBlock chartData={chartData}/>
+                    </MainContainerGrid>
+                </MainContainer>
+            </div>
+        </>
     );
 }

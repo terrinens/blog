@@ -13,7 +13,7 @@ export function MDXImage(
     {
         type, src, alt = '', width, height, className, style = {objectFit: "cover", width: "100%", height: "100%"}
     }: { className?: string } & MDXImageType) {
-    const image = require(`../../data/image/${type}/${src}`);
+    const image = require(`@_posts/image/${type}/${src}`);
     const info = image.default;
 
     return <ExportedImage

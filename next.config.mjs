@@ -32,7 +32,10 @@ const nextConfig = {
     output: 'export',
     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
     distDir: 'out',
+};
 
+/** @type {import('next').NextConfig} */
+const exportImageConfig = {
     images: {
         loader: "custom",
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
@@ -48,9 +51,10 @@ const nextConfig = {
         nextImageExportOptimizer_generateAndUseBlurImages: "true",
         nextImageExportOptimizer_remoteImageCacheTTL: "0",
     },
-};
+}
 
 
 const withMDX = createdMDX()
+const margeConfig = {...nextConfig, ...exportImageConfig};
 
-export default withMDX(nextConfig);
+export default withMDX(margeConfig);

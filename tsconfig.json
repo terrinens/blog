@@ -30,6 +30,12 @@
       ],
       "@_components/*": [
         "./src/app/components/*"
+      ],
+      "@_public/*": [
+        "./src/public/*"
+      ],
+      "@_posts/*": [
+        "./src/data/*"
       ]
     }
   },
