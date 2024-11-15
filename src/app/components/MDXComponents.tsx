@@ -5,13 +5,14 @@ import GitContributors, {ForceCreateGitContributors} from "@_components/post/pro
 import ExportedImage from "next-image-export-optimizer";
 
 type MDXImageType = {
-    type: string, src: string, alt?: string, width?: number, height?: number,
+    type: 'main' | 'proj', src: string, alt?: string, width?: number, height?: number,
     style?: React.CSSProperties
 }
 
 export function MDXImage(
     {
-        type, src, alt = '', width, height, className, style = {objectFit: "cover", width: "100%", height: "100%"}
+        type, src, alt = '', width, height, className,
+        style = {objectFit: "cover", width: "100%", height: "100%"}
     }: { className?: string } & MDXImageType) {
     const image = require(`@_posts/image/${type}/${src}`);
     const info = image.default;

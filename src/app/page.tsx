@@ -13,7 +13,7 @@ export async function RecencyPostBlockData() {
 
     const sliceCount = 6;
     const sliceList = allList.slice(0, sliceCount);
-    return sliceList.map(data => generationPostCardProps(data.filename, data.frontmatter));
+    return sliceList.map(data => generationPostCardProps({postType: "main"}, data.filename, data.frontmatter));
 }
 
 export default async function Home() {

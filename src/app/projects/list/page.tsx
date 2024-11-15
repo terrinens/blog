@@ -1,7 +1,7 @@
 import {getCompileMDX, getDirList, PostListProps} from "@/app/lib/ServerPosts";
 import {ProjectCard} from "@/app/components/post/proj/ProjectCardRender";
 import {PostsDir} from "@/app/lib/Config";
-import {generationPostCardProps} from "@/app/lib/ClientPost";
+import {generationPostCardProps, PostType} from "@/app/lib/ClientPost";
 
 const getProjNameList = async (type: string) => {
     return getDirList('/proj', type)
@@ -21,8 +21,10 @@ const getData = async (type: string) => {
         return bStart.getTime() - aStart.getTime();
     });
 
+    const postType: PostType = {postType: 'proj', projType: type as 'team' | 'personal'}
+
     return projDataList.map(data =>
-        generationPostCardProps(data.filename, data.frontmatter)
+        generationPostCardProps(postType, data.filename, data.frontmatter)
     )
 }
 

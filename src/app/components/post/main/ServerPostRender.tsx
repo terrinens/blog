@@ -1,11 +1,12 @@
 import React from "react";
 import {getCompileMDX} from "@/app/lib/ServerPosts";
 import {PostsDir} from "@/app/lib/Config";
-import {generationPostCardProps} from "@/app/lib/ClientPost";
+import {generationPostCardProps, PostType} from "@/app/lib/ClientPost";
 import {dateFormatter} from "@_components/post/main/ClientPostRender";
 
 export type PostRenderProps = {
     postName: string;
+    postType: PostType;
     deep: string[];
     headerIgnore?: boolean;
 }
@@ -54,13 +55,13 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
     );
 }
 
-export async function ServerPostRender({postName, deep, headerIgnore}: PostRenderProps) {
+export async function ServerPostRender({postName, postType, deep, headerIgnore}: PostRenderProps) {
     const {content, frontmatter} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
-    const cardProps = generationPostCardProps(postName, frontmatter)
+    const cardProps = generationPostCardProps(postType, postName, frontmatter)
 
     return (
         <div className="prose">{headerIgnore
-            ? <div/>
+            ? null
             : <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
         }
             {content}
@@ -77,9 +78,9 @@ export type PostCardProps = {
         tags: string[];
         date: Date;
     },
-
     tagRender?: boolean
     imgRender?: boolean
     dateRender?: boolean
+    postType: PostType;
 }
 

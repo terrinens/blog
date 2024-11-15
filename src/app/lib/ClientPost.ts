@@ -1,6 +1,14 @@
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
 import {PostListProps} from "@/app/lib/ServerPosts";
 
+export type PostType = {
+    postType: 'main'
+} | {
+    postType: 'proj'
+    projType: 'team' | 'personal'
+}
+
+
 /** 페이징 계산을 위해 만들어진 클래스 입니다. */
 export class Paging {
     size: number;
@@ -29,7 +37,8 @@ export class Paging {
     }
 }
 
-export function generationPostCardProps(filename: string, frontmatter: Record<string, unknown>): PostCardProps {
+export function generationPostCardProps(postType: PostType, filename: string, frontmatter: Record<string, unknown>)
+    : PostCardProps {
     if (frontmatter.tags != undefined) {
         if (!(frontmatter.tags instanceof Array)) {
             frontmatter.tags = (frontmatter.tags as string).trim();
@@ -56,22 +65,20 @@ export function generationPostCardProps(filename: string, frontmatter: Record<st
             description: (<string>frontmatter.description),
             tags: (<Array<string>>frontmatter.tags),
             date: (new Date(<Date>frontmatter.timestamp))
-        }
+        },
+        postType: postType,
     }
 }
 
 /** 주어진 데이터, 현재 페이지 번호, 페이징을 사용하여 페이징 크기에 맞게 현재 페이지의 정보를 반환합니다.
- * @param list {@link PostListProps}의 데이터들
- * @param thisPage 현재 페이지
- * @param paging 페이징 정보
  * @see  {@link Paging} */
-export function slicePage(list: PostListProps[], thisPage: number, paging: Paging) {
+export function slicePage(postType: PostType, list: PostListProps[], thisPage: number, paging: Paging) {
     const result: PostCardProps[] = [];
 
     const push = (obj: { filename: string, frontmatter: Record<string, unknown> }) => {
         const filename = obj.filename.replace('.mdx', '');
         const frontmatter = obj.frontmatter;
-        const props: PostCardProps = generationPostCardProps(filename, frontmatter);
+        const props: PostCardProps = generationPostCardProps(postType, filename, frontmatter);
         result.push(props);
     }
 

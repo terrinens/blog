@@ -1,10 +1,8 @@
 "use client"
 
 import React from "react";
-import {DefaultImg, rootPath} from "@/app/lib/Config";
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
-import path from "path";
-import ExportedImage from "next-image-export-optimizer";
+import {PostCard} from "@_components/post/main/ClientPostRender";
 
 export function DataDisplay({team, personal}: { team: React.ReactNode, personal: React.ReactNode }) {
     const [isTeam, setIsTeam] = React.useState(true);
@@ -46,59 +44,15 @@ export function DataDisplay({team, personal}: { team: React.ReactNode, personal:
     );
 }
 
-function GenTags(title: string, tag: string) {
-    return (
-        <span key={`Proj:${title}:${tag}`}
-              className="py-1.5 px-3 bg-white text-gray-600 border border-gray-200 text-xs sm:text-sm rounded-xl">
-                {tag}
-            </span>
-    );
-}
-
-function ProjCard(key: number, type: string, prop: PostCardProps) {
-    const info = prop.info;
-    const dir = prop.filename;
-    const mainImageSrc = info.mainImg == null || info.mainImg.trim().length <= 0 ? DefaultImg.src : info.mainImg;
-
-    return (
-        <div key={`info:${key}`} className='w-full p-4 border border-gray-200 shadow-sm rounded-xl mb-5 items-center'>
-            <a
-                className="my-4 group flex flex-col focus:outline-none mb-1 h-80 w-full"
-                href={path.join(rootPath, 'projects/view', type, dir)}>
-                <div className="h-60 w-full relative flex justify-center overflow-hidden rounded-2xl">
-                    <ExportedImage fill
-                                   style={{objectFit: 'contain'}}
-                                   className="object-cover group-hover:scale-105 group-focus:scale-105 transition-transform duration-500 ease-in-out rounded-2xl"
-                                   src={mainImageSrc}
-                                   alt="Project Image"
-                                   sizes="(max-width: 768px) 100vw, 50vw"
-                    />
-                </div>
-
-                <div className="items-center pt-4 flex-grow text-center">
-                    <h3 className="text-center relative inline-block font-medium text-lg text-black before:absolute before:bottom-0.5 before:start-0 before:-z-[1] before:w-full before:h-1 before:bg-lime-400 before:transition before:origin-left before:scale-x-0 group-hover:before:scale-x-100 dark:text-white">
-                        {info.title}
-                    </h3>
-                    <p className="text-center mt-1 text-gray-600">
-                        {info.description}
-                    </p>
-
-                    <div className="justify-center mt-3 flex flex-wrap gap-2">
-                        {info.tags.map(tag => (GenTags(info.title, tag)))}
-                    </div>
-                </div>
-            </a>
-        </div>
-    )
-}
-
 function generationCards(type: string, props: PostCardProps[]) {
     return (
         <div className='mt-2 max-w-xl w-full flex flex-col items-center'>
             {
                 props.map((prop, index) => {
                     return (
-                        ProjCard(index, type, prop)
+                        <div key={`${index}:${type}`} className={'w-full'}>
+                            <PostCard {...prop}/>
+                        </div>
                     )
                 })
             }

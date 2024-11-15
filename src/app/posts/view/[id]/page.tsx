@@ -10,7 +10,7 @@ type Props = {
 export default async function Page(props: Props) {
     const {id} = props.params;
     return (
-        <ServerPostRender deep={['/main']} postName={id}/>
+        <ServerPostRender postType={{postType: 'main'}} deep={['/main']} postName={id}/>
     )
 }
 

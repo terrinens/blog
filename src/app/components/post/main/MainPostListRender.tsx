@@ -14,7 +14,7 @@ export default function MainPostListRender({props}: { props: PostListProps[] }) 
     const [page, setPage] = useState<number>(1);
 
     useEffect(() => {
-        const data = slicePage(props, page, paging);
+        const data = slicePage({postType: "main"}, props, page, paging);
         setCardData(data);
     }, [props, paging, page]);
 

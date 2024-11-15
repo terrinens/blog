@@ -4,6 +4,7 @@ import {PostRenderProps} from "@_components/post/main/ServerPostRender";
 import fs from "fs";
 import {PostsDir} from "@/app/lib/Config";
 import path from "path";
+import {PostType} from "@/app/lib/ClientPost";
 
 export type Props = {
     params: {
@@ -14,8 +15,11 @@ export type Props = {
 
 export default async function Page({params}: Props) {
     const {type, dir} = params;
+
     const deep = ['proj', type, dir];
-    const props: PostRenderProps = {postName: 'info', deep: deep}
+    const postType: PostType = {postType: 'proj', projType: type as 'team' | 'personal'}
+    const props: PostRenderProps = {postType: postType, postName: 'info', deep: deep}
+
     const nodePath = `${type}/${dir}/docs`
     let dirNods: DirectoryNode;
 

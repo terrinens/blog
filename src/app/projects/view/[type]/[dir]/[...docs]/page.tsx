@@ -5,6 +5,7 @@ import {ServerPostRender} from "@_components/post/main/ServerPostRender";
 import {AccordionBlock, AccordionCase} from "@/app/components/post/proj/Accordion";
 import fs from "fs";
 import {PostsDir} from "@/app/lib/Config";
+import {PostType} from "@/app/lib/ClientPost";
 
 type Props = ParentsProps & {
     params: ParentsProps['params'] & {
@@ -16,23 +17,30 @@ export default async function Page({params}: Props) {
     const {type, dir, docs} = params;
     const docsPath = path.join('proj', type, dir, ...docs.map(decodeURIComponent))
     const slug = await getPostSlugs(docsPath);
+    const postType: PostType = {postType: 'proj', projType: type as 'team' | 'personal'}
 
     const docsRenders = slug.map(doc => {
         return {
             title: doc,
-            render: ServerPostRender({postName: doc.replace('.mdx', ''), deep: [docsPath], headerIgnore: true})
+            render: ServerPostRender({
+                postType: postType,
+                postName: doc.replace('.mdx', ''),
+                deep: [docsPath],
+                headerIgnore: true
+            })
         };
     });
 
     return (
-        <AccordionCase>{
-            docsRenders.map((data, index) => (
+        <AccordionCase>
+            <a className={'hidden'} href={'#'}></a>
+            {docsRenders.map((data, index) => (
                 <AccordionBlock key={`AB:${data.title}:${index}`}
                                 props={{title: data.title, ariaExpanded: true}}>
                     {data.render}
                 </AccordionBlock>
             ))
-        }</AccordionCase>
+            }</AccordionCase>
     )
 }
 

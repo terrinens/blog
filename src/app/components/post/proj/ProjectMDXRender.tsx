@@ -18,6 +18,7 @@ import {
     RootTree,
     SubTree
 } from "@/app/components/post/proj/TreeView";
+import {MainContainerGrid} from "@_components/main_frame/MainContainer";
 
 type DocsBreadcrumbProps = {
     projName: string,
@@ -149,23 +150,30 @@ function DocsTreeView({dirNods}: { dirNods: DirectoryNode }) {
     )
 }
 
-export async function ProjectInfoRender({props, dirNods}: {
-    props: PostRenderProps,
-    dirNods: DirectoryNode
-}) {
+export async function ProjectInfoRender({props, dirNods}: { props: PostRenderProps, dirNods: DirectoryNode }) {
     const deep = props.deep;
     const postName = props.postName;
 
     const projDir = path.join(PostsDir, ...deep);
     const {content} = await getCompileMDX(projDir, postName + '.mdx');
 
-    const docsDirs = getDirectoryNames(dirNods)
-        .map(dir => dir.split(path.sep).join('/'));
+    const docsDirs = getDirectoryNames(dirNods).map(dir => dir.split(path.sep).join('/'));
+    const projName = deep[2];
 
     return (
         <div className='prose w-full'>
-            <DocsBreadcrumb projName={deep[2]} dirs={docsDirs} now={'info'} baseUrl={deep}/>
-            <DocsTreeView dirNods={dirNods}/>
+            <DocsBreadcrumb projName={projName} dirs={docsDirs} now={'info'} baseUrl={deep}/>
+            <MainContainerGrid title={`${projName} Docs`} option={{
+                id: `${projName}::treeview`,
+                tooltipText: (
+                    <>
+                        <span className={'block'}>{`프로젝트 ${projName}를 나타내는 문서구조입니다.`}</span>
+                        <span className={'block'}>문서의 상세 정보를 원하시면 문서객체를 클릭하여 페이지를 이동해 확인이 가능합니다.</span>
+                    </>
+                )
+            }}>
+                <DocsTreeView dirNods={dirNods}/>
+            </MainContainerGrid>
             {content}
         </div>
     );

@@ -103,7 +103,7 @@ export async function countUsedTags(dirs: string[]) {
     for (const slug of allSlugs) {
         const {frontmatter} = await getCompileMDX(slug);
 
-        const {info} = generationPostCardProps('', frontmatter);
+        const {info} = generationPostCardProps({postType: 'main'}, '', frontmatter);
         const tags = info.tags;
 
         if (tags == undefined || tags.length < 0) continue;
