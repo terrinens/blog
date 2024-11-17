@@ -91,33 +91,39 @@ export async function getPostListData(...deep: (string)[]): Promise<PostListProp
 export async function countUsedTags(dirs: string[]) {
     const allSlugs: string[] = [];
 
-    for (const dir of dirs) {
+    await Promise.all(dirs.map(async dir => {
         const slugs = await getPostSlugs(dir);
-        for (const slug of slugs) {
-            allSlugs.push(path.join(PostsDir, dir, slug));
-        }
-    }
+        await Promise.all(slugs.map(async slug => {
+            allSlugs.push(path.join(PostsDir, dir, slug))
+        }))
+    }));
+
+    const frontmatters = await Promise.all(allSlugs
+        .map(async slug => {
+            const {frontmatter} = await getCompileMDX(slug)
+            return frontmatter;
+        })
+    )
 
     const data: { [tag: string]: number; } = {};
 
-    for (const slug of allSlugs) {
-        const {frontmatter} = await getCompileMDX(slug);
-
+    frontmatters.forEach(frontmatter => {
         const {info} = generationPostCardProps({postType: 'main'}, '', frontmatter);
         const tags = info.tags;
 
-        if (tags == undefined || tags.length < 0) continue;
+        if (tags == undefined || tags.length == 0) return;
 
-        for (let tag of tags) {
-            tag = tag.toLowerCase();
-
+        for (const tag of tags) {
             if (Object.hasOwn(data, tag)) {
                 data[tag] += 1;
             } else {
-                data[tag] = 1;
+                const analogyKey = Object.keys(data).find(key => key.toLowerCase() == tag.toLowerCase());
+                if (analogyKey) {
+                    data[tag] += 1;
+                } else data[tag] = 1;
             }
         }
-    }
+    })
 
     return data;
 }

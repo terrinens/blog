@@ -5,22 +5,20 @@ export default async function TagBlock() {
     const result = await countUsedTags(['main', 'proj']);
 
     return (
-        <div className="w-full">
+        <div className="max-w-screen-xl w-full">
             <div
                 className="scroll-hidden max-h-[calc(3*4rem)] flex justify-center">
-                <MainContainerGrid title={'블로그 태그 사용 수'} option={{
+                <MainContainerGrid title={'Tags'} option={{
                     id: 'total_tags_used_block',
-                    tooltipText: '모든 포스터의 태그 사용 횟수를 나타내고 있는 블록입니다.'
+                    tooltipText: '블로그에서 사용된 태그를 나타내는 블록입니다.'
                 }}>
-                    <div
-                        className="grid grid-cols-7 sm:grid-cols-8 md:grid-cols-10 md:gap-4 lg:grid-cols-11 lg:gap-5 xl:grid-cols-12 xl:gap-7 gap-4">
-                        {
-                            Object.entries(result).map(([key, value]) => (
-                                <div key={'TagCountBlockParents:' + key} className={'flex items-center justify-center'}>
-                                    <GenerationBlock key={'TagCountBlock:' + key} tag={key} count={value}/>
-                                </div>
-                            ))
-                        }
+                    <div className="flex flex-wrap justify-start">
+                        {Object.keys(result).map((key) => (
+                            <div key={'TCB:' + key}
+                                 className={'flex items-center w-auto mx-1 justify-center'}>
+                                <GenerationBlock key={'TagCountBlock:' + key} tag={key}/>
+                            </div>
+                        ))}
                     </div>
                 </MainContainerGrid>
             </div>
@@ -28,19 +26,14 @@ export default async function TagBlock() {
     );
 }
 
-function GenerationBlock({tag, count}: { tag: string, count: number }) {
+function GenerationBlock({tag}: { tag: string }) {
     return (
-        <div className="flex flex-col items-center justify-center border rounded-xl w-full max-h-20 overflow-hidden">
-            <div className="w-full pt-2 pb-2 p-0 flex flex-col items-center">
-                <div className="flex flex-col gap-x-2 w-full">
-                    <p className="text-sm text-center font-semibold text-gray-500 break-words overflow-hidden">
-                        {tag}
-                    </p>
-                </div>
-
-                <div className="mt-2 text-2 sm:text-sm md:text-lg lg:text-xl text-gray-800">
-                    <span className="font-semibold">{count}</span>
-                </div>
+        <div
+            className="mb-2.5 flex flex-col items-center justify-center border rounded-xl w-full max-h-20 overflow-hidden">
+            <div className="w-full py-2.5 flex flex-col items-center gap-x-2 px-4">
+                <p className="text-sm text-center font-semibold text-gray-500 break-words overflow-hidden">
+                    {tag}
+                </p>
             </div>
         </div>
     )
