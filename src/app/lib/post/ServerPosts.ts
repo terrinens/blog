@@ -3,9 +3,10 @@ import * as pfs from 'fs/promises'
 import path from 'path';
 import {compileMDX} from "next-mdx-remote/rsc";
 import {PostsDir} from "@/app/lib/Config";
-import {userMDXComponents} from "@_components/MDXComponents";
+import {userMDXComponents} from "@_mdx-components/*";
 import React from "react";
-import {generationPostCardProps} from "@/app/lib/ClientPost";
+import {generationPostCardProps} from "@/app/lib/post/ClientPost";
+import {DirectoryNode, PostListProps} from "@/app/lib/post/PostConfig";
 
 /** 기본 Post 저장 위치에서 deep 수준에 따라 MDX 파일을 찾습니다.
  * @param deep 기본 포스터 위치에서 하위 디렉토리 수준 */
@@ -34,11 +35,6 @@ export async function getDirList(...deep: (string)[]) {
         console.log(`no such dir but ignoring : such dir ? ${deep} ${ignoredError}`);
         return Promise.resolve([]);
     }
-}
-
-export type PostListProps = {
-    filename: string,
-    frontmatter: Record<string, unknown>
 }
 
 /**
@@ -126,12 +122,6 @@ export async function countUsedTags(dirs: string[]) {
     })
 
     return data;
-}
-
-export interface DirectoryNode {
-    name: string,
-    type: "dir" | "file",
-    children?: DirectoryNode[];
 }
 
 export function getDocsTreeNode(projPath: string): DirectoryNode {

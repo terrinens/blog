@@ -1,5 +1,5 @@
 import {PostRenderProps} from "@_components/post/main/ServerPostRender";
-import {DirectoryNode, getCompileMDX, getDirectoryNames} from "@/app/lib/ServerPosts";
+import {getCompileMDX, getDirectoryNames} from "@/app/lib/post/ServerPosts";
 import {PostsDir, rootPath} from "@/app/lib/Config";
 import React from "react";
 import path from "path";
@@ -19,6 +19,7 @@ import {
     SubTree
 } from "@/app/components/post/proj/TreeView";
 import {MainContainerGrid} from "@_components/main_frame/MainContainer";
+import {DirectoryNode} from "@/app/lib/post/PostConfig";
 
 type DocsBreadcrumbProps = {
     projName: string,

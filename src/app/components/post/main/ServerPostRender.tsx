@@ -1,8 +1,9 @@
 import React from "react";
-import {getCompileMDX} from "@/app/lib/ServerPosts";
+import {getCompileMDX} from "@/app/lib/post/ServerPosts";
 import {PostsDir} from "@/app/lib/Config";
-import {generationPostCardProps, PostType} from "@/app/lib/ClientPost";
+import {generationPostCardProps} from "@/app/lib/post/ClientPost";
 import {dateFormatter} from "@_components/post/main/ClientPostRender";
+import {PostType} from "@/app/lib/post/PostConfig";
 
 export type PostRenderProps = {
     postName: string;

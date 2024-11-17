@@ -1,5 +1,6 @@
-import {getOrgMemberSimpleInfo, SimpleGitUserInfo} from "@/app/lib/GithubData";
+import {getOrgMemberSimpleInfo} from "@/app/lib/github/GithubData";
 import React from "react";
+import {SimpleGitUserInfo} from "@/app/lib/github/GitConfig";
 
 function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, popoverId: string }) {
     return (

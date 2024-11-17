@@ -367,3 +367,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,jetbrains+iml,windows,nextjs,node,git
 
+/src/app/test/

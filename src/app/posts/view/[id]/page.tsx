@@ -1,4 +1,4 @@
-import {getPostSlugs} from "@/app/lib/ServerPosts";
+import {getPostSlugs} from "@/app/lib/post/ServerPosts";
 import {ServerPostRender} from "@_components/post/main/ServerPostRender";
 
 type Props = {

@@ -1,16 +1,4 @@
-import {callAPI} from "@/app/lib/GithubCodeByte";
-
-export type SimpleGitUserInfo = {
-    name: string;
-    gitURL: string;
-    avatarURL: string;
-}
-
-export type GitUserInfo = {
-    blog: string | undefined
-    publicRepos: number;
-    bio: string;
-} & SimpleGitUserInfo;
+import {callAPI, GitUserInfo, SimpleGitUserInfo} from "@/app/lib/github/GitConfig";
 
 function genSimpleGitUserInfo(userJson: Record<string, any>): SimpleGitUserInfo {
     const name = userJson.login;

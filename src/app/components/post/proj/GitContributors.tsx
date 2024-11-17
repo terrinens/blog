@@ -1,4 +1,5 @@
-import {callUserInfos, getOrgContributorsInfo, GitUserInfo} from "@/app/lib/GithubData";
+import {callUserInfos, getOrgContributorsInfo} from "@/app/lib/github/GithubData";
+import {GitUserInfo} from "@/app/lib/github/GitConfig";
 
 function Card({info, role}: { info: GitUserInfo, role?: string }) {
     return (

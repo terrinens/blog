@@ -1,10 +1,11 @@
-import {DirectoryNode, getDirList, getDocsTreeNode} from "@/app/lib/ServerPosts";
+import {getDirList, getDocsTreeNode} from "@/app/lib/post/ServerPosts";
 import {ProjectInfoRender} from "@/app/components/post/proj/ProjectMDXRender";
 import {PostRenderProps} from "@_components/post/main/ServerPostRender";
 import fs from "fs";
 import {PostsDir} from "@/app/lib/Config";
 import path from "path";
-import {PostType} from "@/app/lib/ClientPost";
+
+import {DirectoryNode, PostType} from "@/app/lib/post/PostConfig";
 
 export type Props = {
     params: {

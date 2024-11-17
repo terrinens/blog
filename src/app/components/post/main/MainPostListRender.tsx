@@ -1,11 +1,11 @@
 'use client'
 
-import {PostListProps} from "@/app/lib/ServerPosts";
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
 import Pagination from "@_components/post/main/Pagination";
 import {useEffect, useMemo, useState} from "react";
-import {Paging, slicePage} from "@/app/lib/ClientPost";
+import {slicePage} from "@/app/lib/post/ClientPost";
 import {PostCard} from "@_components/post/main/ClientPostRender";
+import {Paging, PostListProps} from "@/app/lib/post/PostConfig";
 
 
 export default function MainPostListRender({props}: { props: PostListProps[] }) {

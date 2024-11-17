@@ -1,11 +1,12 @@
 import {Props as ParentsProps} from "@/app/projects/view/[type]/[dir]/page";
-import {DirectoryNode, getDirectoryNames, getDirList, getDocsTreeNode, getPostSlugs} from "@/app/lib/ServerPosts";
+import {getDirectoryNames, getDirList, getDocsTreeNode, getPostSlugs} from "@/app/lib/post/ServerPosts";
 import path from "path";
 import {ServerPostRender} from "@_components/post/main/ServerPostRender";
 import {AccordionBlock, AccordionCase} from "@/app/components/post/proj/Accordion";
 import fs from "fs";
 import {PostsDir} from "@/app/lib/Config";
-import {PostType} from "@/app/lib/ClientPost";
+
+import {DirectoryNode, PostType} from "@/app/lib/post/PostConfig";
 
 type Props = ParentsProps & {
     params: ParentsProps['params'] & {
