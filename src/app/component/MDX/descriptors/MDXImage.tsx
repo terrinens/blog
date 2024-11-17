@@ -17,9 +17,13 @@ export function convertImagesInMDX(mdxContent: string) {
     const mdImageRegex = /!\[.*?]\((.*?)\)/g;
     const imgRegex = /<img\s+([^>]+)\/?>/g;
 
-    const nextImage = (src: string, height: number = 100, width: number = 100, alt?: string) => {
+    const nextImage = (src: string, height?: number, width?: number, alt?: string) => {
         const type = src.split('/')[0];
-        return `<MDXImage type='${type}' src='${src.split('/')[1]}' alt='${alt}' height='${height}' width='${width}'/>`
+        let imgTag = `<MDXImage type='${type}' src='${src.split('/')[1]}' alt='${alt}'/>`
+
+        if (height !== undefined) imgTag += ` height='${height}'`;
+        if (width !== undefined) imgTag += ` width='${width}'`;
+        return imgTag;
     }
 
     let content = mdxContent.replace(mdImageRegex, (_, src) => {
