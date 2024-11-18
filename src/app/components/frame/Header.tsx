@@ -2,7 +2,7 @@ import logo from "@/public/svg/logo.svg"
 import name from "@/public/svg/Terrinens.log.svg"
 import {rootPath} from "@/app/lib/Config";
 import path from "path";
-import ExportedImage from "next-image-export-optimizer";
+import Image from "next/image";
 
 const Header = () => {
     return (
@@ -13,8 +13,8 @@ const Header = () => {
                     <div>
                         <a className="flex rounded-md text-xl font-semibold focus:outline-none focus:opacity-80"
                            href={rootPath} aria-label="Preline">
-                            <ExportedImage className='h-auto' src={logo} alt='logo' width={50}/>
-                            <ExportedImage className='ml-2' src={name} alt='name' width={150}/>
+                            <Image className='h-auto' src={logo} alt='logo' width={50}/>
+                            <Image className='ml-2' src={name} alt='name' width={150}/>
                         </a>
                     </div>
 

@@ -1,9 +1,9 @@
 import {DefaultImg, rootPath} from "@/app/lib/Config";
-import ExportedImage from "next-image-export-optimizer";
-import {MDXImage} from "@_mdx-components/*";
 import path from "path";
 import React from "react";
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
+import Image from "next/image";
+import {MDXImage} from "@_components/MDXImage";
 
 export const dateFormatter = (date: Date) => {
     const year = date.getFullYear();
@@ -24,7 +24,7 @@ export function PostCard({imgRender = true, dateRender = true, tagRender = true,
     const postType = props.postType;
 
     const img = (info.mainImg == null || (info.mainImg as string).trim().length <= 0)
-        ? <ExportedImage style={{objectFit: "cover", width: "100%", height: "100%"}} width={'100'} height={'100'}
+        ? <Image style={{objectFit: "cover", width: "100%", height: "100%"}} width={'100'} height={'100'}
                          src={DefaultImg.src}
                          alt={'none'}/>
         : <MDXImage type={props.postType.postType} src={info.mainImg} alt={'none'}/>;
