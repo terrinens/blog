@@ -1,9 +1,6 @@
-import {getFirestore} from "@firebase/firestore";
+import {getFirestore, Timestamp} from "@firebase/firestore";
 import {getAuth, onAuthStateChanged, signOut} from "@firebase/auth";
-import fireAdmin, {firestore} from 'firebase-admin'
-import path from "path";
 import {initializeApp} from "@firebase/app";
-import Firestore = firestore.Firestore;
 
 export const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,21 +12,27 @@ export const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
-export interface PostSchema {
-    refProject?: string;
+/* Firestore에서 넘어온 time 객체는 절대로 firebase 라이브러리의 Timestamp를 직접적으로 가져오는것이 아닌
+ * object 객체이다. 그러므로  instanceof에서 Timestamp와 비교를 진행하면 무조건 false이다.
+ * 하지만 object 객체이더라도 Timestamp의 필드는 그대로 사용하고 있으므로, 이 때문에 많은 혼동이 있었다.
+ * 다시한번 적는다. Firestore에서 바로 넘어온 time은 object이지 Timestamp가 아니다.
+ * 이거 때문에 하루종일 테스트했다. */
+interface BasePostSchema {
+    name: string;
+    thumbnail?: string;
     content: string;
     tags?: string[];
-    description: string[];
+    description: string;
 }
 
-export interface ProjSchema {
-    name: string;
-    thumbnail?: string | undefined;
-    startAt: Date;
-    endAt?: Date;
-    tags?: string[];
-    description?: string;
-    content: string;
+export interface PostSchema extends BasePostSchema {
+    createdAt: string | Timestamp;
+    refProject?: string;
+}
+
+export interface ProjSchema extends BasePostSchema {
+    startAt: string | Timestamp;
+    endAt?: string | Timestamp;
     type: 'team' | 'personal';
 }
 
@@ -46,32 +49,3 @@ const auth = getAuth(app);
 onAuthStateChanged(auth, async (user) => {
     if (user && process.env.NODE_ENV === "production") await signOut(auth);
 })
-
-
-/* nextjs 14 환경에서 firestore를 사용할시 버그가 있었음.
- * 지속적으로 app을 초기화하려고 하여서 이에 따라서 버그가 발생해, 이미 정의되었다는 버그가 발생했음.
- * 그렇기에 반드시 init 절차에 이미 있을 경우 정의되어있는것을 그대로 돌려주는 로직이 필요함.
- *
- * 해당 버그가 발생하는 이유는 admin api는 init를 실행할 경우에 자동으로 admin이라는 네임에 추가되고 이를 배열형태로 저장함.
- * 그리고 이를 '기억'하는데 기존에 있던 로직은 변수를 사용할때마다 init로 추가를 하려고 해서 발생한 문제임
- * 그렇기에 배열에서 namespace가 동일한 객체를 꺼내서 사용해야만함.
- * if (!fireAdmin.apps.length) {
- fireAdmin.initializeApp({
- credential: fireAdmin.credential.cert(path.join(process.cwd(), 'src/app/lib/db/google_auth_token.json')),
- }, 'admin')
- }
- export const admin = fireAdmin.firestore();*/
-export const initAdmin = () => {
-    const apps = fireAdmin.apps;
-    if (apps.length > 0 && apps.find(x => x?.name === 'admin')) {
-        return apps.find(x => x?.name === 'admin')?.firestore() as Firestore;
-    } else {
-        fireAdmin.apps[0]?.firestore();
-
-        const adminApp = fireAdmin.initializeApp({
-            credential: fireAdmin.credential.cert(path.join(process.cwd(), 'src/app/lib/db/google_auth_token.json')),
-        }, 'admin');
-
-        return adminApp.firestore();
-    }
-}

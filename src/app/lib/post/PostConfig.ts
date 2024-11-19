@@ -1,3 +1,5 @@
+import {Timestamp} from "@firebase/firestore";
+
 export type PostType = {
     postType: 'main'
 } | {
@@ -9,27 +11,14 @@ export type PostType = {
 export class Paging {
     size: number;
     total: number;
-    sort: any;
 
-    static default_sort(a: any, b: any) {
-        a = new Date(a.timestamp);
-        b = new Date(b.timestamp);
-        return b.getTime() - a.getTime();
-    }
-
-    constructor(size: number, total: any[] | number, sort?: any) {
+    constructor(size: number, total: number) {
+        this.total = total;
         this.size = size;
-        this.total = (total instanceof Array) ? total.length : total
-        this.sort = sort;
     }
 
     get getTotalPage() {
         return Math.ceil(this.total / this.size);
-    }
-
-    get generateStaticParams() {
-        return Array.from({length: this.getTotalPage}, (_, index) =>
-            ({page: String(index + 1)}))
     }
 }
 
@@ -42,4 +31,24 @@ export interface DirectoryNode {
     name: string,
     type: "dir" | "file",
     children?: DirectoryNode[];
+}
+
+export const dateFormatter = (date: Date | Timestamp | string): string => {
+    if (typeof date === 'string') return date;
+
+    if (date instanceof Timestamp) {
+        date = (date as Timestamp).toDate();
+    } else if ('seconds' in date) {
+        date = (date as unknown as Timestamp).toDate();
+    }
+
+    const year = date.getFullYear();
+    if (isNaN(year)) return 'Not Recode Date';
+
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hour = date.getHours().toString().padStart(2, "0");
+    const minute = date.getMinutes().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hour}:${minute}`;
 }

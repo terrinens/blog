@@ -3,6 +3,8 @@
 import React from "react";
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
 import {PostCard} from "@_components/post/main/ClientPostRender";
+import {ProjSchema} from "@/app/lib/db/Init";
+import {generationPostCardProps} from "@/app/lib/post/ClientPost";
 
 export function DataDisplay({team, personal}: { team: React.ReactNode, personal: React.ReactNode }) {
     const [isTeam, setIsTeam] = React.useState(true);
@@ -44,28 +46,30 @@ export function DataDisplay({team, personal}: { team: React.ReactNode, personal:
     );
 }
 
-function generationCards(type: string, props: PostCardProps[]) {
+function generationCards(props: PostCardProps[]) {
     return (
         <div className='mt-2 max-w-xl w-full flex flex-col items-center'>
-            {
-                props.map((prop, index) => {
-                    return (
-                        <div key={`${index}:${type}`} className={'w-full'}>
-                            <PostCard {...prop}/>
-                        </div>
-                    )
-                })
-            }
+            {props.map((prop, index) => {
+                return (
+                    <div key={`${index}:${prop.id}`} className={'w-full'}>
+                        <PostCard baseURL={'/projects/view'} {...prop}/>
+                    </div>
+                )
+            })}
         </div>
     )
 }
 
-export function ProjectCard({teamProps, personalProps}: {
-    teamProps: [type: string, PostCardProps[]],
-    personalProps: [type: string, PostCardProps[]]
+export function ProjectCard({teamsData, personalsData}: {
+    teamsData: { id: string, data: ProjSchema }[],
+    personalsData: { id: string, data: ProjSchema }[]
 }) {
-    const team = generationCards(teamProps[0], teamProps[1]);
-    const personal = generationCards(personalProps[0], personalProps[1]);
+
+    const teamProps: PostCardProps[] = teamsData.map(data => generationPostCardProps(data.id, data.data))
+    const personalProps: PostCardProps[] = personalsData.map(data => generationPostCardProps(data.id, data.data))
+    const team = generationCards(teamProps);
+    const personal = generationCards(personalProps);
+
     return (<DataDisplay team={team} personal={personal}/>)
 }
 

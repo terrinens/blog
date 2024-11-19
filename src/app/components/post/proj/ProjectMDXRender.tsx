@@ -1,6 +1,5 @@
-import {PostRenderProps} from "@_components/post/main/ServerPostRender";
-import {getCompileMDX, getDirectoryNames} from "@/app/lib/post/ServerPosts";
-import {PostsDir, rootPath} from "@/app/lib/Config";
+import {generateCompiledForMDX, getDirectoryNames} from "@/app/lib/post/ServerPosts";
+import {rootPath} from "@/app/lib/Config";
 import React from "react";
 import path from "path";
 import {
@@ -20,6 +19,7 @@ import {
 } from "@/app/components/post/proj/TreeView";
 import {MainContainerGrid} from "@_components/main_frame/MainContainer";
 import {DirectoryNode} from "@/app/lib/post/PostConfig";
+import {ProjSchema} from "@/app/lib/db/Init";
 
 type DocsBreadcrumbProps = {
     projName: string,
@@ -115,7 +115,7 @@ function DocsTreeView({dirNods}: { dirNods: DirectoryNode }) {
                         <SubTree dirname={name} ariaExpanded={true} key={`R-subtree-${name}-${index}`}
                                  id={`subtree:-${index}`}>
                             {deepChildren
-                                ? <DocsSubTree dirNods={deepChildren} baseURL={path.join('docs', node.name)}
+                                ? <DocsSubTree dirNods={deepChildren} baseURL={path.join(node.name)}
                                                key={`DST-${name}-${index}`}/>
                                 : null
                             }
@@ -151,19 +151,14 @@ function DocsTreeView({dirNods}: { dirNods: DirectoryNode }) {
     )
 }
 
-export async function ProjectInfoRender({props, dirNods}: { props: PostRenderProps, dirNods: DirectoryNode }) {
-    const deep = props.deep;
-    const postName = props.postName;
-
-    const projDir = path.join(PostsDir, ...deep);
-    const {content} = await getCompileMDX(projDir, postName + '.mdx');
-
+export async function ProjectInfoRender({data, dirNods}: {data: ProjSchema, dirNods: DirectoryNode }) {
     const docsDirs = getDirectoryNames(dirNods).map(dir => dir.split(path.sep).join('/'));
-    const projName = deep[2];
+    const projName = data.name;
+    const {content} = await generateCompiledForMDX(data.content);
 
     return (
         <div className='prose w-full'>
-            <DocsBreadcrumb projName={projName} dirs={docsDirs} now={'info'} baseUrl={deep}/>
+            <DocsBreadcrumb projName={projName} dirs={docsDirs} now={'info'} baseUrl={['/projects/view']}/>
             <MainContainerGrid title={`${projName} Docs`} option={{
                 id: `${projName}::treeview`,
                 tooltipText: (

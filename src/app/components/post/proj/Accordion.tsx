@@ -42,7 +42,7 @@ export function AccordionBlock({props, children}: { props: AccordionProps, child
             className={`${props.ariaExpanded ? 'active' : ''} w-full max-w-6xl  mb-5 hs-accordion hs-accordion-active:border-gray-200 bg-white border border-transparent rounded-xl dark:hs-accordion-active:border-neutral-700 dark:bg-neutral-800 dark:border-transparent`}
             id={props.title}>
             <AccordionButton props={props}/>
-            <a href={`#${props.title}`}>
+            <a key={`acb-${props.title}`} href={`#${props.title}`}>
                 {block}
             </a>
         </div>

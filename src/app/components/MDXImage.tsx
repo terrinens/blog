@@ -4,7 +4,7 @@ import React from "react";
 import {CldImage} from "next-cloudinary";
 
 type MDXImageType = {
-    type: 'main' | 'proj', src: string, alt?: string, width?: number, height?: number,
+    src: string, alt?: string, width?: number, height?: number,
     className?: string
     style?: React.CSSProperties
 }

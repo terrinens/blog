@@ -1,14 +1,9 @@
 import React from "react";
-import {getCompileMDX} from "@/app/lib/post/ServerPosts";
-import {PostsDir} from "@/app/lib/Config";
+import {generateCompiledForMDX} from "@/app/lib/post/ServerPosts";
 import {generationPostCardProps} from "@/app/lib/post/ClientPost";
-import {dateFormatter} from "@_components/post/main/ClientPostRender";
-import {PostType} from "@/app/lib/post/PostConfig";
+import {PostSchema} from "@/app/lib/db/Init";
 
 export type PostRenderProps = {
-    postName: string;
-    postType: PostType;
-    deep: string[];
     headerIgnore?: boolean;
 }
 
@@ -48,40 +43,45 @@ async function PostRenderHeader({props}: { props: PostCardProps }) {
             className='relative rounded-lg shadow-sm overflow-hidden ring-1 ring-gray-800 ring-opacity-5  dark:ring-neutral-700
              pt-0.5 pb-0.5 pl-2 mb-5'>
             <div className="space-y-3 mb-10">
-                <PostRenderHeaderBlock key={'title'} name={'title'} values={info.title}/>
-                <PostRenderHeaderBlock key={'date'} name={'date'} values={dateFormatter(info.date)}/>
+                <PostRenderHeaderBlock key={'title'} name={'title'} values={info.name}/>
+                <PostRenderHeaderBlock key={'date'} name={'date'} values={info.date}/>
                 <PostRenderHeaderBlock key={'tags'} name={'tags'} values={info.tags}/>
             </div>
         </div>
     );
 }
 
-export async function ServerPostRender({postName, postType, deep, headerIgnore}: PostRenderProps) {
-    const {content, frontmatter} = await getCompileMDX(PostsDir, ...deep, postName + '.mdx');
-    const cardProps = generationPostCardProps(postType, postName, frontmatter)
-
+export async function ServerPostRender({headerIgnore, post}: { headerIgnore?: boolean, post: PostSchema }) {
+    const postProps = generationPostCardProps('', post);
+    const {content} = await generateCompiledForMDX(post.content);
     return (
-        <div className="prose">{headerIgnore
-            ? null
-            : <PostRenderHeader key={'post_header:' + postName} props={cardProps}/>
-        }
+        <div className="prose">
+            {headerIgnore ? null : <PostRenderHeader props={postProps}/>}
+            {content}
+        </div>
+    );
+}
+
+export async function SimpleContentRender({mdxContent}: { mdxContent: string }) {
+    const {content} = await generateCompiledForMDX(mdxContent)
+    return (
+        <div className="prose">
             {content}
         </div>
     );
 }
 
 export type PostCardProps = {
-    filename: string,
+    id: string,
     info: {
-        mainImg: string;
-        title: string,
+        thumbnail: string;
+        name: string,
         description: string,
         tags: string[];
-        date: Date;
+        date: string;
     },
     tagRender?: boolean
     imgRender?: boolean
     dateRender?: boolean
-    postType: PostType;
 }
 

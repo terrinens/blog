@@ -5,8 +5,8 @@ const SliceBlock = ({props}: { props: [PostCardProps, PostCardProps] }) => {
     return (
         <div className="grid grid-cols-2 gap-3 duration-700 ease-in-out bg-white"
              data-carousel-item="active">
-            <PostCard dateRender={false} {...props[0]} />
-            {props[1] != undefined ? <PostCard dateRender={false} {...props[1]} /> : null}
+            <PostCard baseURL={'/posts/view'} dateRender={false} {...props[0]} />
+            {props[1] != undefined ? <PostCard baseURL={'/posts/view'} dateRender={false} {...props[1]} /> : null}
         </div>
     )
 }
