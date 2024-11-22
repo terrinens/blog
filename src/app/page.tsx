@@ -12,13 +12,9 @@ import {Metadata} from "next";
 
 export const revalidate = 3600;
 
-export async function RecencyPostBlockData() {
-    const data = await getPosts(6);
-    return data.posts.map(post => generationPostCardProps(post.id, post.data));
-}
-
 export default async function Home() {
-    const recencyPostBlockData = await RecencyPostBlockData();
+    const postData = await getPosts(6);
+    const recencyPostBlockData = postData.posts.map(post => generationPostCardProps(post.id, post.data));
 
     const chartData = await generationChartData()
         .catch(() => {

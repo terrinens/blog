@@ -4,8 +4,7 @@ import {db} from "@/app/lib/db/Init";
 const tableName = "proj";
 const ref = collection(db, tableName);
 const getDocRef = (id: string) => doc(ref, id);
-const getCollectionRef = () => collection(db, tableName);
-
+/*const getCollectionRef = () => collection(db, tableName);*/
 
 export async function findById(id: string) {
     const docRef = getDocRef(id);

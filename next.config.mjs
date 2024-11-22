@@ -38,8 +38,6 @@ const nextConfig = {
     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
     distDir: 'out',
     images: {unoptimized: true},
-    siteUrl: 'https://terrinens.github.io/blog/',
-    generateRobotsTxt: true,
 };
 
 const withMDX = createdMDX()

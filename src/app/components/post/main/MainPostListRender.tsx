@@ -21,7 +21,7 @@ export default function MainPostListRender({pageSize}: { pageSize: number }) {
             setHasMore(!!data.nextCall);
         }
         init().then(r => r);
-    }, []);
+    }, [pageSize]);
 
     const loadNext = async () => {
         console.log("Load Next");

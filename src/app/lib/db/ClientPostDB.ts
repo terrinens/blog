@@ -85,10 +85,8 @@ export async function getPosts(pageSize: number, nextRefId?: string): Promise<Pa
     if (posts.length < pageSize) {
         return {posts, nextRefId: null, nextCall: null};
     } else {
-        console.info(nextRefId);
         const nextId = posts[posts.length - 1].id;
         nextCall = async () => getPosts(pageSize, nextId);
-        console.info(nextId);
         return {posts, nextRefId: nextId, nextCall};
     }
 }
