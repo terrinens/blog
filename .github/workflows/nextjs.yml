@@ -5,6 +5,9 @@ env:
   GIT_SAW_TOKEN: ${{ secrets.SAW_TOKEN }}
   WORK_DIR: '/home/runner/work/blog/blog'
   TEMP_DIR: '/home/runner/work/temp_post/data'
+  IMG_API_KEY: ${{ secrets.IMG_API_KEY }}
+  IMG_API_SECRET: ${{ secrets.IMG_API_SECRET }}
+  IMG_API_ENVIRONMENT_VARIABLE: ${{ secrets.IMG_API_ENVIRONMENT_VARIABLE }}
 
 on:
   push:
@@ -33,12 +36,6 @@ jobs:
 
       - name: Copy files from posts branch
         run: |
-          ls
-          cd posts
-          ls
-
-      - name: Test
-        run: |
           mkdir -p "${{ env.TEMP_DIR }}"
           cp -r ./posts/src/data/* "${{ env.TEMP_DIR }}"
 
@@ -50,10 +47,16 @@ jobs:
       - name: copy to main
         run: |
           cp -r "${{ env.TEMP_DIR }}" "${{ env.WORK_DIR }}/src/"
-          cd src
-          ls
-          cd data
-          ls
+
+      - name: create-db-key-json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "credentials.json"
+          json: ${{ secrets.FIRE_STORE_JSON }}
+          dir: './'
+        env:
+          FIRE_ADMIN_KEY: './credentials.json'
 
       - name: Detect package manager
         id: detect-package-manager

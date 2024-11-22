@@ -23,6 +23,11 @@ const prefix = process.env.NODE_ENV === 'production'
     ? '/blog'
     : '';
 
+if (process.env.NODE_ENV === 'production') {
+    process.env.DB_AUTH_EMAIL = undefined;
+    process.env.DB_AUTH_PASSWORD = undefined;
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
@@ -32,29 +37,10 @@ const nextConfig = {
     output: 'export',
     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
     distDir: 'out',
+    images: {unoptimized: true},
 };
 
-/** @type {import('next').NextConfig} */
-const exportImageConfig = {
-    images: {
-        loader: "custom",
-        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    },
-    transpilePackages: ["next-image-export-optimizer"],
-    env: {
-        nextImageExportOptimizer_imageFolderPath: "public/images",
-        nextImageExportOptimizer_exportFolderPath: "out",
-        nextImageExportOptimizer_quality: "75",
-        nextImageExportOptimizer_storePicturesInWEBP: "true",
-        nextImageExportOptimizer_exportFolderName: "nextImageExportOptimizer",
-        nextImageExportOptimizer_generateAndUseBlurImages: "true",
-        nextImageExportOptimizer_remoteImageCacheTTL: "0",
-    },
-}
-
-
 const withMDX = createdMDX()
-const margeConfig = {...nextConfig, ...exportImageConfig};
+const margeConfig = {...nextConfig};
 
 export default withMDX(margeConfig);

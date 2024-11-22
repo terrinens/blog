@@ -1,8 +1,8 @@
 'use client'
 
-import ExportedImage from "next-image-export-optimizer";
 import questionMark from '@_public/svg/question-mark-circle-svgrepo-com.svg'
 import React from "react";
+import Image from "next/image";
 
 export default function Tooltip(
     {id, description, href}: {
@@ -21,7 +21,7 @@ export default function Tooltip(
                             window.location.href = href
                         }
                     }}>
-                <ExportedImage src={questionMark.src} alt={''} width={40} height={40} className={'m-0'}/>
+                <Image src={questionMark.src} alt={''} width={40} height={40} className={'m-0'}/>
             </button>
 
             <div id={id} role="tooltip"

@@ -1,9 +1,6 @@
-import {countUsedTags} from "@/app/lib/ServerPosts";
 import {MainContainerGrid} from "@_components/main_frame/MainContainer";
 
-export default async function TagBlock() {
-    const result = await countUsedTags(['main', 'proj']);
-
+export default async function TagBlock({allTags}: { allTags: string[] }) {
     return (
         <div className="max-w-screen-xl w-full">
             <div
@@ -13,7 +10,7 @@ export default async function TagBlock() {
                     tooltipText: '블로그에서 사용된 태그를 나타내는 블록입니다.'
                 }}>
                     <div className="flex flex-wrap justify-start">
-                        {Object.keys(result).map((key) => (
+                        {allTags.map((key) => (
                             <div key={'TCB:' + key}
                                  className={'flex items-center w-auto mx-1 justify-center'}>
                                 <GenerationBlock key={'TagCountBlock:' + key} tag={key}/>
