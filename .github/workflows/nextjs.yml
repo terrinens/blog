@@ -8,6 +8,7 @@ env:
   IMG_API_KEY: ${{ secrets.IMG_API_KEY }}
   IMG_API_SECRET: ${{ secrets.IMG_API_SECRET }}
   IMG_API_ENVIRONMENT_VARIABLE: ${{ secrets.IMG_API_ENVIRONMENT_VARIABLE }}
+  FIRE_ADMIN_KEY: '/home/runner/work/blog/blog/credentials.json'
 
 on:
   push:
@@ -55,8 +56,6 @@ jobs:
           name: "credentials.json"
           json: ${{ secrets.FIRE_STORE_JSON }}
           dir: './'
-        env:
-          FIRE_ADMIN_KEY: './credentials.json'
 
       - name: Detect package manager
         id: detect-package-manager

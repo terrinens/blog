@@ -1,4 +1,5 @@
 import fireAdmin, {firestore} from "firebase-admin";
+import fs from "fs";
 import Firestore = firestore.Firestore;
 
 /* nextjs 14 환경에서 firestore를 사용할시 버그가 있었음.
@@ -21,8 +22,17 @@ export const initAdmin = () => {
     } else {
         fireAdmin.apps[0]?.firestore();
 
+        let keyLocation: string;
+        try {
+            keyLocation = process.env.FIRE_ADMIN_KEY as string;
+            fs.readFileSync(keyLocation);
+        } catch (err) {
+            console.log(`DB 사용에 필요한 Key 파일을 찾지 못했습니다. : ${process.env.FIRE_ADMIN_KEY}` + err);
+            throw err;
+        }
+
         const adminApp = fireAdmin.initializeApp({
-            credential: fireAdmin.credential.cert(process.env.FIRE_ADMIN_KEY as string),
+            credential: fireAdmin.credential.cert(keyLocation!),
         }, 'admin');
 
         return adminApp.firestore();
