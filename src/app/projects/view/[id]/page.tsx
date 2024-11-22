@@ -50,3 +50,14 @@ export async function generateStaticParams() {
     const allIds = await findAllIds();
     return allIds.map(id => ({id: id}));
 }
+
+
+export async function generateMetadata(props: Props) {
+    const {id} = props.params;
+    const projData = await findById(id);
+    const data = projData.data() as ProjSchema;
+    return {
+        title: data.name,
+        description: `${data.tags?.join(' ')}  ${data.description}`,
+    }
+}

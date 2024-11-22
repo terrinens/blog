@@ -6,8 +6,8 @@
   "homepage": "https://terrinens.github.io/blog/",
   "repository": "https://github.com/terrinens/blog",
   "scripts": {
-    "dev": "next dev && next-image-export-optimizer",
-    "build": "next build && next-image-export-optimizer",
+    "dev": "next dev",
+    "build": "next build && npx next-sitemap",
     "start": "next start",
     "lint": "next lint"
   },
@@ -29,6 +29,7 @@
     "next": "14.2.15",
     "next-cloudinary": "^6.16.0",
     "next-mdx-remote": "^5.0.0",
+    "next-sitemap": "^4.2.3",
     "preline": "^2.5.0",
     "react": "^18",
     "react-dom": "^18",

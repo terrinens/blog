@@ -37,7 +37,9 @@ const nextConfig = {
     output: 'export',
     pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
     distDir: 'out',
-    images: {unoptimized: true}
+    images: {unoptimized: true},
+    siteUrl: 'https://terrinens.github.io/blog/',
+    generateRobotsTxt: true,
 };
 
 const withMDX = createdMDX()

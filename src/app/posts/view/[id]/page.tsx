@@ -15,7 +15,7 @@ export default async function Page(props: Props) {
     const {id} = props.params;
     const postData = await findById(id);
     return (
-        <ServerPostRender post={postData} />
+        <ServerPostRender post={postData}/>
     )
 }
 
@@ -24,3 +24,11 @@ export async function generateStaticParams() {
     return allPostIds.map(id => ({id: id}));
 }
 
+export async function generateMetadata(props: Props) {
+    const {id} = props.params;
+    const postData = await findById(id);
+    return {
+        title: postData.name,
+        description: `${postData.tags?.join(' ')}  ${postData.description}`,
+    }
+}

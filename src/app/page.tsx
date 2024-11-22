@@ -8,6 +8,7 @@ import {getPosts} from "@/app/lib/db/ClientPostDB";
 import {generationPostCardProps} from "@/app/lib/post/ClientPost";
 import {findAllTags as projFindAllTags} from "@/app/lib/db/ServerProjDB";
 import {findAllTags} from "@/app/lib/db/ServerPostDB";
+import {Metadata} from "next";
 
 export const revalidate = 3600;
 
@@ -67,4 +68,9 @@ export default async function Home() {
             </div>
         </>
     );
+}
+
+export const metadata: Metadata = {
+    title: 'terrinens 기술 블로그',
+    description: 'Github Pages에서 라우팅하는 기술 블로그입니다.',
 }

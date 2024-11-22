@@ -5,6 +5,9 @@ env:
   GIT_SAW_TOKEN: ${{ secrets.SAW_TOKEN }}
   WORK_DIR: '/home/runner/work/blog/blog'
   TEMP_DIR: '/home/runner/work/temp_post/data'
+  IMG_API_KEY: ${{ secrets.IMG_API_KEY }}
+  IMG_API_SECRET: ${{ secrets.IMG_API_SECRET }}
+  IMG_API_ENVIRONMENT_VARIABLE: ${{ secrets.IMG_API_ENVIRONMENT_VARIABLE }}
 
 on:
   push:
