@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import {compileMDX} from "next-mdx-remote/rsc";
 import {PostsDir} from "@/app/lib/Config";
-import {userMDXComponents} from "@_mdx-components/*";
 import {DirectoryNode} from "@/app/lib/post/PostConfig";
+import {userMDXComponents} from "@_components/mdx/MDXComponents";
 
 export async function generateCompiledForMDX(content: string) {
     return await compileMDX({

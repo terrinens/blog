@@ -1,9 +1,10 @@
-import {DefaultImg, rootPath} from "@/app/lib/Config";
+import {DefaultImg} from "@/app/lib/Config";
 import path from "path";
 import React from "react";
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
 import Image from "next/image";
-import {MDXImage} from "@_components/MDXImage";
+import {MDXImage} from "@_components/mdx/MDXImage";
+import Link from "next/link";
 
 
 export function PostCard({imgRender = true, dateRender = true, tagRender = true, ...props}
@@ -22,7 +23,7 @@ export function PostCard({imgRender = true, dateRender = true, tagRender = true,
 
     return (
         <div className="group flex flex-col h-full bg-white border border-gray-200 shadow-sm rounded-xl">
-            <a href={path.join(rootPath, props.baseURL ?? '', props.id)}>
+            <Link href={path.join(props.baseURL ?? '', props.id)}>
                 <div className={`grid-rows-${parentsGridCount} ` + 'grid max-h-[500px] flex-grow'}>
                     {imgRender
                         ? (<div
@@ -67,7 +68,7 @@ export function PostCard({imgRender = true, dateRender = true, tagRender = true,
                         </div>
                     </div>
                 </div>
-            </a>
+            </Link>
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import type {MDXComponents} from "mdx/types";
-import GitMembers from "@_components/post/proj/GitMembers";
-import GitContributors, {ForceCreateGitContributors} from "@_components/post/proj/GitContributors";
-import {MDXImage} from "@_components/MDXImage";
+import GitMembers from "@_components/mdx/GitMembers";
+import GitContributors, {ForceCreateGitContributors} from "@_components/mdx/GitContributors";
+import {MDXImage} from "@_components/mdx/MDXImage";
 
 /*
  * https://stackoverflow.com/a/78454630/23506904

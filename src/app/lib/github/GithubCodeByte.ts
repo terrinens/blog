@@ -1,7 +1,7 @@
 import {fileIsProgrammeLanguage, programmeLanguageMatching} from "@/app/lib/Config";
 import {callAPI, gitName} from "@/app/lib/github/GitConfig";
 
-async function getGitRepositories() {
+export async function getGitRepositories() {
     const json = await callAPI(`https://api.github.com/user/repos?per_page=100`)
     const extraction: { [type: string]: { urls: string[] } } = {}
 
@@ -21,6 +21,26 @@ async function getGitRepositories() {
     }
 
     return extraction;
+}
+
+export async function getTotalRepositories() {
+    const json = await callAPI(`https://api.github.com/user/repos?per_page=100`)
+    const personal = new Set<string>();
+    const team = new Set<string>();
+
+    for (const data of json) {
+        if (data.fork == true) continue;
+        if (data.owner.type == 'Organization') {
+            const url = data.owner.html_url;
+            team.add(url);
+        } else {
+            if (data.visibility == 'private') continue;
+            const url = data.url;
+            personal.add(url);
+        }
+    }
+
+    return {personal: personal.size, team: team.size};
 }
 
 class LanguagesByte {
@@ -168,8 +188,7 @@ async function getOrgCodeBytes(urls: string[]) {
     return calcCodeByte(extract);
 }
 
-/*https://stackoverflow.com/a/23975976*/
-async function getOpenSourceContributionPRs() {
+export async function getOpenSourceContributorLog() {
     const genUrl = (page: number) => `https://api.github.com/search/issues?q=type:pr+state:closed+author:${gitName}&per_page=100&page=${page}`
     const result: Record<string, any>[] = [];
 
@@ -183,11 +202,15 @@ async function getOpenSourceContributionPRs() {
         if (response.total_count < 101) break;
     }
 
-    const trueContributor = result
+    return result
         .filter((record: Record<string, any>) => record.state == 'closed')
         .filter(record => record.author_association == 'CONTRIBUTOR')
-        .filter(record => ![null, undefined].includes(record.pull_request.merged_at))
+        .filter(record => ![null, undefined].includes(record.pull_request.merged_at));
+}
 
+/*https://stackoverflow.com/a/23975976*/
+async function getOpenSourceContributionFiles() {
+    const trueContributor = await getOpenSourceContributorLog();
     const repAPIUrls = trueContributor
         .map(record => record.pull_request.url)
         .map((url: string) => url + '/files');
@@ -203,7 +226,7 @@ async function getOpenSourceContributionPRs() {
 }
 
 async function getOpenSourceContributionCodeBytes() {
-    const files = await getOpenSourceContributionPRs();
+    const files = await getOpenSourceContributionFiles();
     const extract = extractChangeCode(files);
     return calcCodeByte(extract);
 }
