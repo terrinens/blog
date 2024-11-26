@@ -11,8 +11,9 @@ export function DescriptionList({data}: { data: { title: string, content: string
 
     const Title = ({title}: { title: string }) => {
         return (
-            <dt className="min-w-24">
-                <span className="block text-sm">{title}:</span>
+            <dt className="min-w-24 flex justify-between items-baseline">
+                <span className="block text-sm font-semibold">{title}</span>
+                <span className="text-sm font-semibold mr-5">:</span>
             </dt>
         )
     }
