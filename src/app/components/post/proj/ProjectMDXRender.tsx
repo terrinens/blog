@@ -2,21 +2,8 @@ import {generateCompiledForMDX, getDirectoryNames} from "@/app/lib/post/ServerPo
 import {rootPath} from "@/app/lib/Config";
 import React from "react";
 import path from "path";
-import {
-    BreadcrumbCase,
-    BreadcrumbEntries,
-    BreadcrumbLowerEntries,
-    BreadcrumbNow,
-    BreadcrumbPrevious
-} from "@/app/components/post/proj/Breadcrumb";
-import {
-    FileEntries,
-    FileObject,
-    LowerDirEntries,
-    LowerFileEntries,
-    RootTree,
-    SubTree
-} from "@/app/components/post/proj/TreeView";
+import {BreadcrumbCase, BreadcrumbEntries, BreadcrumbLowerEntries, BreadcrumbNow, BreadcrumbPrevious} from "@/app/components/post/proj/Breadcrumb";
+import {FileEntries, FileObject, LowerDirEntries, LowerFileEntries, RootTree, SubTree} from "@/app/components/post/proj/TreeView";
 import {MainContainerGrid} from "@_components/main_frame/MainContainer";
 import {DirectoryNode} from "@/app/lib/post/PostConfig";
 import {ProjSchema} from "@/app/lib/db/Init";

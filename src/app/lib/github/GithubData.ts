@@ -1,6 +1,6 @@
 import {callAPI, GitUserInfo, SimpleGitUserInfo} from "@/app/lib/github/GitConfig";
 
-function genSimpleGitUserInfo(userJson: Record<string, any>): SimpleGitUserInfo {
+export function genSimpleGitUserInfo(userJson: Record<string, any>): SimpleGitUserInfo {
     const name = userJson.login;
     const gitURL = userJson.html_url;
     const avatarURL = userJson.avatar_url;
@@ -29,6 +29,17 @@ export async function getOrgMemberSimpleInfo(orgName: string, option?: { token?:
     }
 
     return simples;
+}
+
+export async function callSimpleUserInfos(...userNames: string[]) {
+    const calls = userNames.map(name => {
+        const api = `https://api.github.com/users/${name}`;
+        return callAPI(api);
+    })
+
+    const jsons = await Promise.all(calls);
+
+    return jsons.map(json => genSimpleGitUserInfo(json));
 }
 
 export async function callUserInfos(...userNames: string[]) {

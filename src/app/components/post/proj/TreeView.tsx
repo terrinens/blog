@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-function DefaultFileSVG() {
+export function DefaultFileSVG() {
     return (
         <svg className="shrink-0 size-4 text-gray-500"
              xmlns="http://www.w3.org/2000/svg" width="24"

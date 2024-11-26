@@ -1,4 +1,4 @@
-import {getOrgMemberSimpleInfo} from "@/app/lib/github/GithubData";
+import {callSimpleUserInfos, getOrgMemberSimpleInfo} from "@/app/lib/github/GithubData";
 import React from "react";
 import {SimpleGitUserInfo} from "@/app/lib/github/GitConfig";
 
@@ -20,8 +20,8 @@ function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, pop
                     <div className="flex items-center mb-2">
                         <a href={simpleInfo.gitURL}>
                             <img height={40} width={40} className="w-10 h-10 rounded-full m-0"
-                                   src={simpleInfo.avatarURL}
-                                   alt={simpleInfo.name}/>
+                                 src={simpleInfo.avatarURL}
+                                 alt={simpleInfo.name}/>
                         </a>
                     </div>
                     <p className="m-0 p-0 text-base font-semibold leading-none text-gray-900 dark:text-white">
@@ -41,6 +41,19 @@ function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, pop
 
 export default async function GitMembers({orgName, token}: { orgName: string, token: string }) {
     const simpleInfos = await getOrgMemberSimpleInfo(orgName, {token: token});
+    return (
+        <div className={'not-prose mb-5'}>
+            <div className={'flex'}>
+                {simpleInfos.map((info, index) => (
+                    <GitMember key={index} simpleInfo={info} popoverId={`${info.name}:${index}`}/>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+export async function ForceGitMembers({names}: { names: string[] }) {
+    const simpleInfos = await callSimpleUserInfos(...names);
     return (
         <div className={'not-prose mb-5'}>
             <div className={'flex'}>

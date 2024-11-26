@@ -23,7 +23,7 @@ export function MDXImage(
                 type: 'fit',
                 source: true
             }}
-            style={style}
+            style={className ? undefined : style}
             className={className}
         />
     );

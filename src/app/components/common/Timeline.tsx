@@ -20,7 +20,9 @@ export const RecordCase = ({title, children}: { title: string, children: React.R
             <h3 className="flex gap-x-1.5 font-semibold text-gray-800">
                 {title}
             </h3>
-            {children}
+            <div className={'space-y-10'}>
+                {children}
+            </div>
         </div>
     </div>
 )
