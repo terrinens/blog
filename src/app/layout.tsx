@@ -15,9 +15,7 @@ export default function RootLayout({children}: RootLayoutProps) {
         <html lang="ko">
         <body>
         <Header/>
-        <Main>
-            {children}
-        </Main>
+        <Main key={'main'}>{children}</Main>
         <Footer/>
         <ScriptsLoad/>
         </body>

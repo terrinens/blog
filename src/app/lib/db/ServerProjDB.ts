@@ -16,18 +16,19 @@ const dataParse = (d: ProjSchema) => {
     return d;
 }
 
+/** Only plain objects, and a few built-ins 정책으로인해 사용하는 함수 */
 const generationPostData = (docs: FirebaseFirestore.DocumentSnapshot) => {
     return ({id: docs.id, data: dataParse(docs.data() as ProjSchema)})
 }
 
-
 export async function findAll() {
-    return await adminRef.listDocuments();
+    const querySnapshot = await adminRef.orderBy('startAt', 'desc').get();
+    return querySnapshot.docs.map(doc => generationPostData(doc));
 }
 
 export async function findAllIds() {
-    const result = await adminRef.select('id').get();
-    return result.docs.map(doc => doc.id);
+    const snapshots = await adminRef.listDocuments();
+    return snapshots.map(snapshots => snapshots.id);
 }
 
 export async function findAllAndSplitOfType() {
@@ -36,9 +37,8 @@ export async function findAllAndSplitOfType() {
     const personal: { data: ProjSchema, id: string }[] = [];
 
     for (const proj of allProj) {
-        const snapshot = await proj.get();
-        const data = snapshot.data() as ProjSchema;
-        const pushData: { data: ProjSchema, id: string } = generationPostData(snapshot);
+        const data = proj.data;
+        const pushData: { data: ProjSchema, id: string } = {data: data, id: proj.id}
 
         if (data.type === "team") team.push(pushData);
         else personal.push(pushData);

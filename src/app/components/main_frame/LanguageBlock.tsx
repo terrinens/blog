@@ -137,7 +137,7 @@ function CodeByteTable({chartData}: { chartData: ChartDataProps }) {
     }, [chartData.lang, chartData.bytes])
 
     const option = useMemo(() =>
-        ({searchable: true, sortable: true, data: data}), [data])
+        ({searchable: false, sortable: true, data: data}), [data])
 
     useEffect(() => {
         if (tableRef.current) {
@@ -148,16 +148,17 @@ function CodeByteTable({chartData}: { chartData: ChartDataProps }) {
     return (<table ref={tableRef} id="search-table"></table>)
 }
 
-export default function LanguageBlock({chartData}: { chartData: ChartDataProps }) {
+export default function LanguageBlock({chartData, tableIgnore}: { chartData: ChartDataProps, tableIgnore?: boolean }) {
     return (
         <div className="container w-full m-0">
-            <div className='grid xl:grid-cols-3 lg:grid-cols-3 grid-cols-2 gap-1'>
+            <div className={tableIgnore ? '' : 'grid xl:grid-cols-3 lg:grid-cols-3 grid-cols-2 gap-1'}>
                 <div className='pl-0 col-span-1 p-4'>
                     <CodeByteGraph chartData={chartData}/>
                 </div>
-                <div className='xl:col-span-2 lg:col-span-2 col-span-1 p-4 w-full'>
-                    <CodeByteTable chartData={chartData}/>
-                </div>
+                {tableIgnore ? '' :
+                    <div className='xl:col-span-2 lg:col-span-2 col-span-1 p-4 w-full'>
+                        <CodeByteTable chartData={chartData}/>
+                    </div>}
             </div>
         </div>
     )

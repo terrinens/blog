@@ -56,3 +56,4 @@ export function programmeLanguageMatching(key: string) {
 
 export const DefaultImg = {src: default_img.src, alt: 'https://www.freepik.com/ Designed by : freepik'}
 export const PostsDir = path.join(process.cwd(), '/src/data/post');
+export const aboutLock = false;
