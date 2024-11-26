@@ -25,7 +25,7 @@ export default function Tooltip(
             </button>
 
             <div id={id} role="tooltip"
-                 className="h-auto max-h-full absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
+                 className="max-w-2xl h-auto max-h-full absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 tooltip">
                 {description}
                 <div className="tooltip-arrow" data-popper-arrow=""/>
             </div>

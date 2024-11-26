@@ -1,17 +1,5 @@
 import {db, PostSchema} from "@/app/lib/db/Init";
-import {
-    collection,
-    doc,
-    DocumentSnapshot,
-    getCountFromServer,
-    getDoc,
-    getDocs,
-    limit,
-    orderBy,
-    query,
-    startAfter,
-    Timestamp
-} from "@firebase/firestore";
+import {collection, doc, DocumentSnapshot, getCountFromServer, getDoc, getDocs, limit, orderBy, query, startAfter, Timestamp} from "@firebase/firestore";
 import {dateFormatter} from "@/app/lib/post/PostConfig";
 
 const tableName = "main";
