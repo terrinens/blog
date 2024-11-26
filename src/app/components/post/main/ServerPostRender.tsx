@@ -3,10 +3,6 @@ import {generateCompiledForMDX} from "@/app/lib/post/ServerPosts";
 import {generationPostCardProps} from "@/app/lib/post/ClientPost";
 import {PostSchema} from "@/app/lib/db/Init";
 
-export type PostRenderProps = {
-    headerIgnore?: boolean;
-}
-
 const PostRenderHeaderBlock = (
     {name, values}: { name: string, values: string | Array<any> }
 ) => {

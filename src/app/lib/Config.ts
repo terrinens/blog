@@ -1,4 +1,3 @@
-import default_img from "@/public/post_default.jpg";
 import path from "path";
 
 export const rootPath = process.env.NODE_ENV === 'production'
@@ -54,6 +53,5 @@ export function programmeLanguageMatching(key: string) {
     return undefined;
 }
 
-export const DefaultImg = {src: default_img.src, alt: 'https://www.freepik.com/ Designed by : freepik'}
 export const PostsDir = path.join(process.cwd(), '/src/data/post');
 export const aboutLock = false;

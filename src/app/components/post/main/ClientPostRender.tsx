@@ -1,4 +1,4 @@
-import {DefaultImg} from "@/app/lib/Config";
+import DefaultImg from "@_public/svg/logo.svg";
 import path from "path";
 import React from "react";
 import {PostCardProps} from "@_components/post/main/ServerPostRender";
@@ -12,9 +12,7 @@ export function PostCard({imgRender = true, dateRender = true, tagRender = true,
     const info = props.info;
 
     const img = (info.thumbnail == null || (info.thumbnail as string).trim().length <= 0)
-        ? <Image style={{objectFit: "cover", width: "100%", height: "100%"}} width={'100'} height={'100'}
-                 src={DefaultImg.src}
-                 alt={'none'}/>
+        ? <Image src={DefaultImg} alt={'none'}/>
         : <MDXImage src={info.thumbnail} alt={'none'}/>;
 
     const gridCalculation = (...bool: boolean[]) => bool.reduce((a, b) => Number(a) + Number(b), 0)
