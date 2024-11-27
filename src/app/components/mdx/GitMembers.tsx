@@ -1,6 +1,7 @@
 import {callSimpleUserInfos, getOrgMemberSimpleInfo} from "@/app/lib/github/GithubData";
 import React from "react";
 import {SimpleGitUserInfo} from "@/app/lib/github/GitConfig";
+import {random} from "nanoid";
 
 function GitMember({simpleInfo, popoverId}: { simpleInfo: SimpleGitUserInfo, popoverId: string }) {
     return (
@@ -58,7 +59,7 @@ export async function ForceGitMembers({names}: { names: string[] }) {
         <div className={'not-prose mb-5'}>
             <div className={'flex'}>
                 {simpleInfos.map((info, index) => (
-                    <GitMember key={index} simpleInfo={info} popoverId={`${info.name}:${index}`}/>
+                    <GitMember key={index} simpleInfo={info} popoverId={`${info.name}:${index}:${random(256)}`}/>
                 ))}
             </div>
         </div>

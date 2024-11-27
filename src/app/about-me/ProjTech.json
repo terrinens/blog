@@ -23,5 +23,9 @@
     "Jetbrains HTTP Client": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5waBMVMYxfrkGHcomAZTiQtfMUDr1227oZQ&s",
     "Postman": "https://user-images.githubusercontent.com/7853266/44114706-9c72dd08-9fd1-11e8-8d9d-6d9d651c75ad.png",
     "Github": "https://cdn-icons-png.flaticon.com/512/25/25231.png"
+  },
+  "CI/CD": {
+    "Jenkins": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAABHVBMVEX////39/eZmZtVUlGFeW2Admtxbm3Cw8W4t7h0cnSonZD65Mr54cSynIPy2bvq0bPw1rd1aFvs7OxbWFiLioy2pJDJs5nz2bnSu5+EfXiqqquCf4BeXmPZ3d1DAABJSlDgx6reyrKfjnzAq5NqXE5/GRmWSEOrnYxnX1dyAADpLCiQXlaPgHDaJiJvXl6UDAnaMy+rIiGbloGib2GeCgDMJSDUODOzFxidjHmbIyOEc3OOgIAgLz9ZWE0bSl9SKiyAXV27MixHNDo5bIQ/b4chOkmHjZCQKCJRNDF0Wk95NDd6KiiCaGgzUGGsMjB5MDJrOT9SZnKMpq9PdYQaQldvTk4zS1uHvtVXR1NeAgBBHigmMToWOUwFGygAIzhANql4AAABWUlEQVR4AayRAxIDMRRAa66VrW0ta9u27n+LalCOGycv34q/NKVKrdHq9D+ZwWgyQxAEq34zCEExDMK/ZQmSohENAzCUtXxBq83OoBiCohgKfzKHU+1yA8zjxWif/0OvMhAMhX0AsCygWV+EeIO2aMyNAgwDAIHicCL5JpjieMF3g4jb66VFTnK8hiGn0xkTcAOPN+tlc2n5NVYqkU5zMTPDQr6sG+fSXP4FFm73XDEEQgLKlMqVNFd9leRq9Uaz1e7w3V663xhww9cMyPXmaDQqjzm+n5ncNuo1BVKncYOj6XjmmC+W6cxbGlbyDa1H68WmPR9NE/337EnbOywXWzPXcje0vedPtR+NDm2rQU+1KIODMLxT22h0fOg4GvQOpepDdDk6Oh6QtFGqz7pQp/P9iXAZFARxHWb6YmcCSUpxYE9+YJtk2LFLynJKSYlI4Uy6QkKMxKZyAGgaMOiIUjjnAAAAAElFTkSuQmCC",
+    "GitAction": "https://cdn-icons-png.flaticon.com/512/25/25231.png"
   }
 }

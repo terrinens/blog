@@ -76,7 +76,7 @@ export default async function PortfolioForm() {
                 description={'교육기관 혹은 모집하여 결성된 팀으로 진행한 프로젝트입니다. 더 자세한 문서가 있을시, 문서 아이콘으로 나타내고 있습니다. 클릭시 해당 페이지로 이동 할 수 있습니다.'}
                 title={'팀 프로젝트 진행 이력'} src={BoxIcon}>
                 <div
-                    className="grid xl:grid-cols-3 xl:gap-5 lg:grid-cols-3 lg:gap-4 md:grid-cols-2 md:gap-7 sm:grid-cols-2 sm:gap-5 gap-10">
+                    className="grid grid-cols-2 gap-4">
                     {teamProps.map((props, index) => (<div key={`card:${props.id}:${index}`} className={'not-prose w-[272px] border rounded-xl'}>
                         <Card key={`${props.id}:${index}`} id={props.id}  {...props.info} />
                     </div>))}
@@ -86,12 +86,22 @@ export default async function PortfolioForm() {
             <Section description={'개인이 진행한 프로젝트입니다. 더 자세한 문서가 있을시, 문서 아이콘으로 나타내고 있습니다. 클릭시 해당 페이지로 이동 할 수 있습니다.'}
                      title={'개인 프로젝트 진행 이력'} src={BoxIcon}>
                 <div
-                    className="grid xl:grid-cols-3 xl:gap-5 lg:grid-cols-3 lg:gap-4 md:grid-cols-2 md:gap-7 sm:grid-cols-2 sm:gap-5 gap-10">
+                    className="grid grid-cols-2">
                     {personalProps.map((props, index) => (<div key={`card:${props.id}:${index}`} className={'not-prose w-[272px] border rounded-xl'}>
                         <Card key={`${props.id}:${index}`} id={props.id} {...props.info} />
                     </div>))}
                 </div>
             </Section>
+
+            {/*<Section title={'SAW Project'}>
+             <LowSection title={'목적'}>
+             SAW(Sleep As Well)은 스터디팀 디비자바의 다양한 활동 기록을 남기기 위한 팀 블로그입니다.
+             스터디, 대면회의 등등 여러 정보를 담는 블로그입니다.
+             </LowSection>
+             <LowSection title={'사용 기술'}>
+
+             </LowSection>
+             </Section>*/}
         </div>
     )
 }

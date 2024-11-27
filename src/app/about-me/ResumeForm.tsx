@@ -1,8 +1,8 @@
-import {Section, TechSection} from "@/app/about-me/AboutComponent";
+import {LowSection, Section, TechSection} from "@/app/about-me/AboutComponent";
 import FlexibleIcon from "@/app/about-me/icons/flexible-access.svg";
 import {DateBlock, RecordCase} from "@_components/common/Timeline";
 import Link from "next/link";
-import {ForceGitMembers} from "@_components/mdx/GitMembers";
+import GitMembers, {ForceGitMembers} from "@_components/mdx/GitMembers";
 import React from "react";
 import EmailIcon from "@/app/about-me/icons/mail-reception.svg";
 import {DescriptionList} from "@_components/common/List";
@@ -108,12 +108,29 @@ export default async function ResumeForm() {
         <div className={'border-b mb-10'}>
             <h1 className={'text-center'}>지원서</h1>
             <Section title={'끈기있게 도전하는 개발자, 김동철입니다.'} src={''}>
-                <span className={'text-lg'}>로직 하나하나 끈기있게 개선점을 찾아내, 개선하고자 노력하는 신입 백엔드 개발자 김동철 입니다.</span>
-                <ul>
-                    <li>새로운 기술을 배우고 적용하는데 많은 관심이 있으며, 백엔드 개발 분야에서 지속적으로 성장하고자 합니다.</li>
-                    <li>문제를 분석하고 끈기있게 해결책을 찾아내 해결후, 이를 문서화하여 추후에 재발을 방지하고자 합니다.</li>
-                    <li>{personal}개의 개인프로젝트, {team}개의 팀프로젝트, {repInfos.length}개의 오픈소스에 참여했습니다.</li>
-                </ul>
+                <LowSection title={'요약'}>
+                    <span className={'text-lg'}>로직 하나하나 끈기있게 개선점을 찾아내, 개선하고자 노력하는 신입 백엔드 개발자 김동철 입니다.</span>
+                    <ul>
+                        <li>새로운 기술을 배우고 적용하는데 많은 관심이 있으며, 백엔드 개발 분야에서 지속적으로 성장하고자 합니다.</li>
+                        <li>문제를 분석하고 끈기있게 해결책을 찾아내 해결후, 이를 문서화하여 추후에 재발을 방지하고자 합니다.</li>
+                        <li>{personal}개의 개인프로젝트, {team}개의 팀프로젝트, {repInfos.length}개의 오픈소스에 참여했습니다.</li>
+                    </ul>
+
+                </LowSection>
+
+                <LowSection title={'자기소개'}>
+                    안녕하세요. Java, Python을 사용하고 있는 신입 개발자입니다. SpringBoot, NextJS, Flask, Fastapi를 프로젝트에 적용하여, 사용해본 경험이있습니다.
+
+                    <div>
+                        <h3>끈기있는 해결</h3>
+                        저의 강점중 하나는 끈기있게 시도하는 능력입니다. 개발을 진행시에는 수많은 문제들이 발생하는데, 이를 해결하기 위해 필요한것은 끈기라고 생각합니다.
+                        이러한 끈기가 필요하다 생각하는 이유는 끈기가 있어야지만 해결방안에 대해서 찾을수 있기 때문입니다.
+                        문제점을 해결하기 위해
+                    </div>
+                    <div>
+                        <h3></h3>
+                    </div>
+                </LowSection>
             </Section>
 
             <PersonalInfo/>
@@ -129,7 +146,7 @@ export default async function ResumeForm() {
                         'JPA 및 MySql DB 설계',
                         'JWT 인증 및 Spring AOP를 활용한 인증로직 처리'
                     ]}>
-                    <div/>
+                    <GitMembers orgName={'SleepAswell'} token={process.env.GIT_SAW_TOKEN as string}/>
                 </DateListForm>
                 <DateListForm
                     date={'2023.12.10 - 2024.1.1'} title={'뷰티플 브라이드'}
