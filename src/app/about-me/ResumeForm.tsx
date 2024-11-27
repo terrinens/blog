@@ -6,7 +6,7 @@ import GitMembers, {ForceGitMembers} from "@_components/mdx/GitMembers";
 import React from "react";
 import EmailIcon from "@/app/about-me/icons/mail-reception.svg";
 import {DescriptionList} from "@_components/common/List";
-import {getOpenSourceContributorLog, getTotalRepositories} from "@/app/lib/github/GithubCodeByte";
+import {getOpenSourceContributorLog} from "@/app/lib/github/GithubCodeByte";
 import APISolutionIcon from "@/app/about-me/icons/api-interface-svgrepo-com.svg";
 import path from "path";
 import fs from "fs";
@@ -101,7 +101,6 @@ export const unpack = (pack: string) => {
 
 
 export default async function ResumeForm() {
-    const {personal, team} = await getTotalRepositories();
     const repInfos = await getInfos();
 
     return (
@@ -113,12 +112,12 @@ export default async function ResumeForm() {
                     <ul>
                         <li>새로운 기술을 배우고 적용하는데 많은 관심이 있으며, 백엔드 개발 분야에서 지속적으로 성장하고자 합니다.</li>
                         <li>문제를 분석하고 끈기있게 해결책을 찾아내 해결후, 이를 문서화하여 추후에 재발을 방지하고자 합니다.</li>
-                        <li>{personal}개의 개인프로젝트, {team}개의 팀프로젝트, {repInfos.length}개의 오픈소스에 참여했습니다.</li>
+                        <li>2개의 개인프로젝트, 3개의 팀프로젝트, {repInfos.length}개의 오픈소스에 참여했습니다.</li>
                     </ul>
 
                 </LowSection>
 
-                <LowSection title={'자기소개'}>
+               {/* <LowSection title={'자기소개'}>
                     안녕하세요. Java, Python을 사용하고 있는 신입 개발자입니다. SpringBoot, NextJS, Flask, Fastapi를 프로젝트에 적용하여, 사용해본 경험이있습니다.
 
                     <div>
@@ -130,7 +129,7 @@ export default async function ResumeForm() {
                     <div>
                         <h3></h3>
                     </div>
-                </LowSection>
+                </LowSection>*/}
             </Section>
 
             <PersonalInfo/>
