@@ -29,7 +29,7 @@ export const LowSection = ({title, src, children}: SectionProps) => {
         </div>
     )
 }
-const TechnologyList = ({list}: { list: { name: string, src?: string }[] }) => {
+export const TechnologyList = ({list}: { list: { name: string, src?: string }[] }) => {
     const LiElement = (data: { name: string, src?: string; }) => (
         <li className="flex items-center justify-start m-0 mr-5 my-3">{data.src
             ? <Image src={data.src} alt={''} width={24} height={24} className={'rounded-full m-0'}/>
