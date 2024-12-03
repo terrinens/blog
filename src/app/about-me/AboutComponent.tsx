@@ -6,7 +6,7 @@ type SectionProps = { title: string, src?: string, children: React.ReactNode }
 
 export const Section = ({title, src, children, ...option}: SectionProps & { description?: string }) => {
     return (
-        <div key={`${title}`} className={'my-10'}>
+        <div key={`${title}`}>
             <h2 className={'mt-0 flex flex-row items-center'}>
                 {src && (<Image className={'m-0 p-0 mr-2'} src={src} alt={''} width={50} height={50}/>)}
                 <span className={'text-center'}>{title}</span>

@@ -10,7 +10,6 @@ import {getOpenSourceContributorLog} from "@/app/lib/github/GithubCodeByte";
 import APISolutionIcon from "@/app/about-me/icons/api-interface-svgrepo-com.svg";
 import path from "path";
 import fs from "fs";
-import MachineIcon from "@/app/about-me/icons/machine-vision-svgrepo-com.svg";
 import {callAPI} from "@/app/lib/github/GitConfig";
 
 const DateListForm = ({date, title, href, description, summations, children}: {
@@ -45,13 +44,6 @@ export const ProjTechs = () => {
     const projTech: Record<any, any> = readJson('ProjTech.json');
     return (<Section title={'사용가능 기술'} src={APISolutionIcon}>
         <TechSection data={projTech}/>
-    </Section>)
-}
-
-const StudyTechs = () => {
-    const studyTech: Record<any, any> = readJson('StudyTech.json');
-    return (<Section title={'학습중인 기술'} src={MachineIcon}>
-        <TechSection data={studyTech}/>
     </Section>)
 }
 
@@ -104,7 +96,7 @@ export default async function ResumeForm() {
     const repInfos = await getInfos();
 
     return (
-        <div className={'border-b mb-10'}>
+        <div className={'prose space-y-4'}>
             <Section title={'끈기있게 도전하는 개발자, 김동철입니다.'}>
                 <span className={'text-lg font-bold'}>로직 하나하나 끈기있게 개선점을 찾아내, 개선하고자 노력하는 신입 백엔드 개발자 김동철 입니다.</span>
                 <ul>
@@ -198,7 +190,6 @@ export default async function ResumeForm() {
             </Section>
 
             <ProjTechs/>
-            <StudyTechs/>
         </div>
     )
 }

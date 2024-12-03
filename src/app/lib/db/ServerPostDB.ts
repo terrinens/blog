@@ -37,3 +37,15 @@ export async function findAllTags() {
 
     return Array.from(new Set(tags));
 }
+
+export async function modifyPost(id: string, data: Partial<PostSchema>) {
+    const docRef = adminRef.doc(id);
+    
+    try {
+        await docRef.update(data);
+        return true;
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
+}

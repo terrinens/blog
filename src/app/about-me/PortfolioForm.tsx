@@ -23,24 +23,22 @@ const Card = ({thumbnail, name, description, id}: {
 }) => {
 
     const Block = ({children}: { children: React.ReactNode }) => (
-        id ? <Link href={path.join('/projects/view', id)}>{children}</Link> : <>{children}</>
+        id ? <Link className={"flex flex-col max-h-[300px] flex-grow justify-center space-y-2 w-auto"}
+                   href={path.join('/projects/view', id)}>{children}</Link> : <>{children}</>
     );
 
     return (<Block>
-        <div
-            className="flex flex-col max-h-[300px] flex-grow justify-center space-y-2 max-w-lg">
-            <div className="row-span-2 flex justify-center">
-                {thumbnail.length > 0
-                    ? <MDXImage src={thumbnail} className="object-cover w-32 h-32"/>
-                    : <Image src={Logo} alt={''} className="object-cover w-32 h-32"/>}
-            </div>
-            <div className={'flex flex-col'}>
+        <div className="row-span-2 flex justify-center">
+            {thumbnail.length > 0
+                ? <MDXImage src={thumbnail} className="object-cover w-32 h-32"/>
+                : <Image src={Logo} alt={''} className="object-cover w-32 h-32"/>}
+        </div>
+        <div className={'flex flex-col'}>
                 <span className="text-center justify-center items-center text-xl flex flex-row space-x-1">
                     <span>{name}</span>
                     {id && (<DefaultFileSVG/>)}
                 </span>
-                <span className="flex justify-center text-center items-center">{description}</span>
-            </div>
+            <span className="flex justify-center text-center items-center">{description}</span>
         </div>
     </Block>);
 }
@@ -64,7 +62,7 @@ const sawProj = (<Section title={'SAW Project'}>
     </LowSection>
 
     <LowSection title={'성과'}>
-        주목할 만한 부분은 Spring AOP를 활용한 JWT 인증 로직 최적화입니다. 처음에는 JWT 인증을 위해 세션 방식 대신 SecurityContext를 사용하지 않는 방식으로 구현하였습니다. <br/>
+        주목할 만한 부분은 Spring AOP를 활용한 JWT 인증 로직 최적화입니다. 처음에는 JWT 인증을 위해 Session 방식을 사용하지 않으면서, SecurityContext를 사용하지 않는 방식으로 구현하였습니다. <br/>
         하지만 이 접근법은 모든 사용자 정보가 필요한 로직에서 JWT를 해석해야 하므로, 반복적인 작업이 발생했습니다. 따라서 API를 개발하는 과정에서 개발자가 이러한 반복 작업을 줄이기 위해 SecurityContext를 활용하여 필터를 구성하게 되었습니다.
 
         <MDXImage src={'aop_filter_before'}/>
@@ -129,8 +127,8 @@ export default async function PortfolioForm() {
     );
 
     return (
-        <div>
-            <h2>끈기있게 도전하는 개발자, 김동철 입니다.</h2>
+        <div className={'prose'}>
+            <h2>끈기있게 도전하는 개발자, 김동철입니다.</h2>
 
             <PersonalInfo/>
 
@@ -145,8 +143,8 @@ export default async function PortfolioForm() {
                 description={'교육기관 혹은 모집하여 결성된 팀으로 진행한 프로젝트입니다. 더 자세한 문서가 있을시, 문서 아이콘으로 나타내고 있습니다. 클릭시 해당 페이지로 이동 할 수 있습니다.'}
                 title={'팀 프로젝트 진행 이력'} src={BoxIcon}>
                 <div
-                    className="grid grid-cols-2 gap-4">
-                    {teamProps.map((props, index) => (<div key={`card:${props.id}:${index}`} className={'not-prose w-[272px] border rounded-xl'}>
+                    className="grid grid-cols-2 gap-4 sm:grid-rows-1">
+                    {teamProps.map((props, index) => (<div key={`card:${props.id}:${index}`} className={'not-prose w-auto border rounded-xl'}>
                         <Card key={`${props.id}:${index}`} id={props.id}  {...props.info} />
                     </div>))}
                 </div>
@@ -156,7 +154,7 @@ export default async function PortfolioForm() {
                      title={'개인 프로젝트 진행 이력'} src={BoxIcon}>
                 <div
                     className="grid grid-cols-2 gap-4">
-                    {personalProps.map((props, index) => (<div key={`card:${props.id}:${index}`} className={'not-prose w-[272px] border rounded-xl'}>
+                    {personalProps.map((props, index) => (<div key={`card:${props.id}:${index}`} className={'not-prose w-auto border rounded-xl'}>
                         <Card key={`${props.id}:${index}`} id={props.id} {...props.info} />
                     </div>))}
                 </div>
