@@ -34,7 +34,7 @@ export default async function Home() {
     return (
         <>
             <Banner/>
-            <div className='grid grid-cols-1 gap-4'>
+            <div className='grid grid-cols-1 gap-4 space-y-10'>
                 <MainContainer>
                     <TagBlock allTags={tags} key={'TagBlock'}/>
                 </MainContainer>

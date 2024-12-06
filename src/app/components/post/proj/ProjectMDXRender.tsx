@@ -15,7 +15,7 @@ type DocsBreadcrumbProps = {
     baseUrl: string[]
 }
 
-function DocsBreadcrumb({projName, now, dirs}: DocsBreadcrumbProps) {
+export function DocsBreadcrumb({projName, now, dirs}: DocsBreadcrumbProps) {
     return (
         <div
             className='mb-5 flex whitespace-nowrap border max-h-24 rounded-xl shadow-sm p-1 dark:bg-neutral-800 dark:border-neutral-700'>

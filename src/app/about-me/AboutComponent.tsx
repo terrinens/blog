@@ -6,7 +6,7 @@ type SectionProps = { title: string, src?: string, children: React.ReactNode }
 
 export const Section = ({title, src, children, ...option}: SectionProps & { description?: string }) => {
     return (
-        <div key={`${title}`} className={'my-10'}>
+        <div key={`${title}`}>
             <h2 className={'mt-0 flex flex-row items-center'}>
                 {src && (<Image className={'m-0 p-0 mr-2'} src={src} alt={''} width={50} height={50}/>)}
                 <span className={'text-center'}>{title}</span>
@@ -29,7 +29,7 @@ export const LowSection = ({title, src, children}: SectionProps) => {
         </div>
     )
 }
-const TechnologyList = ({list}: { list: { name: string, src?: string }[] }) => {
+export const TechnologyList = ({list}: { list: { name: string, src?: string }[] }) => {
     const LiElement = (data: { name: string, src?: string; }) => (
         <li className="flex items-center justify-start m-0 mr-5 my-3">{data.src
             ? <Image src={data.src} alt={''} width={24} height={24} className={'rounded-full m-0'}/>

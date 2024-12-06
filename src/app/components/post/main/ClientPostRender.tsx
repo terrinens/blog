@@ -12,7 +12,7 @@ export function PostCard({imgRender = true, dateRender = true, tagRender = true,
     const info = props.info;
 
     const img = (info.thumbnail == null || (info.thumbnail as string).trim().length <= 0)
-        ? <Image src={DefaultImg} alt={'none'}/>
+        ? <Image src={DefaultImg} alt={'none'} width={500} height={500} property={'true'}/>
         : <MDXImage src={info.thumbnail} alt={'none'}/>;
 
     const gridCalculation = (...bool: boolean[]) => bool.reduce((a, b) => Number(a) + Number(b), 0)

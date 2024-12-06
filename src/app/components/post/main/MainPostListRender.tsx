@@ -7,12 +7,18 @@ import {generationPostCardProps} from "@/app/lib/post/ClientPost";
 import {PostCard} from "@_components/post/main/ClientPostRender";
 import InfiniteScroll from "react-infinite-scroller";
 
-
 export default function MainPostListRender({pageSize}: { pageSize: number }) {
     const [data, setData] = useState<PaginationResult>({} as PaginationResult);
     const [cardData, setCardData] = useState<PostCardProps[]>([]);
     const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [key, setKey] = useState<number>(1);
+
+    const loadingAction = (action: () => any) => {
+        setLoading(true);
+        action();
+        setLoading(false);
+    }
 
     useEffect(() => {
         const init = async () => {
@@ -21,30 +27,33 @@ export default function MainPostListRender({pageSize}: { pageSize: number }) {
             setCardData(data.posts.map(post => generationPostCardProps(post.id, post.data)));
             setHasMore(!!data.nextCall);
             setKey(1);
-        }
-        init().then(r => r);
+        };
+
+        loadingAction(init);
     }, [pageSize]);
 
     const loadNext = async () => {
-        if (data.nextCall) {
-            const newData = await data.nextCall();
-            setData(newData);
+        const action = async () => {
+            if (data.nextCall) {
+                const newData = await data.nextCall();
+                setData(newData);
 
-            setCardData(cardData => [
-                ...cardData,
-                ...newData.posts.map(post => generationPostCardProps(post.id, post.data))
-            ]);
+                setCardData(cardData => [
+                    ...cardData,
+                    ...newData.posts.map(post => generationPostCardProps(post.id, post.data))
+                ]);
 
-            setHasMore(!!newData.nextCall);
-            setKey(key + 1);
-        } else {
-            setHasMore(false);
+                setHasMore(!!newData.nextCall);
+                setKey(key + 1);
+            } else {
+                setHasMore(false);
+            }
         }
+
+        loadingAction(action);
     }
 
-    const loadingBlock = (
-        <div key={'loadingBlock'} className={'prose'}><h4>Loading...</h4></div>
-    );
+    const loadingBlock = (<div key={'loadingBlock'} className={'prose'}><h4>Loading...</h4></div>);
 
     const endBlock = (
         <div key={'endBlock'} className={'flex justify-center items-center mt-9 text-center prose flex-col'}>
@@ -65,8 +74,8 @@ export default function MainPostListRender({pageSize}: { pageSize: number }) {
                     {cardData.map((props, index) => (
                         <PostCard key={`card:${index}:${props.id}`} baseURL={'/posts/view/'} {...props}/>))}
                 </div>
-                {!hasMore && endBlock}
+                {!hasMore && !loading && (endBlock)}
             </InfiniteScroll>
         </div>
-    )
+    );
 }

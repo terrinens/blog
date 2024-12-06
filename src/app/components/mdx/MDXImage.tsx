@@ -7,23 +7,26 @@ type MDXImageType = {
     src: string, alt?: string, width?: number, height?: number,
     className?: string
     style?: React.CSSProperties
+    property?: boolean;
 }
 
 export function MDXImage(
     {
-        src, width, height, className, style = {objectFit: "cover", width: "100%", height: "100%"}
+        src, width, height, className, style = {objectFit: "cover", width: "100%", height: "auto"},
+        ...options
     }: MDXImageType) {
     return (
         <CldImage
             src={src}
             width={width ?? 1000}
             height={height ?? 1000}
-            alt={''}
+            alt={options.alt ?? ''}
             crop={{
                 type: 'fit',
                 source: true
             }}
-            style={className ? undefined : style}
+            property={'true'}
+            style={(style && !className) ? style : undefined}
             className={className}
         />
     );

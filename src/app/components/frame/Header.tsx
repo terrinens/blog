@@ -11,10 +11,10 @@ const Header = () => {
                 className="mt-4 relative max-w-3xl w-full bg-white border border-gray-200 rounded-[2rem] mx-2 py-2.5 md:flex md:items-center md:justify-between md:py-0 md:px-4 md:mx-auto">
                 <div className="px-4 md:px-0 flex justify-between items-center">
                     <div>
-                        <a className="flex rounded-md text-xl font-semibold focus:outline-none focus:opacity-80"
+                        <a className="flex rounded-md text-xl font-semibold focus:outline-none focus:opacity-80 space-x-2"
                            href={rootPath} aria-label="Preline">
-                            <Image className='h-auto' src={logo} alt='logo' width={50}/>
-                            <Image className='ml-2' src={name} alt='name' width={150}/>
+                            <Image src={logo} alt='logo' width={50} height={50} property={'true'}/>
+                            <Image src={name} alt='name' width={150} height={50} property={'true'}/>
                         </a>
                     </div>
 
