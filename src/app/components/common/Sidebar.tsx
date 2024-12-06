@@ -24,7 +24,7 @@ export function DocsSidebar({docs}: { docs: DocsSidebarProps[] }) {
     const contentRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        if (window.innerWidth >= 768) setIsOpen(true);
+        if (window.innerWidth >= 768 && docs.length > 1) setIsOpen(true);
         else (setIsOpen(false));
     }, []);
 
@@ -54,38 +54,49 @@ export function DocsSidebar({docs}: { docs: DocsSidebarProps[] }) {
     const sidebarWidth = '192px';
 
     return (
-        <div ref={contentRef} className={'flex'}>{docs.length > 1 && (<>
-            <div className={`fixed top-6 xl:ml-2 right-16 md:right-20 md:ml-2 sm:top-24 sm:left-0 md:top-24 md:left-0 h-12 z-50 text-center ${isOpen ? 'hidden' : 'block'}`}>
-                <button
-                    onClick={toggleSidebar}
-                    className={`flex flex-col justify-center items-center border hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2`}
-                    type="button" data-drawer-backdrop="false" data-drawer-target="default-sidebar" data-drawer-show="default-sidebar" aria-controls="default-sidebar"
-                    data-drawer-body-scrolling="true">
+        <div ref={contentRef} className={'flex'}>{docs.length > 1 ? (<>
+                <div className={`fixed top-6 xl:ml-2 right-16 md:right-20 md:ml-2 sm:top-24 sm:left-0 md:top-24 md:left-0 h-12 z-50 text-center ${isOpen ? 'hidden' : 'block'}`}>
+                    <button
+                        onClick={toggleSidebar}
+                        className={`flex flex-col justify-center items-center border hover:bg-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2`}
+                        type="button" data-drawer-backdrop="false" data-drawer-target="default-sidebar" data-drawer-show="default-sidebar" aria-controls="default-sidebar"
+                        data-drawer-body-scrolling="true">
+                        <DefaultFileSVG/>
+                        <span>docs</span>
+                    </button>
+                </div>
+
+                <div id="default-sidebar" className={`fixed top-16 md:top-20 z-40 h-screen overflow-y-auto left-0 transition-transform bg-white dark:bg-gray-800`}
+                     style={{width: isOpen ? sidebarWidth : '0'}}
+                     aria-labelledby="drawer-backdrop-label">
+
+                    <div className="h-full px-3 py-4 overflow-y-auto border-r dark:bg-gray-800">
+                        <button onClick={toggleSidebar} type="button" data-drawer-hide="default-sidebar" aria-controls="default-sidebar"
+                                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
+                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span className="sr-only">Close menu</span>
+                        </button>
+                        <ul className="space-y-2 font-medium mt-5">
+                            {docs.map(data => (
+                                <DocsSidebarLi key={data.name} id={data.name} onClick={() => handleChangeDoc(data.children)}/>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </>)
+            : (<div
+                className={`fixed top-6 xl:ml-2 right-16 md:right-20 md:ml-2 sm:top-24 sm:left-0 md:top-24 md:left-0 h-12 z-50 text-center ${isOpen ? 'hidden' : 'block'} pointer-events-none cursor-not-allowed`}>
+                <button onClick={toggleSidebar}
+                        className={`flex flex-col justify-center items-center border border-gray-300 bg-gray-300 text-gray-500 hover:bg-gray-300 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2`}
+                        type="button" data-drawer-backdrop="false" data-drawer-target="default-sidebar" data-drawer-show="default-sidebar" aria-controls="default-sidebar"
+                        data-drawer-body-scrolling="true" disabled>
                     <DefaultFileSVG/>
                     <span>docs</span>
                 </button>
-            </div>
-
-            <div id="default-sidebar" className={`fixed top-16 md:top-20 z-40 h-screen overflow-y-auto left-0 transition-transform bg-white dark:bg-gray-800`}
-                 style={{width: isOpen ? sidebarWidth : '0'}}
-                 aria-labelledby="drawer-backdrop-label">
-
-                <div className="h-full px-3 py-4 overflow-y-auto border-r dark:bg-gray-800">
-                    <button onClick={toggleSidebar} type="button" data-drawer-hide="default-sidebar" aria-controls="default-sidebar"
-                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
-                        <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span className="sr-only">Close menu</span>
-                    </button>
-                    <ul className="space-y-2 font-medium mt-5">
-                        {docs.map(data => (
-                            <DocsSidebarLi key={data.name} id={data.name} onClick={() => handleChangeDoc(data.children)}/>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-        </>)}
+            </div>)
+        }
 
             <div className={`flex-grow p-0 transition-all duration-300`}
                  style={{marginLeft: isOpen ? sidebarWidth : '0', width: isOpen ? `calc(100% - ${sidebarWidth})` : '100%'}}>

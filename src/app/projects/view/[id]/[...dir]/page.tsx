@@ -1,6 +1,7 @@
 import {SimpleContentRender} from "@_components/post/main/ServerPostRender";
-import {AccordionBlock, AccordionCase} from "@_components/post/proj/Accordion";
 import {findAllIds, findByIdForDocsPaths, findByPathsForDocs} from "@/app/lib/db/ServerProjDB";
+import {DocsSidebar} from "@_components/common/Sidebar";
+import React from "react";
 
 type Props = {
     params: {
@@ -14,24 +15,14 @@ export default async function Page({params}: Props) {
     const data = await findByPathsForDocs(id, dir);
     const docsRenders = data.map((doc, index) => {
         return {
-            title: doc.id,
-            render: <SimpleContentRender key={`render:${id}:${index}`} mdxContent={doc.data.content}/>,
+            name: doc.id,
+            children: <SimpleContentRender key={`render:${id}:${index}`} mdxContent={doc.data.content}/>,
         }
     })
 
-
-    return (
-        <AccordionCase>
-            <a className={'hidden'} href={'#'}></a>
-            {docsRenders.map((data, index) => (
-                <AccordionBlock key={`AB:${data.title}:${index}`}
-                                props={{title: data.title, ariaExpanded: true}}>
-                    {data.render}
-                </AccordionBlock>
-            ))
-            }
-        </AccordionCase>
-    )
+    return (<>
+        <DocsSidebar docs={docsRenders}/>
+    </>)
 }
 
 export async function generateStaticParams() {
