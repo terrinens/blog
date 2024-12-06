@@ -26,7 +26,7 @@ export function DocsSidebar({docs}: { docs: DocsSidebarProps[] }) {
     useEffect(() => {
         if (window.innerWidth >= 768 && docs.length > 1) setIsOpen(true);
         else (setIsOpen(false));
-    }, []);
+    }, [docs.length]);
 
     useEffect(() => {
         const handleHashChange = () => {
