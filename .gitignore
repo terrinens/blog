@@ -224,3 +224,4 @@ $RECYCLE.BIN/
 
 #custom
 bin/tmp
+*.json
