@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api-server/pkg/db"
+	"api-server/internal/db"
 	"log"
 	"net/http"
 	"os"
@@ -17,8 +17,8 @@ func main() {
 		}
 	}
 
-	client := db.CreateClient()
-	InitRouter(client)
+	db.InitClient()
+	InitRouter()
 
 	if len(os.Args) > 1 && os.Args[1] == "dev" {
 		log.Println("Server Listening Port:", port)

@@ -10,7 +10,10 @@ import (
 	"os"
 )
 
-func CreateClient() *firestore.Client {
+var Client *firestore.Client
+
+/*InitClient 해당 함수는 DB를 초기화하고 글로벌 변수 Client에 결과를 주입합니다.*/
+func InitClient() {
 	keyFile, err := os.Open(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 	if err != nil {
 		log.Println(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"))
@@ -41,5 +44,5 @@ func CreateClient() *firestore.Client {
 		log.Fatalf("error getting client: %v\n", err)
 	}
 
-	return client
+	Client = client
 }

@@ -1,7 +1,7 @@
 package api
 
 import (
-	"api-server/pkg/api/logs"
+	"api-server/pkg/logs"
 	"net/http"
 )
 
@@ -23,7 +23,9 @@ func httpMethodAction(w http.ResponseWriter, r *http.Request, fun func(w http.Re
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 		_, err := w.Write([]byte("404 - Not Found"))
-		logs.WriteFail(w, r, err)
+		if err != nil {
+			logs.WriteFail(w, r)
+		}
 	}
 }
 

@@ -1,20 +1,21 @@
 package main
 
 import (
-	"api-server/pkg/api"
-	"api-server/pkg/api/logs"
-	"cloud.google.com/go/firestore"
+	"api-server/internal/api"
+	"api-server/pkg/logs"
 	"net/http"
 )
 
-func InitRouter(client *firestore.Client) {
+func InitRouter() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := w.Write([]byte("Server Ready"))
-		logs.WriteFail(w, r, err)
+		if err != nil {
+			logs.WriteFail(w, r)
+		}
 	})
 
 	http.HandleFunc("/post", func(w http.ResponseWriter, r *http.Request) {
-		api.Handler(w, r, api.Post{Client: *client})
+		api.Handler(w, r, api.Post{})
 	})
 
 	http.HandleFunc("/project", func(w http.ResponseWriter, r *http.Request) {
