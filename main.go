@@ -11,16 +11,12 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
-
-		if err := os.Setenv("PORT", port); err != nil {
-			log.Fatal("Error setting port env:", err)
-		}
 	}
 
 	db.InitClient()
 	InitRouter()
 
-	if len(os.Args) > 1 && os.Args[1] == "dev" {
+	if len(os.Args) >= 1 && os.Args[1] == "dev" {
 		log.Println("Server Listening Port:", port)
 		if err := http.ListenAndServe(":"+port, nil); err != nil {
 			log.Fatalf("Error starting server: %v", err)
