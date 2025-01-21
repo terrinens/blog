@@ -4,6 +4,7 @@ import (
 	"api-server/internal/db"
 	"cloud.google.com/go/firestore"
 	"context"
+	"strings"
 )
 
 var tableName = "main"
@@ -41,10 +42,33 @@ func GetPosts(nextRefId *string, limit *int) (map[string]interface{}, error) {
 		posts = append(posts, data)
 	}
 
+	var nextId string
+	if len(posts) < *limit {
+		nextId = ""
+	} else {
+		nextId = posts[len(posts)-1]["id"].(string)
+	}
+
 	results := map[string]interface{}{
-		"posts":     posts,
-		"nextRefId": posts[len(posts)-1]["id"],
+		"posts": posts,
+		"next":  nextId,
 	}
 
 	return results, nil
+}
+
+func FindPostById(id string) (map[string]interface{}, error) {
+	ref := db.Client.Collection(tableName)
+	ctx := context.Background()
+
+	data, err := ref.Doc(id).Get(ctx)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			return nil, nil
+		} else {
+			return nil, err
+		}
+	} else {
+		return data.Data(), nil
+	}
 }

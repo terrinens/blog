@@ -3,7 +3,7 @@ package api
 import (
 	"api-server/internal/db/post"
 	"api-server/pkg/logs"
-	"encoding/json"
+	"api-server/pkg/response"
 	"log"
 	"net/http"
 	"strconv"
@@ -21,9 +21,8 @@ func (api Post) Get(w http.ResponseWriter, r *http.Request) {
 		val, err := strconv.Atoi(limitQuery)
 
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			_, err = w.Write([]byte("limit parameter must be an integer and max request 30"))
-			logs.WriteFail(w, r)
+			res := map[string]interface{}{"message": "limit parameter must be an integer and max request 30"}
+			response.Json(w, 400, res)
 			return
 		}
 
@@ -31,8 +30,8 @@ func (api Post) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if limit >= 30 {
-		w.WriteHeader(http.StatusBadRequest)
-		_, _ = w.Write([]byte(`{"message":"limit parameter should be less than 30"}`))
+		res := map[string]interface{}{"message": "limit must be less than 30"}
+		response.Json(w, 400, res)
 		return
 	}
 
@@ -42,15 +41,26 @@ func (api Post) Get(w http.ResponseWriter, r *http.Request) {
 		logs.ServerFail(w, nil, "server error")
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	if err = json.NewEncoder(w).Encode(result); err != nil {
-		logs.ServerFail(w, nil, "Failed to Json Encode")
-	}
+	response.Json(w, 200, result)
 }
 
 func (api Post) Post(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	if id == "" || id == "undefined" {
+		res := map[string]interface{}{"message": "id parameter must be required or must be valid"}
+		response.Json(w, 400, res)
+		return
+	}
+
+	data, err := post.FindPostById(id)
+	if err != nil {
+		log.Println(err.Error())
+		logs.ServerFail(w, nil, "server error")
+	} else if data == nil {
+		response.Json(w, 404, map[string]interface{}{"message": "post not found"})
+	} else {
+		response.Json(w, 200, data)
+	}
 }
 
 func (api Post) Put(w http.ResponseWriter, r *http.Request) {

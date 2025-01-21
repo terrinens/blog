@@ -2,16 +2,18 @@ package api
 
 import (
 	"api-server/pkg/logs"
+	"log"
 	"net/http"
 )
 
 func optionsAction(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodOptions {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		w.Header().Set("Access-Control-Max-Age", "3600")
 		w.WriteHeader(http.StatusNoContent)
+		return
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -37,9 +39,9 @@ type API interface {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request, api API) {
+	optionsAction(w, r)
+
 	switch r.Method {
-	case http.MethodOptions:
-		optionsAction(w, r)
 	case http.MethodGet:
 		httpMethodAction(w, r, api.Get)
 	case http.MethodPost:
@@ -51,4 +53,6 @@ func Handler(w http.ResponseWriter, r *http.Request, api API) {
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+
+	log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL.Path)
 }
