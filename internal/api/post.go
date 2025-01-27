@@ -10,6 +10,7 @@ import (
 )
 
 type Post struct {
+	BaseAPI
 }
 
 func (api Post) Get(w http.ResponseWriter, r *http.Request) {
@@ -61,10 +62,4 @@ func (api Post) Post(w http.ResponseWriter, r *http.Request) {
 	} else {
 		response.Json(w, 200, data)
 	}
-}
-
-func (api Post) Put(w http.ResponseWriter, r *http.Request) {
-}
-
-func (api Post) Delete(w http.ResponseWriter, r *http.Request) {
 }

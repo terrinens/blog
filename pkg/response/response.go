@@ -13,3 +13,9 @@ func Json(w http.ResponseWriter, code int, data map[string]interface{}) {
 		logs.ServerFail(w, nil, "Failed to Json Encode")
 	}
 }
+
+func Notfound(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+	return
+}

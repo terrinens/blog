@@ -225,3 +225,5 @@ $RECYCLE.BIN/
 #custom
 bin/tmp
 *.json
+/localInit.go
+/localEnvInit.go

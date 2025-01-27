@@ -2,6 +2,7 @@ package api
 
 import (
 	"api-server/pkg/logs"
+	"api-server/pkg/response"
 	"log"
 	"net/http"
 )
@@ -36,6 +37,24 @@ type API interface {
 	Post(w http.ResponseWriter, r *http.Request)
 	Put(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
+}
+
+type BaseAPI struct{}
+
+func (b BaseAPI) Get(w http.ResponseWriter, r *http.Request) {
+	response.Notfound(w)
+}
+
+func (b BaseAPI) Post(w http.ResponseWriter, r *http.Request) {
+	response.Notfound(w)
+}
+
+func (b BaseAPI) Put(w http.ResponseWriter, r *http.Request) {
+	response.Notfound(w)
+}
+
+func (b BaseAPI) Delete(w http.ResponseWriter, r *http.Request) {
+	response.Notfound(w)
 }
 
 func Handler(w http.ResponseWriter, r *http.Request, api API) {
