@@ -22,12 +22,11 @@ func InitClient() {
 	if os.Getenv("DEV") == "true" {
 		app = devInit()
 	} else {
-		newApp, err := firebase.NewApp(context.Background(), nil)
-		if newApp == nil || err != nil {
-			log.Fatalf("error initializing app: %v\n", err)
-		}
+		app = cloudInit()
+	}
 
-		app = newApp
+	if app == nil {
+		log.Fatalf("error initializing app\n")
 	}
 
 	client, err := app.Firestore(context.Background())
@@ -37,6 +36,15 @@ func InitClient() {
 	}
 
 	Client = client
+}
+
+func cloudInit() *firebase.App {
+	newApp, err := firebase.NewApp(context.Background(), nil)
+	if err != nil {
+		log.Fatalf("error initializing app: %v\n", err)
+	}
+
+	return newApp
 }
 
 func devInit() *firebase.App {
@@ -59,10 +67,7 @@ func devInit() *firebase.App {
 	}
 
 	sa := option.WithCredentialsJSON(data)
-
-	config := &firebase.Config{ProjectID: os.Getenv("GOOGLE_PROJECT_ID")}
-
-	app, err := firebase.NewApp(context.Background(), config, sa)
+	app, err := firebase.NewApp(context.Background(), nil, sa)
 
 	if err != nil {
 		log.Fatalf("error initializing app: %v\n", err)

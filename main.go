@@ -25,13 +25,8 @@ func main() {
 }
 
 func init() {
-	err := os.Setenv("GOOGLE_PROJECT_ID", "gitblog-service")
-	if err != nil {
-		log.Fatal("Failed to set FIRESTORE_PROJECT_ID environment variable")
-	}
-
 	if len(os.Args) > 1 && strings.ToLower(os.Args[1]) == "dev" {
-		err = os.Setenv("DEV", "true")
+		err := os.Setenv("DEV", "true")
 		if err != nil {
 			log.Fatalf("Failed to set DEV environment variable")
 		}
