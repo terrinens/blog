@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api-server/internal/db"
+	"api-server/internal/database"
 	"log"
 	"net/http"
 	"os"
@@ -14,7 +14,7 @@ func main() {
 		port = "8080"
 	}
 
-	db.InitClient()
+	database.InitClient()
 	InitRouter()
 
 	log.Println("Server starting on port " + port)

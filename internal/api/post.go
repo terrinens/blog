@@ -1,7 +1,7 @@
 package api
 
 import (
-	"api-server/internal/db/post"
+	"api-server/internal/database/post"
 	"api-server/pkg/logs"
 	"api-server/pkg/response"
 	"log"

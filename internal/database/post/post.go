@@ -1,7 +1,7 @@
 package post
 
 import (
-	"api-server/internal/db"
+	"api-server/internal/database"
 	"cloud.google.com/go/firestore"
 	"context"
 	"strings"
@@ -11,7 +11,7 @@ var tableName = "main"
 
 // GetPosts Json Return {posts: ...posts, next: nextRef}
 func GetPosts(nextRefId *string, limit *int) (map[string]interface{}, error) {
-	ref := db.Client.Collection(tableName)
+	ref := database.Client.Collection(tableName)
 	ctx := context.Background()
 
 	if limit == nil || *limit <= 0 {
@@ -58,7 +58,7 @@ func GetPosts(nextRefId *string, limit *int) (map[string]interface{}, error) {
 }
 
 func FindPostById(id string) (map[string]interface{}, error) {
-	ref := db.Client.Collection(tableName)
+	ref := database.Client.Collection(tableName)
 	ctx := context.Background()
 
 	data, err := ref.Doc(id).Get(ctx)
