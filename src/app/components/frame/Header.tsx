@@ -50,8 +50,6 @@ const Header = () => {
                         className="flex flex-col md:flex-row md:items-center md:justify-end gap-2 md:gap-3 mt-3 md:mt-0 py-2 md:py-0 md:ps-7">
                         <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
                            href={path.join(rootPath, "/posts/list")}>포스트 목록</a>
-                        <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
-                           href={path.join(rootPath, "/projects/list")}>프로젝트</a>
                         <a className={`${aboutLock ? 'opacity-50 cursor-not-allowed' : ''} py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none`}
                            href={aboutLock ? undefined : path.join(rootPath, "/about-me")}>About Me</a>
                         <a className="py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent font-medium text-gray-800 focus:outline-none"
