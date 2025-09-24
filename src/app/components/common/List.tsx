@@ -1,6 +1,13 @@
 import React from "react";
 
+const isURL = (url: string) => {
+    return url.startsWith("http") || url.startsWith("https:");
+}
+
+
 export function DescriptionList({data}: { data: { title: string, content: string[] }[] }) {
+
+
     const CaseBox = ({children}: { children: React.ReactNode }) => {
         return (
             <dl className="flex flex-col sm:flex-row gap-1 items-center">
@@ -19,13 +26,19 @@ export function DescriptionList({data}: { data: { title: string, content: string
     }
 
     const Content = ({contents}: { contents: string[] }) => {
+
+
         return (
             <dd>
                 <ul>
                     {contents.map((item, index) => (
                         <li key={`${item}:${index}`}
                             className={`${index === contents.length - 1 ? '' : 'after:content-[\',\']'} me-1  inline-flex items-center text-sm text-gray-800 dark:text-neutral-200`}>
-                            {item}
+                            {isURL(item)
+                                ? <a href={item} target="_blank"
+                                     rel="noopener">{item.replace(/^(http|https):\/\//, '')}</a>
+                                : <>{item}</>
+                            }
                         </li>
                     ))}
                 </ul>

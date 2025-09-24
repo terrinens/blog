@@ -55,7 +55,6 @@ export const PersonalInfo = () => (
                 title: 'Phone',
                 content: [unpack('0000 0001 0000 00 0010 0001 0011 0000 00 0000 0111 1000 0101')]
             },
-            {title: 'Address', content: ['서울특별시 성북구 장위동']},
             {title: 'Email', content: ['terrinens@gmail.com']},
             {title: 'Blog', content: ['https://terrinens.github.io/blog']},
             {title: 'Github', content: ['https://github.com/terrinens']},

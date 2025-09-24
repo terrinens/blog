@@ -234,7 +234,15 @@ async function getOpenSourceContributionCodeBytes() {
 export async function getAllCodeBytes() {
     const allRepData = await getGitRepositories();
     const userCodeBytes = await getUserCodeBytes(allRepData['user'].urls);
-    const orgCodeBytes = await getOrgCodeBytes(allRepData['org'].urls);
+    let orgCodeBytes: PromiseConstructor
+
+    if (allRepData['org']) {
+        orgCodeBytes = await getOrgCodeBytes(allRepData['org'].urls)
+    } else {
+        console.debug("Git org 계산 실패 임시값 주입");
+        orgCodeBytes = Promise.resolve({"javascript": 0})
+    }
+
     const openSourceContributionCodeBytes = await getOpenSourceContributionCodeBytes();
 
     return userCodeBytes.merge(orgCodeBytes, openSourceContributionCodeBytes);
