@@ -26,10 +26,10 @@
         "./src/*"
       ],
       "@_mdx-components/*": [
-        "./src/app/components/MDXComponents.tsx"
+        "./src/pages/components/MDXComponents.tsx"
       ],
       "@_components/*": [
-        "./src/app/components/*"
+        "./src/pages/components/*"
       ],
       "@_public/*": [
         "./src/public/*"
